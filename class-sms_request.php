@@ -8,6 +8,7 @@ class sms_request
 
     public function __construct()
     {
+        global $configuration;
         if (isset($_REQUEST['source']))
             $this->sender = new identifier($_REQUEST['source']);
         else
