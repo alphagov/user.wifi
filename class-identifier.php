@@ -1,0 +1,62 @@
+<?php
+
+class identifier
+{
+    public $text;
+    public $valid_email;
+    public $valid_mobile;
+
+    public function __constructor($identifier)
+    {
+        if ($this->isvalidmobilenumber($identifier))
+        {
+            $this->valid_mobile = true;
+            $this->text = fixupmobilenumber($identifier);
+
+        } else
+            if ($this->isvalidemailaddress($identifier))
+            {
+                $this->valid_email = true;
+                $this->text = fixupemailaddress($identifier);
+            }
+
+    }
+
+    private function isvalidmobilenumber($identifier)
+    {
+        $pattern = "/^\+?\d{1,15}$/Ui";
+
+        return preg_match($pattern, $identifier);
+
+    }
+
+    private function isvalidemailaddress($identifier)
+    {
+        return filter_var($identifier, FILTER_VALIDATE_EMAIL);
+    }
+
+    private function fixupmobilenumber($sender)
+    {
+        // dont mangle the short code
+        if (strlen($sender) > 6)
+        {
+
+            if (substr($sender, 0, 2) == "07")
+                $sender = "44" . substr($sender, 1);
+            if (substr($sender, 0, 1) != "+")
+                $sender = "+" . $sender;
+        }
+        return $sender;
+    }
+
+    private function fixupemailaddress($address)
+    {
+        preg_match_all('/[A-Za-z0-9\_\+\.\'-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]+/', $emailFrom,
+            $matches);
+        $this->emailFrom = strtolower($matches[0][0]);
+    }
+
+
+}
+
+?>
