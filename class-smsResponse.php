@@ -14,13 +14,13 @@ class smsResponse
     public function setReply()
     {
         $config = config::getInstance();
-        $this->from = $config->values['noreply-sender'];
+        $this->from = $config->values['reply-sender'];
 
     }
     public function setNoReply()
     {
         $config = config::getInstance();
-        $this->from = $config->values['reply-sender'];
+        $this->from = $config->values['noreply-sender'];
     }
 
     public function send()
