@@ -21,7 +21,7 @@ class smsResponse
     public function set_noreply()
     {
         $config = config::getInstance();
-        $this->from = $config->vlues['reply-sender'];
+        $this->from = $config->values['reply-sender'];
     }
 
     public function send()
@@ -29,16 +29,16 @@ class smsResponse
         $config = config::getInstance();
         // choose which provider to use to send the message
         // knock off the +
-        $dest = str_replace("+", "", $dest);
+        $this->to = str_replace("+", "", $this->to);
 
         // remove any double spaces (when not using keywords)
-        $message = str_replace("  ", " ", $message);
+        $this->message = str_replace("  ", " ", $this->message);
         $provider = 1;
         $success = false;
         while ($success == false and isset($config->values['sms-provider' . $provider]))
         {
-            if ($this->providercanhandle($provider))
-                $success = $this->tryProvider();
+            if ($this->providerCanHandle($provider))
+                $success = $this->tryProvider($provider);
             $provider++;
         }
 
@@ -118,7 +118,7 @@ class smsResponse
         $this->send();
     }
 
-    private function isinternational()
+    private function isInternational()
     {
 
         $config = config::getInstance();
@@ -130,10 +130,10 @@ class smsResponse
     }
 
 
-    private function providercanhandle($provider)
+    private function providerCanHandle($provider)
     {
         $config = config::getInstance();
-        if (!$this->isinternational() or $config->values['sms-provider' . $provider]['international'] ==
+        if (!$this->isInternational() or $config->values['sms-provider' . $provider]['international'] ==
             1)
         {
             return true;

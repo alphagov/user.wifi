@@ -39,7 +39,7 @@ class smsRequest
         $sms = new smsResponse;
         $sms->to = $this->sender->text;
         $sms->set_reply();
-        $sms->help($smsreq->message);
+        $sms->help($this->message);
     }
     public function newPassword()
     {
@@ -62,7 +62,7 @@ class smsRequest
         } else
         {
             $sms = new smsResponse;
-            $sms->to = $smsReq->sender->text;
+            $sms->to = $this->sender->text;
             $sms->set_reply();
             $sms->terms();
             error_log("SMS: Initial request, sending terms to $this->sender->text");
