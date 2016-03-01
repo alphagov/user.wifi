@@ -18,6 +18,7 @@ class emailRequest
             error_log("EMAIL: Self Enrolling : ".$this->emailFrom->text);
             $user = new user;
             $user->identifier = $this->emailFrom;
+            $user->sponsor = $this->emailFrom;
             $user->enroll();
         } else
         {

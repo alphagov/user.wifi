@@ -160,11 +160,11 @@ class user
                 $password .= $word;
             }
         }
-        if ($configuration['wifi-password']['random-chars'])
+        if ($config->values['wifi-password']['random-chars'])
         {
-            $length = $configuration['wifi-password']['length'];
-            $pattern = $configuration['wifi-password']['regex'];
-            $pass = preg_replace($pattern, "", base64_encode(strong_random_bytes($length * 4)));
+            $length = $config->values['wifi-password']['length'];
+            $pattern = $config->values['wifi-password']['regex'];
+            $pass = preg_replace($pattern, "", base64_encode($this->strongRandomBytes($length * 4)));
             $password = substr($pass, 0, $length);
         }
         return $password;
