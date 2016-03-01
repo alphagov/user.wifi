@@ -6,7 +6,7 @@ class smsRequest
     public $message;
     public $message_words;
 
-    public function __construct()
+    function __construct()
     {
         $config = config::getInstance();
         if (isset($_REQUEST['source']))
