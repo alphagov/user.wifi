@@ -134,14 +134,54 @@ class user
         $this->login = $username;
     }
 
+
     private function generateRandomUsername()
     {
         $config = config::getInstance();
         $length = $config->values['wifi-username']['length'];
         $pattern = $config->values['wifi-username']['regex'];
-        $pass = preg_replace($pattern, "", base64_encode(strong_random_bytes($length * 4)));
+        $pass = preg_replace($pattern, "", base64_encode(strongRandomBytes($length * 4)));
         return substr($pass, 0, $length);
 
+    }
+
+    function generateRandomWifiPassword()
+    {
+        $config = config::getInstance();
+        $password = "";
+        if ($config->values['wifi-password']['random-words'])
+        {
+            $f_contents = file($config->values['wifi-password']['wordlist-file']);
+            for ($x = 1; $x <= $config->values['wifi-password']['word-count']; $x++)
+            {
+                $word = trim($f_contents[array_rand($f_contents)]);
+                if ($config->values['wifi-password']['uppercase'])
+                    $word = ucfirst($word);
+                $password .= $word;
+            }
+        }
+        if ($configuration['wifi-password']['random-chars'])
+        {
+            $length = $configuration['wifi-password']['length'];
+            $pattern = $configuration['wifi-password']['regex'];
+            $pass = preg_replace($pattern, "", base64_encode(strong_random_bytes($length * 4)));
+            $password = substr($pass, 0, $length);
+        }
+        return $password;
+    }
+
+    private function strongRandomBytes($length)
+    {
+        $strong = false; // Flag for whether a strong algorithm was used
+        $bytes = openssl_random_pseudo_bytes($length, $strong);
+
+        if (!$strong)
+        {
+            // System did not use a cryptographically strong algorithm
+            throw new Exception('Strong algorithm not available for PRNG.');
+        }
+
+        return $bytes;
     }
 
     private function getIdentifier()
