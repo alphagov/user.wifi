@@ -12,13 +12,13 @@ class identifier
         if ($this->isValidMobileNumber($identifier))
         {
             $this->validMobile = true;
-            $this->text = fixUpMobileNumber($identifier);
+            $this->text = $this->fixUpMobileNumber($identifier);
 
         } else
             if ($this->isValidEmailAddress($identifier))
             {
                 $this->validEmail = true;
-                $this->text = fixUpEmailAddress($identifier);
+                $this->text = $this->fixUpEmailAddress($identifier);
             }
 
     }
@@ -50,7 +50,7 @@ class identifier
         return $sender;
     }
 
-    private function fixupemailaddress($address)
+    private function fixUpEmailAddress($address)
     {
         preg_match_all('/[A-Za-z0-9\_\+\.\'-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]+/', $address,
             $matches);
