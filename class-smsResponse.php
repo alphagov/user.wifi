@@ -62,6 +62,7 @@ class smsResponse
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $result = curl_exec($ch); // This is the result from the API
         curl_close($ch);
+        print "<PRE>$result</PRE>";
         if (preg_match($config->values[$confIndex]['success-regex'], $result))
             return true;
         else
