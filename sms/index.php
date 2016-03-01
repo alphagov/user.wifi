@@ -44,8 +44,10 @@ if ($smsreq->sender->valid_mobile)
             }
             break;
 
-
     }
+    error_log("SMS: Invalid number $smsreq->sender->text");
+
+
 }
 
 ?>
