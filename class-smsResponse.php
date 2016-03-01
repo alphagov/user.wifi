@@ -136,7 +136,7 @@ class smsResponse
 
         $config = config::getInstance();
 
-        if (substr($this->to, 1, 2) == $config->values['country-code'])
+        if (substr($this->to, 0, 2) == $config->values['country-code'])
             return false;
         else
             return true;
