@@ -49,7 +49,7 @@ class smsResponse
         $config = config::getInstance();
         $conf_index = 'sms-provider' . $provider;
         $key = $config->values[$conf_index]['key'];
-        $message = urlencode($this->$message);
+        $message = urlencode($this->message);
         $data = $config->values[$conf_index]['user-field'] . '=' . $config->values[$conf_index]['user'] .
             '&' . $config->values[$conf_index]['key-field'] . '=' . $config->values[$conf_index]['key'] .
             '&' . $config->values[$conf_index]['message-field'] . '=' . $message . '&' . $config->values[$conf_index]['from-field'] .
