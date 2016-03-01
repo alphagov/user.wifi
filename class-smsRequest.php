@@ -53,7 +53,7 @@ class smsRequest
     {
         $config = config::getInstance();
 
-        if (!$config['send-terms'] or $this->message_words[0] == "agree")
+        if (!$config['send-terms'] or $this->messageWords[0] == "agree")
         {
             error_log("SMS: Creating new account for $this->sender->text");
             $user = new user();

@@ -21,12 +21,12 @@ if ($smsReq->sender->validMobile)
     switch ($smsreq->messageWords[0])
     {
         case "security":
-            
+
             $smsreq->security();
             break;
 
         case "new":
-          $smsReq->newPassword();
+            $smsReq->newPassword();
             break;
 
         case "help":
@@ -38,12 +38,11 @@ if ($smsReq->sender->validMobile)
             break;
 
     }
-   
 
 
 } else
 {
-  error_log("SMS: Invalid number ".$smsReq->sender->text);   
+    error_log("SMS: Invalid number " . $smsReq->sender->text);
 }
 
 ?>
