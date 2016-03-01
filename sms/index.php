@@ -1,5 +1,7 @@
 <?php
 
+require ("../common.php");
+
 $smsreq = new smsRequest();
 
 if ($smsreq->sender->valid_mobile)
