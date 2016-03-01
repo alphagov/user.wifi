@@ -135,7 +135,7 @@ class emailRequest
     public function setEmailTo($to)
     {
         $this->emailTo = $to;
-        $this->emailToCMD = strtolower(trim(strtok(emailTo, "@")));
+        $this->emailToCMD = strtolower(trim(strtok($this->emailTo, "@")));
     }
 
     public function setEmailFrom($from)
