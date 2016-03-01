@@ -43,7 +43,7 @@ if ($smsReq->sender->valid_mobile)
 
 } else
 {
-  error_log("SMS: Invalid number $smsReq->sender->text");   
+  error_log("SMS: Invalid number ".$smsReq->sender->text);   
 }
 
 ?>
