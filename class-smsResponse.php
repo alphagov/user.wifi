@@ -8,17 +8,16 @@ class smsResponse
 
     public function __construct()
     {
-        $this->set_noreply();
-
+        $this->setNoReply();
     }
 
-    public function set_reply()
+    public function setReply()
     {
         $config = config::getInstance();
         $this->from = $config->values['noreply-sender'];
 
     }
-    public function set_noreply()
+    public function setNoReply()
     {
         $config = config::getInstance();
         $this->from = $config->values['reply-sender'];
@@ -55,7 +54,7 @@ class smsResponse
             '&' . $config->values[$confIndex]['message-field'] . '=' . urlencode($this->
             message) . '&' . $config->values[$confIndex]['from-field'] . '=' . $this->from .
             '&' . $config->values[$confIndex]['to-field'] . '=' . $this->to;
-            print "<PRE>".$data."</PRE>";
+        print "<PRE>" . $data . "</PRE>";
         $ch = curl_init($config->values[$confIndex]['url']);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
