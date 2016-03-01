@@ -43,17 +43,18 @@ class smsResponse
         }
 
     }
-    
+
     private function tryProvider($provider)
     {
+        print "Sending " . $this->message . " to " . $this->to . "<BR>";
         $config = config::getInstance();
         $conf_index = 'sms-provider' . $provider;
         $key = $config->values[$conf_index]['key'];
-        $message = urlencode($this->message);
         $data = $config->values[$conf_index]['user-field'] . '=' . $config->values[$conf_index]['user'] .
             '&' . $config->values[$conf_index]['key-field'] . '=' . $config->values[$conf_index]['key'] .
-            '&' . $config->values[$conf_index]['message-field'] . '=' . $message . '&' . $config->values[$conf_index]['from-field'] .
-            '=' . $this->from . '&' . $config->values[$conf_index]['to-field'] . '=' . $this->to;
+            '&' . $config->values[$conf_index]['message-field'] . '=' . urlencode($this->
+            message) . '&' . $config->values[$conf_index]['from-field'] . '=' . $this->from .
+            '&' . $config->values[$conf_index]['to-field'] . '=' . $this->to;
         $ch = curl_init($config->values[$conf_index]['url']);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
