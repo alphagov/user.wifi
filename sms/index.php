@@ -17,9 +17,6 @@ else
 
 if ($smsReq->sender->valid_mobile)
 {
-    $sms = new smsResponse;
-    $sms->to = $smsReq->sender->text;
-    $sms->set_reply();
 
     switch ($smsreq->message_words[0])
     {
@@ -46,7 +43,7 @@ if ($smsReq->sender->valid_mobile)
 
 } else
 {
-  error_log("SMS: Invalid number $smsreq->sender->text");   
+  error_log("SMS: Invalid number $smsReq->sender->text");   
 }
 
 ?>
