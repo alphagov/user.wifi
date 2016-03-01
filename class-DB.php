@@ -14,7 +14,7 @@ class DB
         { // If no instance then make one
             self::$instance = new self();
         }
-        return self::$_instance;
+        return self::$instance;
     }
     // Constructor
     private function __construct()
