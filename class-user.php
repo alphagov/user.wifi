@@ -134,6 +134,16 @@ class user
         $this->login = $username;
     }
 
+    private function generateRandomUsername()
+    {
+        $config = config::getInstance();
+        $length = $config->values['wifi-username']['length'];
+        $pattern = $config->values['wifi-username']['regex'];
+        $pass = preg_replace($pattern, "", base64_encode(strong_random_bytes($length * 4)));
+        return substr($pass, 0, $length);
+
+    }
+
     private function getIdentifier()
     {
         $db = DB::getInstance();
