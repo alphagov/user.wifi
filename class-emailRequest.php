@@ -15,13 +15,13 @@ class emailRequest
         // Self enrollment request
         if ($this->fromAuthDomain())
         {
-            error_log("EMAIL: Self Enrolling : $this->emailFrom");
+            error_log("EMAIL: Self Enrolling : $this->emailFrom->text");
             $user = new user;
             $user->identifier = $this->emailFrom;
             $user->enroll();
         } else
         {
-            error_log("EMAIL: Ignoring self enrollment from : $this->emailFrom");
+            error_log("EMAIL: Ignoring self enrollment from : $this->emailFrom->text");
         }
     }
 
@@ -29,7 +29,7 @@ class emailRequest
     {
         if ($this->fromAuthDomain())
         {
-            error_log("EMAIL: Sponsored request from: $this->emailFrom");
+            error_log("EMAIL: Sponsored request from: $this->emailFrom->text");
             $enrollcount = 0;
 
             foreach ($this->contactList() as $identifier)
@@ -46,7 +46,7 @@ class emailRequest
             $email->send();
         } else
         {
-            error_log("EMAIL: Ignoring sponsored reqeust from : $emailFrom");
+            error_log("EMAIL: Ignoring sponsored reqeust from : $this->emailFrom->text");
         }
     }
 
@@ -58,7 +58,7 @@ class emailRequest
         $orgAdmin = new orgAdmin($this->emailFrom);
         if ($org_admin->authorised)
         {
-            error_log("EMAIL: processing new site request from : $emailFrom");
+            error_log("EMAIL: processing new site request from : $this->emailFrom->text");
             // Add the new site & IP addresses
             $site = new site();
             $site->org_id = $orgAdmin->org_id;
