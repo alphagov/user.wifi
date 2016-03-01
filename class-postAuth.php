@@ -1,7 +1,7 @@
 <?php
 
 class postAuth {
-    public function __constructor($login, $mac_address) {
+    public function __construct($login, $mac_address) {
         
     }
     

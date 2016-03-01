@@ -10,7 +10,7 @@ class orgAdmin
     public $name;
     public $authorised;
 
-    public function __constructor($email)
+    public function __construct($email)
     {
         $db = DB::getInstance();
         $dblink = $db->getConnection();

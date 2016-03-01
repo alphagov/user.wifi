@@ -6,7 +6,7 @@ class smsResponse
     public $to;
     public $message;
 
-    public function __constructor()
+    public function __construct()
     {
         $this->set_noreply();
 

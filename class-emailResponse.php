@@ -8,7 +8,7 @@ class emailResponse
     public $message;
     public $filename;
 
-    public function __constructor()
+    public function __construct()
     {
         $config = config::getInstance();
         $this->from = $config->values['email-noreply'];

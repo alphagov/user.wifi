@@ -6,11 +6,7 @@ class site
     public $name;
     public $org_id;
 
-    public function __constructor()
-    {
-
-
-    }
+   
 
     public function get_ip_list()
     {

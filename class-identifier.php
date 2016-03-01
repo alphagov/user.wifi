@@ -6,7 +6,7 @@ class identifier
     public $validEmail;
     public $validMobile;
 
-    public function __constructor($identifier)
+    public function __construct($identifier)
     {
         print $identifier;
         if ($this->isValidMobileNumber($identifier))
