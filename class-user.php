@@ -140,7 +140,7 @@ class user
         $config = config::getInstance();
         $length = $config->values['wifi-username']['length'];
         $pattern = $config->values['wifi-username']['regex'];
-        $pass = preg_replace($pattern, "", base64_encode(strongRandomBytes($length * 4)));
+        $pass = preg_replace($pattern, "", base64_encode($this->strongRandomBytes($length * 4)));
         return substr($pass, 0, $length);
 
     }

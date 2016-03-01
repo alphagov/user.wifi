@@ -6,7 +6,6 @@ class site
     public $name;
     public $org_id;
 
-   
 
     public function get_ip_list()
     {
@@ -46,9 +45,9 @@ class site
 
     }
 
-    public function set_radkey()
+    public function setRadkey()
     {
-    $db = DB::getInstance();
+        $db = DB::getInstance();
         $dblink = $db->getConnection();
         $handle = $dblink->prepare('select secret from nas WHERE shortname=? and org_id=?');
         $handle->bindValue(1, $this->name, PDO::PARAM_STR);
@@ -58,17 +57,32 @@ class site
         if ($row)
             $this->radkey = $row['secret'];
         else
-            generate_random_radkey();
+            generateRandomRadKey();
     }
 
-    private function generate_random_radkey()
+    private function generateRandomRadKey()
     {
         $config = config::getInstance();
         $length = $config->values['radius-password']['length'];
         $pattern = $config->value['radius-password']['regex'];
-        $pass = preg_replace($pattern, "", base64_encode(strong_random_bytes($length * 4)));
+        $pass = preg_replace($pattern, "", base64_encode($this->strongRandomBytes($length *
+            4)));
         $this->radkey = substr($pass, 0, $length);
     }
+    private function strongRandomBytes($length)
+    {
+        $strong = false; // Flag for whether a strong algorithm was used
+        $bytes = openssl_random_pseudo_bytes($length, $strong);
+
+        if (!$strong)
+        {
+            // System did not use a cryptographically strong algorithm
+            throw new Exception('Strong algorithm not available for PRNG.');
+        }
+
+        return $bytes;
+    }
+
 
 }
 
