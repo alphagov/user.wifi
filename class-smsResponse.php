@@ -67,6 +67,17 @@ class smsResponse
         else
             return false;
     }
+    public function enroll($user)
+    {
+        $config = config::getInstance();
+        $message = file_get_contents($config->values['sms-messages']['enrollment-file']);
+        $message = str_replace("%LOGIN%", $user->login, $message);
+        $message = str_replace("%PASS%", $user->password, $message);
+        $message = str_replace("%KEYWORD%", $config->values['reply-keyword'], $message);
+
+        $this->message = $message;
+        $this->send();
+    }
 
 
     public function terms()
