@@ -21,7 +21,7 @@ class DB
     {
         try
         {
-            $this->setCredentials;
+            $this->setCredentials();
             $this->connection = new \PDO('mysql:host=' . $this->hostname .
                 '; dbname=radius; charset=utf8mb4', $this->username, $this->password, array(\PDO::
                     ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION, \PDO::ATTR_PERSISTENT => false));
