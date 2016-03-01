@@ -32,14 +32,12 @@ class user
             $sms->setReply();
             $sms->to = $this->identifier->text;
             $sms->enroll($this);
-            $sms->send();
         } else
             if ($this->identifier->validEmail)
             {
                 $email = new emailResponse();
                 $email->to = $this->identifier->text;
                 $email->enroll($this);
-                $email->send();
 
             }
 
