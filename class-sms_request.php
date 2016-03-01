@@ -23,8 +23,7 @@ class sms_request
         // remove whitespace and convert to lower case
         $this->message = strtolower(trim($this->message));
         // remove any instances of wifi from the message
-        $this->message = str_replace($configuration['strip-keyword'], "", $this->
-            message);
+        $this->message = str_replace($configuration['strip-keyword'], "", $this->message);
 
         $this->message_words = explode(' ', $this->message);
 
