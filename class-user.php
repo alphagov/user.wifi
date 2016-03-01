@@ -47,7 +47,8 @@ class user
 
     private function radius_db_write()
     {
-        global $dblink;
+        $db = DB::getInstance();
+        $dblink = $db->getConnection();
         // Delete any old accounts for that username
         $lc_wifilogin = strtolower($this->login);
         $handle = $dblink->prepare('delete from radcheck where username=?');
@@ -78,7 +79,8 @@ class user
         # This function looks for an existing password entry for this username
         # if it finds it and force is false then it will return the same password
         # otherwise it will return a randomly generated one
-        global $dblink;
+        $db = DB::getInstance();
+        $dblink = $db->getConnection();
         $row = false;
         if (!$force)
         {
@@ -98,7 +100,8 @@ class user
 
     private function username_is_unique($uname)
     {
-        global $dblink;
+        $db = DB::getInstance();
+        $dblink = $db->getConnection();
         $handle = $dblink->prepare('select count(username) as unamecount from userdetails where username=?');
         $handle->bindValue(1, $uname, PDO::PARAM_STR);
         $handle->execute();
@@ -111,7 +114,8 @@ class user
 
     private function set_username()
     {
-        global $dblink;
+        $db = DB::getInstance();
+        $dblink = $db->getConnection();
         $handle = $dblink->prepare('select distinct username from userdetails where contact=?');
         $handle->bindValue(1, $this->identifier->text, PDO::PARAM_STR);
         $handle->execute();
@@ -133,7 +137,8 @@ class user
 
     private function get_identifier()
     {
-        global $dblink;
+        $db = DB::getInstance();
+        $dblink = $db->getConnection();
         $handle = $dblink->prepare('select distinct contact from userdetails where username=?');
         $handle->bindValue(1, $this->login, PDO::PARAM_STR);
         $handle->execute();
