@@ -48,20 +48,21 @@ class smsResponse
     {
         print "Sending " . $this->message . " to " . $this->to . "<BR>";
         $config = config::getInstance();
-        $conf_index = 'sms-provider' . $provider;
-        $key = $config->values[$conf_index]['key'];
-        $data = $config->values[$conf_index]['user-field'] . '=' . $config->values[$conf_index]['user'] .
-            '&' . $config->values[$conf_index]['key-field'] . '=' . $config->values[$conf_index]['key'] .
-            '&' . $config->values[$conf_index]['message-field'] . '=' . urlencode($this->
-            message) . '&' . $config->values[$conf_index]['from-field'] . '=' . $this->from .
-            '&' . $config->values[$conf_index]['to-field'] . '=' . $this->to;
-        $ch = curl_init($config->values[$conf_index]['url']);
+        $confIndex = 'sms-provider' . $provider;
+        $key = $config->values[$confIndex]['key'];
+        $data = $config->values[$confIndex]['user-field'] . '=' . $config->values[$confIndex]['user'] .
+            '&' . $config->values[$confIndex]['key-field'] . '=' . $config->values[$confIndex]['key'] .
+            '&' . $config->values[$confIndex]['message-field'] . '=' . urlencode($this->
+            message) . '&' . $config->values[$confIndex]['from-field'] . '=' . $this->from .
+            '&' . $config->values[$confIndex]['to-field'] . '=' . $this->to;
+            print "<PRE>".$data."</PRE>";
+        $ch = curl_init($config->values[$confIndex]['url']);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $result = curl_exec($ch); // This is the result from the API
         curl_close($ch);
-        if (preg_match($config->values[$conf_index]['success-regex'], $result))
+        if (preg_match($config->values[$confIndex]['success-regex'], $result))
             return true;
         else
             return false;
