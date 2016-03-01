@@ -2,46 +2,42 @@
 
 require ("../common.php");
 
-$smsreq = new smsRequest();
+$smsReq = new smsRequest();
 
-if ($smsreq->sender->valid_mobile)
+if (isset($_REQUEST['source']))
+    $smsReq->setSender($_REQUEST['source']);
+else
+    $smsReq->setSender($_REQUEST["sender"]);
+
+if (isset($_REQUEST["message"]))
+    $smsReq->setMessage($_REQUEST["message"]);
+else
+    $smsReq->setMessage($_REQUEST["content"]);
+
+
+if ($smsReq->sender->valid_mobile)
 {
     $sms = new smsResponse;
-    $sms->to = $smsreq->sender->text;
+    $sms->to = $smsReq->sender->text;
     $sms->set_reply();
 
     switch ($smsreq->message_words[0])
     {
         case "security":
-            error_log("SMS: Security info request from $smsreq->sender->text");
-            $sms->security();
-            $sms->send();
+            
+            $smsreq->security();
             break;
 
         case "new":
-            error_log("SMS: Creating new password for $smsreq->sender->text");
-            $user = new user();
-            $user->identifier = $smsreq->sender->text;
-            $user->enroll(true);
+          $smsReq->newPassword();
             break;
 
         case "help":
-            error_log("SMS: Sending help information to $smsreq->sender->text");
-            $sms->help($smsreq->message);
+            $smsReq->help();
             break;
 
         default:
-            if (!$configuration['send-terms'] or $smsreq->message_words[0] == "agree")
-            {
-                error_log("SMS: Creating new account for $smsreq->sender->text");
-                $user = new user();
-                $user->identifier = $smsreq->sender->text;
-                $user->enroll();
-            } else
-            {
-                $sms->terms();
-                error_log("SMS: Initial request, sending terms to $smsreq->sender->text");
-            }
+            $smsReq->other();
             break;
 
     }

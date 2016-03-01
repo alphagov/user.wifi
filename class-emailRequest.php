@@ -8,13 +8,7 @@ class emailRequest
     public $emailBody;
     public $emailSubject;
 
-    function __construct()
-    {
-        setEmailFrom($_REQUEST['sender']);
-        setEmailTo($_REQUEST['recipient']);
-        setEmailSubject($_REQUEST['subject']);
-        setEmailBody($_REQUEST['body-plain']);
-    }
+    
 
     public function enroll()
     {
@@ -129,22 +123,22 @@ class emailRequest
         return (preg_match($config->values['authorised-domains'], $this->emailFrom));
     }
 
-    private function setEmailSubject($subject)
+    public function setEmailSubject($subject)
     {
         $this->emailSubject = $subject;
     }
-    private function setEmailBody($body)
+    public function setEmailBody($body)
     {
         $this->emailBody = strip_tags(strtolower($body));
     }
 
-    private function setEmailTo($to)
+    public function setEmailTo($to)
     {
         $this->emailTo = $to;
         $this->emailToCMD = strtolower(trim(strtok(emailTo, "@")));
     }
 
-    private function setEmailFrom($from)
+    public function setEmailFrom($from)
     {
         $this->emailFrom = new identifier($from);
     }
