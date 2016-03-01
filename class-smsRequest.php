@@ -26,7 +26,7 @@ class smsRequest
 
     public function security()
     {
-        error_log("SMS: Security info request from $this->sender->text");
+        error_log("SMS: Security info request from ".$this->sender->text);
         $sms = new smsResponse;
         $sms->to = $this->sender->text;
         $sms->set_reply();
@@ -35,7 +35,7 @@ class smsRequest
     }
     public function help()
     {
-        error_log("SMS: Sending help information to $this->sender->text");
+        error_log("SMS: Sending help information to ".$this->sender->text);
         $sms = new smsResponse;
         $sms->to = $this->sender->text;
         $sms->set_reply();
@@ -43,7 +43,7 @@ class smsRequest
     }
     public function newPassword()
     {
-        error_log("SMS: Creating new password for $this->sender->text");
+        error_log("SMS: Creating new password for ".$this->sender->text);
         $user = new user();
         $user->identifier = $this->sender->text;
         $user->enroll(true);
@@ -55,7 +55,7 @@ class smsRequest
 
         if (!$config->values['send-terms'] or $this->messageWords[0] == "agree")
         {
-            error_log("SMS: Creating new account for $this->sender->text");
+            error_log("SMS: Creating new account for ".$this->sender->text);
             $user = new user();
             $user->identifier = $this->sender->text;
             $user->enroll();
@@ -65,7 +65,7 @@ class smsRequest
             $sms->to = $this->sender->text;
             $sms->set_reply();
             $sms->terms();
-            error_log("SMS: Initial request, sending terms to $this->sender->text");
+            error_log("SMS: Initial request, sending terms to ".$this->sender->text);
         }
     }
 
