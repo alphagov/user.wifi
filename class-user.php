@@ -28,7 +28,7 @@ class user
     {
         if ($this->identifier->validMobile)
         {
-            $sms = new sms_response();
+            $sms = new smsResponse();
             $sms->setReply();
             $sms->to = $this->identifier->text;
             $sms->enroll($this);
