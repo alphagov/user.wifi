@@ -1,6 +1,6 @@
 <?php
 
-class sms_request
+class smsRequest
 {
     public $sender;
     public $message;
@@ -8,7 +8,7 @@ class sms_request
 
     public function __construct()
     {
-        global $configuration;
+        $config = config::getInstance();
         if (isset($_REQUEST['source']))
             $this->sender = new identifier($_REQUEST['source']);
         else
@@ -23,7 +23,7 @@ class sms_request
         // remove whitespace and convert to lower case
         $this->message = strtolower(trim($this->message));
         // remove any instances of wifi from the message
-        $this->message = str_replace($configuration['strip-keyword'], "", $this->message);
+        $this->message = str_replace($config->values['strip-keyword'], "", $this->message);
 
         $this->message_words = explode(' ', $this->message);
 

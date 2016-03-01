@@ -1,15 +1,10 @@
 <?php
 
-require ("../common.php");
-// Load the configuration file into a global variable
-loadconfiguration();
-// Connect to the database
-db_connect();
-$smsreq = new sms_request();
+$smsreq = new smsRequest();
 
 if ($smsreq->sender->valid_mobile)
 {
-    $sms = new sms_response;
+    $sms = new smsResponse;
     $sms->to = $smsreq->sender->text;
     $sms->set_reply();
 

@@ -5,7 +5,7 @@ require ("../common.php");
 loadconfiguration();
 // Connect to the database
 db_connect();
-$emailreq = new email_request();
+$emailreq = new emailRequest();
 switch ($emailreq->emailToCMD) {
     case "enroll":
         $emailreq->enroll();

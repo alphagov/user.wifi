@@ -1,6 +1,6 @@
 <?php
 
-class email_request
+class emailRequest
 {
     public $emailFrom;
     public $emailTo;
@@ -10,16 +10,16 @@ class email_request
 
     public function __construct()
     {
-        set_emailFrom();
-        set_emailTo();
-        set_emailSubject();
-        set_emailBody();
+        setEmailFrom();
+        setEmailTo();
+        setEmailSubject();
+        setEmailBody();
     }
 
     public function enroll()
     {
         // Self enrollment request
-        if ($this->fromauthdomain())
+        if ($this->fromAuthDomain())
         {
             error_log("EMAIL: Self Enrolling : $this->emailFrom");
             $user = new user;
@@ -33,12 +33,12 @@ class email_request
 
     public function sponsor()
     {
-        if ($this->fromauthdomain())
+        if ($this->fromAuthDomain())
         {
             error_log("EMAIL: Sponsored request from: $this->emailFrom");
             $enrollcount = 0;
 
-            foreach ($this->contactlist() as $identifier)
+            foreach ($this->contactList() as $identifier)
             {
                 $enrollcount++;
                 $user = new user;
@@ -46,7 +46,7 @@ class email_request
                 $user->sponsor = $this->emailFrom;
                 $user->enroll();
             }
-            $email = new email_response();
+            $email = new emailResponse();
             $email->to = $this->emailFrom;
             $email->sponsor($enrollcount);
             $email->send();
@@ -56,33 +56,35 @@ class email_request
         }
     }
 
-    public function newsite()
+    public function newSite()
     {
-        global $dblink;
-        $org_admin = new org_admin($this->emailFrom);
+        $db = DB::getInstance();
+        $dblink = $db->getConnection();
+        
+        $orgAdmin = new orgAdmin($this->emailFrom);
         if ($org_admin->authorised)
         {
             error_log("EMAIL: processing new site request from : $emailFrom");
             // Add the new site & IP addresses
             $site = new site();
-            $site->org_id = $org_admin->org_id;
+            $site->org_id = $orgAdmin->org_id;
             $site->name = $this->emailSubject;
-            $site->set_radkey();
-            $site->add_ips($this->iplist());
+            $site->setRADKey();
+            $site->addIPs($this->iplist());
             // Create the site information pdf
             $pdf = new pdf;
-            $pdf->populate_newsite($site);
-            $pdf->generatepdf($site->get_ip_list());
+            $pdf->populateNewsite($site);
+            $pdf->generatePDF($site->getIPList());
             // Create email response and attach the pdf
-            $email = new email_response;
+            $email = new emailResponse;
             $email->to = $this->emailFrom;
-            $email->newsite();
+            $email->newSite();
             $email->filename = $pdf->filename;
             $email->send();
             // Create sms response for the code
-            $sms = new sms_response;
-            $sms->to=$org_admin->mobile;
-            $sms->
+            $sms = new smsResponse;
+            $sms->to=$orgAdmin->mobile;
+            
 
 
         } else
@@ -92,7 +94,7 @@ class email_request
     }
 
   
-    private function contactlist()
+    private function contactList()
     {
 
         foreach (preg_split("/((\r?\n)|(\r\n?))/", $this->emailBody) as $contact)
@@ -100,49 +102,49 @@ class email_request
             $contact = trim($contact);
             if (filter_var($contact, FILTER_VALIDATE_EMAIL) or isvalidmobilenumber($contact))
             {
-                $list[] = $ip_addr;
+                $list[] = $contact;
             }
         }
         return $list;
     }
 
-    private function iplist()
+    private function IpList()
     {
 
-        foreach (preg_split("/((\r?\n)|(\r\n?))/", $this->emailBody) as $ip_addr)
+        foreach (preg_split("/((\r?\n)|(\r\n?))/", $this->emailBody) as $ipAddr)
         {
-            $ip_addr = trim($ip_addr);
-            if (filter_var($ip_addr, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 |
+            $ipAddr = trim($ipAddr);
+            if (filter_var($ipAddr, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 |
                 FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE))
             {
-                $list[] = $ip_addr;
+                $list[] = $ipAddr;
             }
         }
         return $list;
     }
 
-    public function fromauthdomain()
+    public function fromAuthDomain()
     {
-        global $configuration;
-        return (preg_match($configuration['authorised-domains'], $this->emailFrom));
+        $config = config::getInstance();
+        return (preg_match($config->values['authorised-domains'], $this->emailFrom));
     }
 
-    private function set_emailSubject()
+    private function setEmailSubject()
     {
         $this->emailSubject = $_REQUEST['subject'];
     }
-    private function set_emailBody()
+    private function setEmailBody()
     {
         $this->emailBody = strip_tags(strtolower($_REQUEST['body-plain']));
     }
 
-    private function set_emailTo()
+    private function setEmailTo()
     {
         $this->emailTo = $_REQUEST['recipient'];
         $this->emailToCMD = strtolower(trim(strtok(emailTo, "@")));
     }
 
-    private function set_emailFrom()
+    private function setEmailFrom()
     {
         $this->emailFrom = new identifier($_REQUEST['sender']);
     }

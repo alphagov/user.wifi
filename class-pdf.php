@@ -1,7 +1,7 @@
 <?php
 
 
-class pdf
+class PDF
 {
     public $filename;
     public $subject;
@@ -9,31 +9,33 @@ class pdf
     public $landscape;
     public $password;
 
-    public function populate_newsite($site)
+    public function populateNewsite($site)
     {
-        $this->message = file_get_contents($configuration['pdf-contents']['newsite-file']);
+         $config = config::getInstance();
+        $this->message = file_get_contents($config->values['pdf-contents']['newsite-file']);
         $this->message = str_replace("%ORG%", $site->org_name, $this->message);
         $this->message = str_replace("%RADKEY%", $site->radkey, $this->message);
         $this->message = str_replace("%DESCRIPTION%", $site->name, $this->message);
         $this->filename = $site->org_name . "-" . $site->name;
         $this->filename = preg_replace("/[^a-zA-Z0-9]/", "_", $this->filename);
         $this->filename .= ".pdf";
-        $this->filename = $configuration['pdftemp-path'] . $this->filename;
-        $this->subject = $configuration['email-messages']['newsite-subject'];
+        $this->filename = $config->values['pdftemp-path'] . $this->filename;
+        $this->subject = $config->values['email-messages']['newsite-subject'];
     }
 
-    public function populate_logrequest($org_admin)
+    public function populateLogrequest($org_admin)
     {
+         $config = config::getInstance();
         $this->filename = date("Ymd") . $org_admin->org_name . "-" . $org_admin->name .
             "-Logs";
         $this->filename = preg_replace("/[^a-zA-Z0-9]/", "_", $this->filename);
         $this->filename .= ".pdf";
-        $this->filename = $configuration['pdftemp-path'] . $this->filename;
+        $this->filename = $config->values['pdftemp-path'] . $this->filename;
         $this->subject = "Generated on: " . date("d-m-Y") . " Requestor: " . $org_admin->
             name;
     }
 
-    public function generatepdf($handle = null)
+    public function generatePDF($handle = null)
     {
         // Generate PDF with the site details
         // Encrypts the file then returns the password
@@ -53,15 +55,15 @@ class pdf
 
         foreach (preg_split("/((\r?\n)|(\r\n?))/", $message) as $line) {
             if ($line == "%TABLE%")
-                $this->pdfsqltable($pdf, $handle);
+                $this->PdfSqlTable($pdf, $handle);
             else
                 $pdf->Write(5, $line . "\n");
         }
         $pdf->Output($un_filename);
-        $this->encryptpdf($un_filename);
+        $this->encryptPdf($un_filename);
     }
 
-    private function encryptpdf($filename)
+    private function encryptPdf($filename)
     {
         $self->password = generate_random_pdf_password();
         exec("/usr/bin/qpdf --encrypt " . $self->password . " - 256 -- " . $filename .
@@ -69,7 +71,7 @@ class pdf
         unlink($filename);
     }
 
-    private function pdfsqltable($pdf, $handle)
+    private function PdfSqlTable($pdf, $handle)
     {
         global $dblink;
         $handle->execute();
@@ -112,11 +114,11 @@ class pdf
         }
     }
 
-    private function generate_random_pdf_password()
+    private function GenerateRandomPdfPassword()
     {
-        global $configuration;
-        $length = $configuration['pdf-password']['length'];
-        $pattern = $configuration['pdf-password']['regex'];
+         $config = config::getInstance();
+        $length = $config->values['pdf-password']['length'];
+        $pattern = $config->values['pdf-password']['regex'];
         $pass = preg_replace($pattern, "", base64_encode(strong_random_bytes($length * 4)));
         return substr($pass, 0, $length);
     }
