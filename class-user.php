@@ -10,33 +10,33 @@ class user
     public function loaduser($login)
     {
         $this->login = $login;
-        $this->set_identifier();
+        $this->setIdentifier();
     }
 
     public function enroll($force = false)
     {
-        $this->set_username();
-        $this->set_wifi_password();
+        $this->setUsername();
+        $this->setWifiPassword();
         if ($force)
-            $this->newpassword();
-        $this->radius_db_write();
-        $this->send_credentials();
+            $this->newPassword();
+        $this->radiusDbWrite();
+        $this->sendCredentials();
     }
 
 
-    private function send_credentials()
+    private function sendCredentials()
     {
-        if ($this->identifier->valid_mobile)
+        if ($this->identifier->validMobile)
         {
             $sms = new sms_response();
-            $sms->set_reply();
+            $sms->setReply();
             $sms->to = $this->identifier->text;
             $sms->enroll($this);
             $sms->send();
         } else
-            if ($this->identifier->valid_email)
+            if ($this->identifier->validEmail)
             {
-                $email = new email_response();
+                $email = new emailResponse();
                 $email->to = $this->identifier->text;
                 $email->enroll($this);
                 $email->send();
@@ -45,12 +45,11 @@ class user
 
     }
 
-    private function radius_db_write()
+    private function radiusDbWrite()
     {
         $db = DB::getInstance();
         $dblink = $db->getConnection();
         // Delete any old accounts for that username
-        $lc_wifilogin = strtolower($this->login);
         $handle = $dblink->prepare('delete from radcheck where username=?');
         $handle->bindValue(1, $this->login, PDO::PARAM_STR);
         $handle->execute();
@@ -68,13 +67,13 @@ class user
         $handle->execute();
     }
 
-    public function newpassword()
+    public function newPassword()
     {
         # This will force the generation of a new password for the user
-        $this->set_wifi_password(true);
+        $this->setWifiPassword(true);
     }
 
-    private function set_wifi_password($force = false)
+    private function setWifiPassword($force = false)
     {
         # This function looks for an existing password entry for this username
         # if it finds it and force is false then it will return the same password
@@ -94,11 +93,11 @@ class user
             $this->password = $row['value'];
         } else
         {
-            $this->password = generate_random_wifi_password();
+            $this->password = generateRandomWifiPassword();
         }
     }
 
-    private function username_is_unique($uname)
+    private function UsernameIsUnique($uname)
     {
         $db = DB::getInstance();
         $dblink = $db->getConnection();
@@ -112,7 +111,7 @@ class user
             return false;
     }
 
-    private function set_username()
+    private function setUsername()
     {
         $db = DB::getInstance();
         $dblink = $db->getConnection();
@@ -125,17 +124,17 @@ class user
             $username = $row['username'];
         } else
         {
-            $username = $this->generate_random_username();
+            $username = $this->generateRandomUsername();
 
-            while (!$this->username_is_unique($username))
+            while (!$this->usernameIsUnique($username))
             {
-                $username = $this->generate_random_username();
+                $username = $this->generateRandomUsername();
             }
         }
         $this->login = $username;
     }
 
-    private function get_identifier()
+    private function getIdentifier()
     {
         $db = DB::getInstance();
         $dblink = $db->getConnection();
