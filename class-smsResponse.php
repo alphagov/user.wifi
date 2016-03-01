@@ -54,7 +54,7 @@ class smsResponse
             '&' . $config->values[$confIndex]['message-field'] . '=' . urlencode($this->
             message) . '&' . $config->values[$confIndex]['from-field'] . '=' . $this->from .
             '&' . $config->values[$confIndex]['to-field'] . '=' . $this->to;
-        print "<PRE>" . $data . "</PRE>";
+        print "<PRE>" . $data . "<BR>".$config->values[$confIndex]['url']. "</PRE>";
         $ch = curl_init($config->values[$confIndex]['url']);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
