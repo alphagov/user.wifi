@@ -21,7 +21,7 @@ class emailRequest
             $user->enroll();
         } else
         {
-            error_log("EMAIL: Ignoring self enrollment from : $emailFrom");
+            error_log("EMAIL: Ignoring self enrollment from : $this->emailFrom");
         }
     }
 
@@ -120,7 +120,7 @@ class emailRequest
     public function fromAuthDomain()
     {
         $config = config::getInstance();
-        return (preg_match($config->values['authorised-domains'], $this->emailFrom));
+        return (preg_match($config->values['authorised-domains'], $this->emailFrom->text));
     }
 
     public function setEmailSubject($subject)
