@@ -93,7 +93,7 @@ class user
             $this->password = $row['value'];
         } else
         {
-            $this->password = generateRandomWifiPassword();
+            $this->password = $this->generateRandomWifiPassword();
         }
     }
 
