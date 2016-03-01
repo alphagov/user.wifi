@@ -3,26 +3,26 @@
 class identifier
 {
     public $text;
-    public $valid_email;
-    public $valid_mobile;
+    public $validEmail;
+    public $validMobile;
 
     public function __constructor($identifier)
     {
-        if ($this->isvalidmobilenumber($identifier))
+        if ($this->isValidMobileNumber($identifier))
         {
-            $this->valid_mobile = true;
-            $this->text = fixupmobilenumber($identifier);
+            $this->validMobile = true;
+            $this->text = fixUpMobileNumber($identifier);
 
         } else
-            if ($this->isvalidemailaddress($identifier))
+            if ($this->isValidEmailAddress($identifier))
             {
-                $this->valid_email = true;
-                $this->text = fixupemailaddress($identifier);
+                $this->validEmail = true;
+                $this->text = fixUpEmailAddress($identifier);
             }
 
     }
 
-    private function isvalidmobilenumber($identifier)
+    private function isValidMobileNumber($identifier)
     {
         $pattern = "/^\+?\d{1,15}$/Ui";
 
@@ -30,12 +30,12 @@ class identifier
 
     }
 
-    private function isvalidemailaddress($identifier)
+    private function isValidEmailAddress($identifier)
     {
         return filter_var($identifier, FILTER_VALIDATE_EMAIL);
     }
 
-    private function fixupmobilenumber($sender)
+    private function fixUpMobileNumber($sender)
     {
         // dont mangle the short code
         if (strlen($sender) > 6)
@@ -51,7 +51,7 @@ class identifier
 
     private function fixupemailaddress($address)
     {
-        preg_match_all('/[A-Za-z0-9\_\+\.\'-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]+/', $emailFrom,
+        preg_match_all('/[A-Za-z0-9\_\+\.\'-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]+/', $address,
             $matches);
         $this->emailFrom = strtolower($matches[0][0]);
     }

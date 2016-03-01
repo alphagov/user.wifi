@@ -4,7 +4,7 @@ class smsRequest
 {
     public $sender;
     public $message;
-    public $message_words;
+    public $messageWords;
 
 
     public function setSender($sender)
@@ -20,7 +20,7 @@ class smsRequest
         $this->message = str_replace($config->values['strip-keyword'], "", $this->
             message);
 
-        $this->message_words = explode(' ', $this->message);
+        $this->messageWords = explode(' ', $this->message);
 
     }
 

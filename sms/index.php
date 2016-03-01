@@ -15,10 +15,10 @@ else
     $smsReq->setMessage($_REQUEST["content"]);
 
 
-if ($smsReq->sender->valid_mobile)
+if ($smsReq->sender->validMobile)
 {
 
-    switch ($smsreq->message_words[0])
+    switch ($smsreq->messageWords[0])
     {
         case "security":
             
