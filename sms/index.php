@@ -18,11 +18,11 @@ else
 if ($smsReq->sender->validMobile)
 {
 
-    switch ($smsreq->messageWords[0])
+    switch ($smsReq->messageWords[0])
     {
         case "security":
 
-            $smsreq->security();
+            $smsReq->security();
             break;
 
         case "new":
