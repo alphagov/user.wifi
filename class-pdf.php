@@ -1,6 +1,5 @@
 <?php
 
-
 class PDF
 {
     public $filename;
@@ -11,7 +10,7 @@ class PDF
 
     public function populateNewsite($site)
     {
-         $config = config::getInstance();
+        $config = config::getInstance();
         $this->message = file_get_contents($config->values['pdf-contents']['newsite-file']);
         $this->message = str_replace("%ORG%", $site->org_name, $this->message);
         $this->message = str_replace("%RADKEY%", $site->radkey, $this->message);
@@ -25,7 +24,7 @@ class PDF
 
     public function populateLogrequest($org_admin)
     {
-         $config = config::getInstance();
+        $config = config::getInstance();
         $this->filename = date("Ymd") . $org_admin->org_name . "-" . $org_admin->name .
             "-Logs";
         $this->filename = preg_replace("/[^a-zA-Z0-9]/", "_", $this->filename);
@@ -53,7 +52,8 @@ class PDF
         $pdf->SetFont('Arial', '', 12);
         // Write Body
 
-        foreach (preg_split("/((\r?\n)|(\r\n?))/", $message) as $line) {
+        foreach (preg_split("/((\r?\n)|(\r\n?))/", $message) as $line)
+        {
             if ($line == "%TABLE%")
                 $this->PdfSqlTable($pdf, $handle);
             else
@@ -92,10 +92,12 @@ class PDF
             0,
             0);
 
-        foreach ($result as $row[$totalrows]) {
+        foreach ($result as $row[$totalrows])
+        {
             $column = 0;
 
-            while (isset($row[$totalrows][$column])) {
+            while (isset($row[$totalrows][$column]))
+            {
                 $collength = strlen($row[$totalrows][$column]);
                 if ($w[$column] < $collength)
                     $w[$column] = $collength * 4;
@@ -103,10 +105,12 @@ class PDF
             }
             $totalrows++;
         }
-        for ($rownum = 0; $rownum <= $totalrows; $rownum++) {
+        for ($rownum = 0; $rownum <= $totalrows; $rownum++)
+        {
             $column = 0;
 
-            while (isset($row[$rownum][$column])) {
+            while (isset($row[$rownum][$column]))
+            {
                 $pdf->Cell($w[$column], 6, $row[$rownum][$column], 1, 0, 'C');
                 $column++;
             }
@@ -116,12 +120,29 @@ class PDF
 
     private function GenerateRandomPdfPassword()
     {
-         $config = config::getInstance();
+        $config = config::getInstance();
         $length = $config->values['pdf-password']['length'];
         $pattern = $config->values['pdf-password']['regex'];
-        $pass = preg_replace($pattern, "", base64_encode(strong_random_bytes($length * 4)));
+        $pass = preg_replace($pattern, "", base64_encode($this->strongRandomBytes($length *
+            4)));
         return substr($pass, 0, $length);
     }
+
+    private function strong_random_bytes($length)
+    {
+        $strong = false; // Flag for whether a strong algorithm was used
+        $bytes = openssl_random_pseudo_bytes($length, $strong);
+
+        if (!$strong)
+        {
+            // System did not use a cryptographically strong algorithm
+            throw new Exception('Strong algorithm not available for PRNG.');
+        }
+
+        return $bytes;
+    }
+
+
 }
 
 ?>
