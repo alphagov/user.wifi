@@ -3,6 +3,7 @@
 require ("../common.php");
 
 $emailreq = new emailRequest();
+error_log("EMAIL: From : ".$_REQUEST['sender']);
 $emailreq->setEmailFrom($_REQUEST['sender']);
 $emailreq->setEmailTo($_REQUEST['recipient']);
 $emailreq->setEmailSubject($_REQUEST['subject']);
