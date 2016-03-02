@@ -36,8 +36,8 @@ class emailResponse
         $this->subject = $config->values['email-messages']['enrollment-subject'];
         $this->message = file_get_contents($config->values['email-messages']['enrollment-file']);
         $this->message = str_replace("%LOGIN%", $user->login, $this->message);
-        $this->message = str_replace("%PASS%", $user->passsword, $this->message);
-        $this->message = str_replace("%SPONSOR%", $user->sponsor, $this->message);
+        $this->message = str_replace("%PASS%", $user->password, $this->message);
+        $this->message = str_replace("%SPONSOR%", $user->sponsor->text, $this->message);
         $this->message = str_replace("%THUMBPRINT%", $config->values['radcert-thumbprint'],
             $this->message);
     }
