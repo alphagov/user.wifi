@@ -54,7 +54,7 @@ class identifier
     {
         preg_match_all('/[A-Za-z0-9\_\+\.\'-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]+/', $address,
             $matches);
-        $this->emailFrom = strtolower($matches[0][0]);
+        return strtolower($matches[0][0]);
     }
 
 
