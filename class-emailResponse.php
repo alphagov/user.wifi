@@ -40,6 +40,7 @@ class emailResponse
         $this->message = str_replace("%SPONSOR%", $user->sponsor->text, $this->message);
         $this->message = str_replace("%THUMBPRINT%", $config->values['radcert-thumbprint'],
             $this->message);
+        $this->send();
     }
 
     public function logrequest()

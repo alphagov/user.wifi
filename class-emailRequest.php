@@ -20,6 +20,7 @@ class emailRequest
             $user->identifier = $this->emailFrom;
             $user->sponsor = $this->emailFrom;
             $user->enroll();
+        
         } else
         {
             error_log("EMAIL: Ignoring self enrollment from : ".$this->emailFrom->text);
