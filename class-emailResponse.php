@@ -17,7 +17,7 @@ class emailResponse
 
     public function sponsor($count)
     {
-         $config = config::getInstance();
+        $config = config::getInstance();
         $this->subject = $config->values['email-messages']['sponsor-subject'];
         $this->message = file_get_contents($config->values['email-messages']['sponsor-file']);
         $this->message = str_replace("%X%", $count, $this->message);
@@ -25,14 +25,14 @@ class emailResponse
 
     public function newsite()
     {
-         $config = config::getInstance();
+        $config = config::getInstance();
         $this->subject = $config->values['email-messages']['newsite-subject'];
         $this->message = file_get_contents($config->values['email-messages']['newsite-file']);
     }
 
     public function enroll($user)
     {
-         $config = config::getInstance();
+        $config = config::getInstance();
         $this->subject = $config->values['email-messages']['enrollment-subject'];
         $this->message = file_get_contents($config->values['email-messages']['enrollment-file']);
         $this->message = str_replace("%LOGIN%", $user->login, $this->message);
@@ -45,14 +45,14 @@ class emailResponse
 
     public function logrequest()
     {
-         $config = config::getInstance();
+        $config = config::getInstance();
         $subject = $config->values['email-messages']['logrequest-subject'];
         $message = file_get_contents($config->values['email-messages']['logrequest-file']);
     }
 
     public function send()
     {
-         $config = config::getInstance();
+        $config = config::getInstance();
         $provider = 1;
         $success = false;
 
@@ -62,6 +62,7 @@ class emailResponse
             $provider++;
         }
     }
+
 
     function tryEmailProvider($provider)
     {
@@ -77,8 +78,24 @@ class emailResponse
             $data[$config->values[$conf_index]['attachment-field']] = new CURLFile($this->
                 filename);
         }
+        if ($config->values[$conf_index]['json'])
+        {
+            $data = json_encode($data);
+        }
         $ch = curl_init($config->values[$conf_index]['url']);
-        curl_setopt($ch, CURLOPT_USERPWD, $config->values[$conf_index]['user'] . ":" . $config->values[$conf_index]['key']);
+
+        if (isset($config->values[$conf_index]['key-header']))
+        {
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array($config->values[$conf_index]['key-header'] .
+                    ': ' . $config->values[$conf_index]['key']));
+        }
+        if ($config->values[$conf_index]['http-auth']) 
+        {
+        curl_setopt($ch, CURLOPT_USERPWD, $config->values[$conf_index]['user'] . ":" . $config->
+            values[$conf_index]['key']);    
+            
+        }
+        
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
