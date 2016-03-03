@@ -11,8 +11,8 @@ if (isset($_REQUEST['json']))
     error_log("EMAIL: From : " . $data->from);
     $emailreq->setEmailFrom($data->from);
     $emailreq->setEmailTo($data->to);
-    $emailreq->setEmailSubject($data->Subject);
-    $emailreq->setEmailBody($data->TextBody);
+    $emailreq->setEmailSubject($data->subject);
+    $emailreq->setEmailBody($_REQUEST['body-plain']);
 }
 
 if (isset($_REQUEST['sender']))
