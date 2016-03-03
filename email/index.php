@@ -7,7 +7,7 @@ $emailreq = new emailRequest();
 if (preg_match("/^Postmark/",$_SERVER['HTTP_USER_AGENT']))
 {
     $json = file_get_contents('php://input');
-    $data = json_decode(stripslashes($json));
+    $data = json_decode($json);
     // Support for Postmark
     error_log("Postmark EMAIL: From : " . $data->From);
     $emailreq->setEmailFrom($data->From);
