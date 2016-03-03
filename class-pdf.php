@@ -8,7 +8,7 @@ class PDF
     public $landscape;
     public $password;
 
-    public function populateNewsite($site)
+    public function populateNewSite($site)
     {
         $config = config::getInstance();
         $this->message = file_get_contents($config->values['pdf-contents']['newsite-file']);
@@ -19,7 +19,7 @@ class PDF
         $this->filename = preg_replace("/[^a-zA-Z0-9]/", "_", $this->filename);
         $this->filename .= ".pdf";
         $this->filename = $config->values['pdftemp-path'] . $this->filename;
-        $this->subject = $config->values['email-messages']['newsite-subject'];
+        $this->subject = "New Site";
     }
 
     public function populateLogrequest($org_admin)

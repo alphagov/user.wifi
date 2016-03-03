@@ -70,7 +70,7 @@ class emailRequest
             $site->addIPs($this->ipList());
             // Create the site information pdf
             $pdf = new pdf;
-            $pdf->populateNewsite($site);
+            $pdf->populateNewSite($site);
             $pdf->generatePDF($site->getIPList());
             // Create email response and attach the pdf
             $email = new emailResponse;
