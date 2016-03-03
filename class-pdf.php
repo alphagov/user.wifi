@@ -116,7 +116,7 @@ class PDF
         }
     }
 
-    private function GenerateRandomPdfPassword()
+    private function generateRandomPdfPassword()
     {
         $config = config::getInstance();
         $length = $config->values['pdf-password']['length'];
