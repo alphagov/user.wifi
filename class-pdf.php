@@ -65,15 +65,15 @@ class PDF
 
     private function encryptPdf($filename)
     {
-        $this->password = $this->generateRandomPdfPassword();
-        exec("/usr/bin/qpdf --encrypt " . $self->password . " - 256 -- " . $filename .
+        $this->setRandomPdfPassword();
+        exec("/usr/bin/qpdf --encrypt " . $this->password . " - 256 -- " . $filename .
             " " . $self->filename);
         unlink($filename);
     }
 
     private function PdfSqlTable($pdf, $table)
     {
-       
+
         $totalrows = 0;
         $w = array(
             0,
@@ -116,14 +116,14 @@ class PDF
         }
     }
 
-    private function generateRandomPdfPassword()
+    private function setRandomPdfPassword()
     {
         $config = config::getInstance();
         $length = $config->values['pdf-password']['length'];
         $pattern = $config->values['pdf-password']['regex'];
         $pass = preg_replace($pattern, "", base64_encode($this->strongRandomBytes($length *
             4)));
-        return substr($pass, 0, $length);
+        $this->password = substr($pass, 0, $length);
     }
 
     private function strongRandomBytes($length)
