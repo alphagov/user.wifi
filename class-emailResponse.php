@@ -58,12 +58,12 @@ class emailResponse
 
         while ($success == false and isset($config->values['email-provider' . $provider]))
         {
-            $success = emailprovider($provider);
+            $success = $this->tryEmailProvider($provider);
             $provider++;
         }
     }
 
-    function emailprovider($provider)
+    function tryEmailProvider($provider)
     {
         $config = config::getInstance();
         $conf_index = 'email-provider' . $provider;
