@@ -43,7 +43,7 @@ class emailRequest
                 $user->enroll();
             }
             $email = new emailResponse();
-            $email->to = $this->emailFrom;
+            $email->to = $this->emailFrom->text;
             $email->sponsor($enrollcount);
             $email->send();
         } else
@@ -57,7 +57,7 @@ class emailRequest
         $db = DB::getInstance();
         $dblink = $db->getConnection();
         
-        $orgAdmin = new orgAdmin($this->emailFrom);
+        $orgAdmin = new orgAdmin($this->emailFrom->text);
         if ($org_admin->authorised)
         {
             error_log("EMAIL: processing new site request from : ".$this->emailFrom->text);
@@ -73,7 +73,7 @@ class emailRequest
             $pdf->generatePDF($site->getIPList());
             // Create email response and attach the pdf
             $email = new emailResponse;
-            $email->to = $this->emailFrom;
+            $email->to = $org_admin->email;
             $email->newSite();
             $email->filename = $pdf->filename;
             $email->send();
