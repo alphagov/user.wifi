@@ -51,6 +51,44 @@ class emailRequest
         }
     }
 
+    public function logRequest()
+    {
+
+
+        $orgAdmin = new orgAdmin($this->emailFrom->text);
+        if ($orgAdmin->authorised)
+        {
+            error_log("EMAIL: processing log request from : " . $this->emailFrom->text);
+            $report = new report;
+            $report->$orgAdmin = $orgAdmin;
+
+            switch ($this->emailSubject)
+            {
+                default:
+                    $report->byOrgId();
+                    break;
+            }
+
+
+            // Create report pdf
+            $pdf = new pdf;
+            $pdf->populateLogRequest($orgAdmin);
+            $pdf->landscape = true;
+            $pdf->generatePDF($report->result);
+            // Create email response and attach the pdf
+            $email = new emailResponse;
+            $email->to = $orgAdmin->email;
+            $email->logrequest();
+            $email->filename = $pdf->filepath;
+            $email->send();
+            // Create sms response for the code
+            $sms = new smsResponse;
+            $sms->to = $orgAdmin->mobile;
+            $sms->logrequest($pdf);
+
+        }
+    }
+
     public function newSite()
     {
         $db = DB::getInstance();
