@@ -58,7 +58,7 @@ class emailRequest
         $dblink = $db->getConnection();
         
         $orgAdmin = new orgAdmin($this->emailFrom->text);
-        if ($org_admin->authorised)
+        if ($orgAdmin->authorised)
         {
             error_log("EMAIL: processing new site request from : ".$this->emailFrom->text);
             // Add the new site & IP addresses
@@ -73,7 +73,7 @@ class emailRequest
             $pdf->generatePDF($site->getIPList());
             // Create email response and attach the pdf
             $email = new emailResponse;
-            $email->to = $org_admin->email;
+            $email->to = $orgAdmin->email;
             $email->newSite();
             $email->filename = $pdf->filename;
             $email->send();
