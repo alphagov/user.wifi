@@ -39,7 +39,7 @@ class PDF
         // Generate PDF with the site details
         // Encrypts the file then returns the password
         $un_filename = $this->filename . "-unencrypted";
-        if ($self->landscape)
+        if ($this->landscape)
             $pdf = new FPDF("L");
         else
             $pdf = new FPDF();
