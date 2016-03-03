@@ -67,7 +67,7 @@ class PDF
     {
         $this->setRandomPdfPassword();
         exec("/usr/bin/qpdf --encrypt " . $this->password . " - 256 -- " . $filename .
-            " " . $self->filename);
+            " " . $this->filename);
         unlink($filename);
     }
 
