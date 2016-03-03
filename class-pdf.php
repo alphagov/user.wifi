@@ -65,7 +65,7 @@ class PDF
 
     private function encryptPdf($filename)
     {
-        $self->password = generate_random_pdf_password();
+        $self->password = generateRandomPdfPassword();
         exec("/usr/bin/qpdf --encrypt " . $self->password . " - 256 -- " . $filename .
             " " . $self->filename);
         unlink($filename);
@@ -126,7 +126,7 @@ class PDF
         return substr($pass, 0, $length);
     }
 
-    private function strong_random_bytes($length)
+    private function strongRandomBytes($length)
     {
         $strong = false; // Flag for whether a strong algorithm was used
         $bytes = openssl_random_pseudo_bytes($length, $strong);
