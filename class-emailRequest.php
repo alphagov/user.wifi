@@ -60,7 +60,7 @@ class emailRequest
         {
             error_log("EMAIL: processing log request from : " . $this->emailFrom->text);
             $report = new report;
-            $report->$orgAdmin = $orgAdmin;
+            $report->orgAdmin = $orgAdmin;
 
             switch ($this->emailSubject)
             {
