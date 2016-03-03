@@ -4,9 +4,10 @@ require ("../common.php");
 
 $emailreq = new emailRequest();
 
-if (isset($_REQUEST['json']))
+if (preg_match($_SERVER['HTTP_USER_AGENT'],"Postmark"))
 {
-    $data = json_decode(stripslashes($_REQUEST['json']), true);
+    $json = file_get_contents('php://input');
+    $data = json_decode(stripslashes($json), true);
     // Support for Postmark
     error_log("EMAIL: From : " . $data->from);
     $emailreq->setEmailFrom($data->from);
