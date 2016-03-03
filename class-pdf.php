@@ -34,7 +34,7 @@ class PDF
             name;
     }
 
-    public function generatePDF($handle = null)
+    public function generatePDF($table = null)
     {
         // Generate PDF with the site details
         // Encrypts the file then returns the password
@@ -55,7 +55,7 @@ class PDF
         foreach (preg_split("/((\r?\n)|(\r\n?))/", $this->message) as $line)
         {
             if ($line == "%TABLE%")
-                $this->PdfSqlTable($pdf, $handle);
+                $this->PdfSqlTable($pdf, $table);
             else
                 $pdf->Write(5, $line . "\n");
         }
@@ -71,11 +71,9 @@ class PDF
         unlink($filename);
     }
 
-    private function PdfSqlTable($pdf, $handle)
+    private function PdfSqlTable($pdf, $table)
     {
-        global $dblink;
-        $handle->execute();
-        $result = $handle->fetchAll(\PDO::FETCH_NUM);
+       
         $totalrows = 0;
         $w = array(
             0,
@@ -92,7 +90,7 @@ class PDF
             0,
             0);
 
-        foreach ($result as $row[$totalrows])
+        foreach ($table as $row[$totalrows])
         {
             $column = 0;
 

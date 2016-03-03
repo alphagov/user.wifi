@@ -71,6 +71,7 @@ class emailRequest
             // Create the site information pdf
             $pdf = new pdf;
             $pdf->populateNewSite($site);
+            
             $pdf->generatePDF($site->getIPList());
             // Create email response and attach the pdf
             $email = new emailResponse;
