@@ -66,7 +66,7 @@ class emailRequest
             $site->org_id = $orgAdmin->org_id;
             $site->name = $this->emailSubject;
             $site->setRADKey();
-            $site->addIPs($this->iplist());
+            $site->addIPs($this->ipList());
             // Create the site information pdf
             $pdf = new pdf;
             $pdf->populateNewsite($site);
@@ -104,7 +104,7 @@ class emailRequest
         return $list;
     }
 
-    private function IpList()
+    private function ipList()
     {
 
         foreach (preg_split("/((\r?\n)|(\r\n?))/", $this->emailBody) as $ipAddr)

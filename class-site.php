@@ -7,7 +7,7 @@ class site
     public $org_id;
 
 
-    public function get_ip_list()
+    public function getIPList()
     {
         $db = DB::getInstance();
         $dblink = $db->getConnection();
@@ -20,7 +20,7 @@ class site
 
 
     }
-    public function add_ips($iplist)
+    public function addIPs($iplist)
     {
         $db = DB::getInstance();
         $dblink = $db->getConnection();
