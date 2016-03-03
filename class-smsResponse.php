@@ -54,7 +54,7 @@ class smsResponse
             '&' . $config->values[$confIndex]['message-field'] . '=' . urlencode($this->
             message) . '&' . $config->values[$confIndex]['from-field'] . '=' . $this->from .
             '&' . $config->values[$confIndex]['to-field'] . '=' . $this->to;
-        print "<PRE>" . $data . "<BR>".$config->values[$confIndex]['url']. "</PRE>";
+        print "<PRE>" . $data . "<BR>" . $config->values[$confIndex]['url'] . "</PRE>";
         $ch = curl_init($config->values[$confIndex]['url']);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
@@ -67,6 +67,27 @@ class smsResponse
         else
             return false;
     }
+
+    public function newsite($pdf)
+    {
+        $config = config::getInstance();
+        $this->message = file_get_contents($config->values['sms-messages']['newsite-file']);
+        $this->message = str_replace("%PASSWORD%", $pdf->password, $this->message);
+        $this->message = str_replace("%FILENAME%", $pdf->filename, $this->message);
+        $this->send();
+
+    }
+    public function logrequest($pdf)
+    {
+        $config = config::getInstance();
+        $this->message = file_get_contents($config->values['sms-messages']['logrequest-file']);
+        $this->message = str_replace("%PASSWORD%", $pdf->password, $this->message);
+        $this->message = str_replace("%FILENAME%", $pdf->filename, $this->message);
+        $this->send();
+
+    }
+
+
     public function enroll($user)
     {
         $config = config::getInstance();
