@@ -52,7 +52,7 @@ class PDF
         $pdf->SetFont('Arial', '', 12);
         // Write Body
 
-        foreach (preg_split("/((\r?\n)|(\r\n?))/", $this->$message) as $line)
+        foreach (preg_split("/((\r?\n)|(\r\n?))/", $this->message) as $line)
         {
             if ($line == "%TABLE%")
                 $this->PdfSqlTable($pdf, $handle);
