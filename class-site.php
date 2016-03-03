@@ -5,6 +5,7 @@ class site
     public $radkey;
     public $name;
     public $org_id;
+    public $org_name;
 
 
     public function getIPList()
@@ -28,9 +29,9 @@ class site
         {
             $handle = $dblink->prepare('insert into nas (nasname, shortname, secret, org_id) VALUES (?,?,?,?)');
             $handle->bindValue(1, $ip_addr, PDO::PARAM_STR);
-            $handle->bindValue(2, $description, PDO::PARAM_STR);
-            $handle->bindValue(3, $radkey, PDO::PARAM_STR);
-            $handle->bindValue(4, $authorised_org_id, PDO::PARAM_INT);
+            $handle->bindValue(2, $this->name, PDO::PARAM_STR);
+            $handle->bindValue(3, $this->radkey, PDO::PARAM_STR);
+            $handle->bindValue(4, $this->org_id, PDO::PARAM_INT);
             try
             {
                 $handle->execute();

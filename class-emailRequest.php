@@ -64,6 +64,7 @@ class emailRequest
             // Add the new site & IP addresses
             $site = new site();
             $site->org_id = $orgAdmin->org_id;
+            $site->org_name = $orgAdmin->org_name;
             $site->name = $this->emailSubject;
             $site->setRADKey();
             $site->addIPs($this->ipList());
