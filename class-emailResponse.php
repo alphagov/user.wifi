@@ -69,8 +69,8 @@ class emailResponse
         $conf_index = 'email-provider' . $provider;
         $key = $config->values[$conf_index]['key'];
         $data[$config->values[$conf_index]['text-field']] = $this->message;
-        $data[$config->values[$conf_index]['from-field']] = $this->from->text;
-        $data[$config->values[$conf_index]['to-field']] = $this->to->text;
+        $data[$config->values[$conf_index]['from-field']] = $this->from;
+        $data[$config->values[$conf_index]['to-field']] = $this->to;
         $data[$config->values[$conf_index]['subject-field']] = $this->subject;
         if ($this->filename != "")
         {
