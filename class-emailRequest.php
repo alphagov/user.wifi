@@ -38,7 +38,7 @@ class emailRequest
             {
                 $enrollcount++;
                 $user = new user;
-                $user->identifier = new identifier($identifier);
+                $user->identifier = $identifier;
                 $user->sponsor = $this->emailFrom;
                 $user->enroll();
             }
@@ -95,8 +95,8 @@ class emailRequest
 
         foreach (preg_split("/((\r?\n)|(\r\n?))/", $this->emailBody) as $contact)
         {
-            $contact = trim($contact);
-            if (filter_var($contact, FILTER_VALIDATE_EMAIL) or isvalidmobilenumber($contact))
+            $contact = new identifier(trim($contact));
+            if ($contact->validEmail or $contact->validMobile)
             {
                 $list[] = $contact;
             }
