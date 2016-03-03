@@ -4,7 +4,7 @@ require ("../common.php");
 
 $emailreq = new emailRequest();
 
-if (preg_match($_SERVER['HTTP_USER_AGENT'],"/Postmark/"))
+if (preg_match("/^Postmark/",$_SERVER['HTTP_USER_AGENT']))
 {
     $json = file_get_contents('php://input');
     $data = json_decode(stripslashes($json), true);
