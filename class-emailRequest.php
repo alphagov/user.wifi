@@ -79,7 +79,8 @@ class emailRequest
             $email = new emailResponse;
             $email->to = $orgAdmin->email;
             $email->logrequest();
-            $email->filename = $pdf->filepath;
+            $email->filename = $pdf->filename;
+            $email->filepath = $pdf->filepath;
             $email->send();
             // Create sms response for the code
             $sms = new smsResponse;
@@ -114,7 +115,8 @@ class emailRequest
             $email = new emailResponse;
             $email->to = $orgAdmin->email;
             $email->newSite();
-            $email->filename = $pdf->filepath;
+            $email->filename = $pdf->filename;
+            $email->filepath = $pdf->filepath;
             $email->send();
             // Create sms response for the code
             $sms = new smsResponse;

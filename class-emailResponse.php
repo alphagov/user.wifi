@@ -7,6 +7,7 @@ class emailResponse
     public $subject;
     public $message;
     public $filename;
+    public $filepath;
 
     public function __construct()
     {
@@ -63,49 +64,83 @@ class emailResponse
         }
     }
 
+    function tryPostMark($provider)
+    {
+        $config = config::getInstance();
+        $conf_index = 'email-provider' . $provider;
 
-    function tryEmailProvider($provider)
+        $json = json_encode(array(
+            'From' => $this->from,
+            'To' => $this->to,
+            'Subject' => $this->subject,
+            'TextBody' => $this->message,
+            'Attachments' => array(
+                'Name: ' => $this->filename,
+                'Content' => base64_encode(file_get_contents($this->filepath)),
+                'ContentType' => 'application/octet-stream')));
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $config->values[$conf_index]['url']);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Accept: application/json',
+            'Content-Type: application/json',
+            'X-Postmark-Server-Token: ' . $config->values[$conf_index]['key']));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+        $response = json_decode(curl_exec($ch), true);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        return $http_code === 200;
+
+    }
+
+    function tryMailGun($provider)
     {
         $config = config::getInstance();
         $conf_index = 'email-provider' . $provider;
         $key = $config->values[$conf_index]['key'];
-        $data[$config->values[$conf_index]['text-field']] = $this->message;
-        $data[$config->values[$conf_index]['from-field']] = $this->from;
-        $data[$config->values[$conf_index]['to-field']] = $this->to;
-        $data[$config->values[$conf_index]['subject-field']] = $this->subject;
+        $data['text'] = $this->message;
+        $data['from'] = $this->from;
+        $data['to'] = $this->to;
+        $data['subject'] = $this->subject;
         if ($this->filename != "")
         {
-            $data[$config->values[$conf_index]['attachment-field']] = new CURLFile($this->
-                filename);
-        }
-        if ($config->values[$conf_index]['json'])
-        {
-            $data = json_encode($data);
+            $data['attachment'][1] = new CURLFile($this->filepath);
         }
         $ch = curl_init($config->values[$conf_index]['url']);
-
-        if (isset($config->values[$conf_index]['key-header']))
-        {
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array($config->values[$conf_index]['key-header'] .
-                    ': ' . $config->values[$conf_index]['key']));
-        }
-        if ($config->values[$conf_index]['http-auth']) 
-        {
         curl_setopt($ch, CURLOPT_USERPWD, $config->values[$conf_index]['user'] . ":" . $config->
-            values[$conf_index]['key']);    
-            
-        }
-        
+            values[$conf_index]['key']);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $result = curl_exec($ch);
         // This is the result from the API
         curl_close($ch);
-        if (preg_match($config->values[$conf_index]['success-regex'], $result))
+        if (preg_match('/success', $result))
             return true;
         else
             return false;
+    }
+
+    function tryEmailProvider($provider)
+    {
+        $config = config::getInstance();
+        $conf_index = 'email-provider' . $provider;
+        $success = false;
+        if ($config->values[$conf_index]['enabled'])
+        {
+            switch ($config->values[$conf_index]['provider'])
+            {
+                case "postmark":
+                    $success = $this->tryPostMark($provider);
+                    break;
+                case "mailgun":
+                    $success = $this->tryMailGun($provider);
+                    break;
+            }
+
+        }
+        return $success;
     }
 
 }
