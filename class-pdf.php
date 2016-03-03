@@ -3,6 +3,7 @@
 class PDF
 {
     public $filename;
+    public $filepath;
     public $subject;
     public $message;
     public $landscape;
@@ -18,7 +19,7 @@ class PDF
         $this->filename = $site->org_name . "-" . $site->name;
         $this->filename = preg_replace("/[^a-zA-Z0-9]/", "_", $this->filename);
         $this->filename .= ".pdf";
-        $this->filename = $config->values['pdftemp-path'] . $this->filename;
+        $this->filepath = $config->values['pdftemp-path'] . $this->filename;
         $this->subject = "New Site";
     }
 
@@ -29,7 +30,7 @@ class PDF
             "-Logs";
         $this->filename = preg_replace("/[^a-zA-Z0-9]/", "_", $this->filename);
         $this->filename .= ".pdf";
-        $this->filename = $config->values['pdftemp-path'] . $this->filename;
+        $this->filepath = $config->values['pdftemp-path'] . $this->filename;
         $this->subject = "Generated on: " . date("d-m-Y") . " Requestor: " . $org_admin->
             name;
     }
@@ -38,7 +39,7 @@ class PDF
     {
         // Generate PDF with the site details
         // Encrypts the file then returns the password
-        $un_filename = $this->filename . "-unencrypted";
+        $un_filename = $this->filepath . "-unencrypted";
         if ($this->landscape)
             $pdf = new FPDF("L");
         else
@@ -67,7 +68,7 @@ class PDF
     {
         $this->setRandomPdfPassword();
         exec("/usr/bin/qpdf --encrypt " . $this->password . " - 256 -- " . $filename .
-            " " . $this->filename);
+            " " . $this->filepath);
         unlink($filename);
     }
 

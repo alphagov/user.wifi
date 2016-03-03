@@ -76,7 +76,7 @@ class emailRequest
             $email = new emailResponse;
             $email->to = $orgAdmin->email;
             $email->newSite();
-            $email->filename = $pdf->filename;
+            $email->filename = $pdf->filepath;
             $email->send();
             // Create sms response for the code
             $sms = new smsResponse;
