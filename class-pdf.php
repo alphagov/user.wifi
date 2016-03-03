@@ -65,7 +65,7 @@ class PDF
 
     private function encryptPdf($filename)
     {
-        $self->password = generateRandomPdfPassword();
+        $this->password = $this->generateRandomPdfPassword();
         exec("/usr/bin/qpdf --encrypt " . $self->password . " - 256 -- " . $filename .
             " " . $self->filename);
         unlink($filename);
