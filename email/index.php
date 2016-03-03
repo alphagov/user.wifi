@@ -9,9 +9,9 @@ if (preg_match("/^Postmark/",$_SERVER['HTTP_USER_AGENT']))
     $json = file_get_contents('php://input');
     $data = json_decode(stripslashes($json), true);
     // Support for Postmark
-    error_log("EMAIL: From : " . $data['from']);
-    $emailreq->setEmailFrom($data['from']);
-    $emailreq->setEmailTo($data['to']);
+    error_log("EMAIL: From : " . $data['From']);
+    $emailreq->setEmailFrom($data['From']);
+    $emailreq->setEmailTo($data['To']);
     $emailreq->setEmailSubject($data['Subject']);
     $emailreq->setEmailBody($data['TextBody']);
 }
