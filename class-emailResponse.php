@@ -78,7 +78,7 @@ class emailResponse
         if ($this->filename != "")
         {
             $attachments = array(
-                'Name: ' => $this->filename,
+                'Name' => $this->filename,
                 'Content' => base64_encode(file_get_contents($this->filepath)),
                 'ContentType' => 'application/octet-stream');
             $data['Attachments'][]= $attachments;
