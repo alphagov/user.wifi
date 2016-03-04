@@ -81,7 +81,7 @@ class emailResponse
                 'Name: ' => $this->filename,
                 'Content' => base64_encode(file_get_contents($this->filepath)),
                 'ContentType' => 'application/octet-stream');
-            $data['Attachments']= $attachments;
+            $data['Attachments'][]= $attachments;
                     }
                     
         $json = json_encode($data);
