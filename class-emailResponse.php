@@ -68,7 +68,7 @@ class emailResponse
     {
         $config = config::getInstance();
         $conf_index = 'email-provider' . $provider;
-        $attachemnts = array();
+        $attachments = array();
         if ($this->filename != "")
         {
             $attachments = array(
@@ -81,7 +81,7 @@ class emailResponse
             'To' => $this->to,
             'Subject' => $this->subject,
             'TextBody' => $this->message,
-            'Attachments' => $attachemnts));
+            'Attachments' => $attachments));
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $config->values[$conf_index]['url']);
         curl_setopt($ch, CURLOPT_POST, true);
