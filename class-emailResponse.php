@@ -69,19 +69,23 @@ class emailResponse
         $config = config::getInstance();
         $conf_index = 'email-provider' . $provider;
         $attachments = array();
+        $data = array(
+            'From' => $this->from,
+            'To' => $this->to,
+            'Subject' => $this->subject,
+            'TextBody' => $this->message);
+            
         if ($this->filename != "")
         {
             $attachments = array(
                 'Name: ' => $this->filename,
                 'Content' => base64_encode(file_get_contents($this->filepath)),
                 'ContentType' => 'application/octet-stream');
-        }
-        $json = json_encode(array(
-            'From' => $this->from,
-            'To' => $this->to,
-            'Subject' => $this->subject,
-            'TextBody' => $this->message,
-            'Attachments' => $attachments));
+            $data['Attachments']= $attachments;
+                    }
+                    
+        $json = json_encode($data);
+        
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $config->values[$conf_index]['url']);
         curl_setopt($ch, CURLOPT_POST, true);
