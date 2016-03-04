@@ -91,8 +91,17 @@ class PDF
             0,
             0,
             0);
-        // Get column widths
-        
+        // Get column widths for headings
+
+        $column = 0;
+        while (isset($report->columns[$column]))
+        {
+            $collength = 10 + (2 * strlen($report->columns[$column]));
+            if ($w[$column] < $collength)
+                $w[$column] = $collength;
+            $column++;
+        }
+        // Get column widths for data
         foreach ($report->result as $row[$totalrows])
         {
             $column = 0;
@@ -106,15 +115,17 @@ class PDF
             }
             $totalrows++;
         }
-// Write column headers
-$column = 0;
-            while (isset($report->columns[$column]))
-            {
-                $pdf->Cell($w[$column], 6, $report->columns[$column], 1, 0, 'C');
-                $column++;
-            }
-            $pdf->Ln();
-// Write column
+        // Write column headers
+        $pdf->SetFont('Arial', 'B', 12);
+        $column = 0;
+        while (isset($report->columns[$column]))
+        {
+            $pdf->Cell($w[$column], 6, $report->columns[$column], 1, 0, 'C');
+            $column++;
+        }
+        $pdf->Ln();
+        $pdf->SetFont('Arial', '', 12);
+        // Write column
         for ($rownum = 0; $rownum <= $totalrows; $rownum++)
         {
             $column = 0;
