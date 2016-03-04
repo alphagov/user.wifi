@@ -33,6 +33,7 @@ class PDF
         $this->filepath = $config->values['pdftemp-path'] . $this->filename;
         $this->subject = "Generated on: " . date("d-m-Y") . " Requestor: " . $org_admin->
             name;
+        $this->message = file_get_contents($config->values['pdf-contents']['logrequest-file']);
     }
 
     public function generatePDF($table = null)
