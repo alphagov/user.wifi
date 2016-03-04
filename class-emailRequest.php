@@ -63,12 +63,29 @@ class emailRequest
             $report->orgAdmin = $orgAdmin;
             error_log("EMAIL: processing log request from : " . $this->emailFrom->text .
                 " representing " . $orgAdmin->org_name);
-            switch ($this->emailSubject)
+            $subjectArray = explode(":", $this->emailSubject, 2);
+            $reportType = strtolower(trim($subjectArray[0]));
+            $criteria = $subjectArray[1];
+
+
+            switch ($reportType)
             {
+                case "topsites":
+                    $report->topSites();
+                    error_log("Top Sites report generated records:" . count($report->result));
+                    break;
+                    
+                case "sitelist":
+                    $report->siteList();
+                    error_log("Site list generated records:" . count($report->result));
+                    break;
+
+
                 default:
                     $report->byOrgId();
-                    error_log("Report by Org ID generated records:".count($report->result));
+                    error_log("Report by Org ID generated records:" . count($report->result));
                     break;
+
             }
 
 

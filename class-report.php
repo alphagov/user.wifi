@@ -4,7 +4,29 @@ class report
 {
     public $orgAdmin;
     public $result;
+    public $subject;
 
+    function siteList()
+    {
+ $db = DB::getInstance();
+        $dblink = $db->getConnection();
+        $sql = "select distinct name, shortname from nas, organisation where organisation.id=nas.org_id order by name";
+        $handle = $dblink->prepare($sql);
+        $handle->execute();
+        $this->result = $handle->fetchAll(\PDO::FETCH_NUM);
+        $this->subject = "List of sites subscribed to user.wifi";
+    }
+    function topSites()
+    {
+       $db = DB::getInstance();
+        $dblink = $db->getConnection();
+        $sql = 'select shortname, count(distinct username) as usercount from logs where authdate > DATE_SUB(NOW(), INTERVAL 30 DAY) and reply = "Access-Accept" group by shortname having usercount > 2 order by usercount desc';
+        $handle = $dblink->prepare($sql);
+        $handle->execute();
+        $this->result = $handle->fetchAll(\PDO::FETCH_NUM);  
+        $this->subject = "Sites by number of unique users in the last 30 days";
+        
+    }
     function byOrgId()
     {
 
@@ -15,6 +37,7 @@ class report
         $handle->bindValue(1, $this->orgAdmin->org_id, PDO::PARAM_INT);
         $handle->execute();
         $this->result = $handle->fetchAll(\PDO::FETCH_NUM);
+        $this->subject = "All authentications for ".$this->orgAdmin->name." sites";
     }
 
     function bySite($site)
@@ -27,6 +50,7 @@ class report
         $handle->bindValue(2, $site, PDO::PARAM_INT);
         $handle->execute();
         $this->result = $handle->fetchAll(\PDO::FETCH_NUM);
+        $this->subject = "All authentications for ".$site;
     }
 
     function byUser($user)
@@ -40,6 +64,7 @@ class report
         $handle->bindValue(2, $site, PDO::PARAM_INT);
         $handle->execute();
         $this->result = $handle->fetchAll(\PDO::FETCH_NUM);
+        $this->subject = "All authentications by the user ".$user;
 
     }
 
