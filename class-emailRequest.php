@@ -58,10 +58,11 @@ class emailRequest
         $orgAdmin = new orgAdmin($this->emailFrom->text);
         if ($orgAdmin->authorised)
         {
-            error_log("EMAIL: processing log request from : " . $this->emailFrom->text);
+
             $report = new report;
             $report->orgAdmin = $orgAdmin;
-
+            error_log("EMAIL: processing log request from : " . $this->emailFrom->text .
+                " representing " . $orgAdmin->org_name);
             switch ($this->emailSubject)
             {
                 default:
