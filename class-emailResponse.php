@@ -47,8 +47,8 @@ class emailResponse
     public function logrequest()
     {
         $config = config::getInstance();
-        $subject = $config->values['email-messages']['logrequest-subject'];
-        $message = file_get_contents($config->values['email-messages']['logrequest-file']);
+        $this->subject = $config->values['email-messages']['logrequest-subject'];
+        $this->message = file_get_contents($config->values['email-messages']['logrequest-file']);
     }
 
     public function send()
