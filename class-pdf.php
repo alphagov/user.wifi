@@ -98,9 +98,9 @@ class PDF
 
             while (isset($row[$totalrows][$column]))
             {
-                $collength = strlen($row[$totalrows][$column]);
+                $collength = 10 + (2 * strlen($row[$totalrows][$column]));
                 if ($w[$column] < $collength)
-                    $w[$column] = 10 + ($collength * 2);
+                    $w[$column] = $collength;
                 $column++;
             }
             $totalrows++;
@@ -108,7 +108,6 @@ class PDF
         for ($rownum = 0; $rownum <= $totalrows; $rownum++)
         {
             $column = 0;
-
             while (isset($row[$rownum][$column]))
             {
                 $pdf->Cell($w[$column], 6, $row[$rownum][$column], 1, 0, 'C');
@@ -132,7 +131,6 @@ class PDF
     {
         $strong = false; // Flag for whether a strong algorithm was used
         $bytes = openssl_random_pseudo_bytes($length, $strong);
-
         if (!$strong)
         {
             // System did not use a cryptographically strong algorithm
