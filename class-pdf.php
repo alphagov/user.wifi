@@ -107,7 +107,6 @@ class PDF
             $totalrows++;
         }
 // Write column headers
-        $pdf->Cell($w[$column], 6, $report->columns[$column], 1, 0, 'C');
 $column = 0;
             while (isset($report->columns[$column]))
             {
