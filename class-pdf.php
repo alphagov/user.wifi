@@ -117,6 +117,7 @@ class PDF
         }
         // Write column headers
         $pdf->SetFont('Arial', 'B', 12);
+        $pdf->Write(5, $report->subject . "\n");
         $column = 0;
         while (isset($report->columns[$column]))
         {
