@@ -8,19 +8,7 @@ class site
     public $org_name;
 
 
-    public function getIPList()
-    {
-        $db = DB::getInstance();
-        $dblink = $db->getConnection();
-        $sql = "select nasname, shortname, secret from nas where org_id = ? and shortname = ?";
-        $handle = $dblink->prepare($sql);
-        $handle->bindValue(1, $this->org_id, PDO::PARAM_INT);
-        $handle->bindValue(2, $this->name, PDO::PARAM_STR);
-        $handle->execute();
-        return $handle->fetchAll(\PDO::FETCH_NUM);
-
-
-    }
+  
     public function addIPs($iplist)
     {
         $db = DB::getInstance();

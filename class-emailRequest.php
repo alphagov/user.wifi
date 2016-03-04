@@ -65,7 +65,6 @@ class emailRequest
                 " representing " . $orgAdmin->org_name);
             $subjectArray = explode(":", $this->emailSubject, 2);
             $reportType = strtolower(trim($subjectArray[0]));
-            $criteria = $subjectArray[1];
 
 
             switch ($reportType)
@@ -74,12 +73,20 @@ class emailRequest
                     $report->topSites();
                     error_log("Top Sites report generated records:" . count($report->result));
                     break;
-                    
+
                 case "sitelist":
                     $report->siteList();
                     error_log("Site list generated records:" . count($report->result));
                     break;
-
+                case "site":
+                    $report->bySite($subjectArray[1]);
+                    error_log("Site list generated records:" . count($report->result));
+                    break;
+                    
+                case "user":
+                    $report->byUser($subjectArray[1]);
+                    error_log("User report generated records:" . count($report->result));
+                    break;
 
                 default:
                     $report->byOrgId();
@@ -93,7 +100,7 @@ class emailRequest
             $pdf = new pdf;
             $pdf->populateLogRequest($orgAdmin);
             $pdf->landscape = true;
-            $pdf->generatePDF($report->result);
+            $pdf->generatePDF($report);
             // Create email response and attach the pdf
             $email = new emailResponse;
             $email->to = $orgAdmin->email;
@@ -128,8 +135,10 @@ class emailRequest
             // Create the site information pdf
             $pdf = new pdf;
             $pdf->populateNewSite($site);
-
-            $pdf->generatePDF($site->getIPList());
+$report = new report;
+            $report->orgAdmin = $orgAdmin;
+            $report->getIPList($site);
+            $pdf->generatePDF($report);
             // Create email response and attach the pdf
             $email = new emailResponse;
             $email->to = $orgAdmin->email;

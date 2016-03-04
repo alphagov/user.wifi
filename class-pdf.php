@@ -36,7 +36,7 @@ class PDF
         $this->message = file_get_contents($config->values['pdf-contents']['logrequest-file']);
     }
 
-    public function generatePDF($table = null)
+    public function generatePDF($report = null)
     {
         // Generate PDF with the site details
         // Encrypts the file then returns the password
@@ -57,7 +57,7 @@ class PDF
         foreach (preg_split("/((\r?\n)|(\r\n?))/", $this->message) as $line)
         {
             if ($line == "%TABLE%")
-                $this->PdfSqlTable($pdf, $table);
+                $this->PdfSqlTable($pdf, $report);
             else
                 $pdf->Write(5, $line . "\n");
         }
@@ -73,7 +73,7 @@ class PDF
         unlink($filename);
     }
 
-    private function PdfSqlTable($pdf, $table)
+    private function PdfSqlTable($pdf, $report)
     {
 
         $totalrows = 0;
@@ -92,7 +92,7 @@ class PDF
             0,
             0);
 
-        foreach ($table as $row[$totalrows])
+        foreach ($report->result as $row[$totalrows])
         {
             $column = 0;
 
@@ -105,6 +105,8 @@ class PDF
             }
             $totalrows++;
         }
+        $pdf->Cell($w[$column], 6, $report->columns[$column], 1, 0, 'C');
+
         for ($rownum = 0; $rownum <= $totalrows; $rownum++)
         {
             $column = 0;
