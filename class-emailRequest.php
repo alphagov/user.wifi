@@ -67,6 +67,7 @@ class emailRequest
             {
                 default:
                     $report->byOrgId();
+                    error_log("Report by Org ID generated records:".array_count_values($report->result));
                     break;
             }
 
