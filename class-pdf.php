@@ -91,7 +91,8 @@ class PDF
             0,
             0,
             0);
-
+        // Get column widths
+        
         foreach ($report->result as $row[$totalrows])
         {
             $column = 0;
@@ -105,8 +106,16 @@ class PDF
             }
             $totalrows++;
         }
+// Write column headers
         $pdf->Cell($w[$column], 6, $report->columns[$column], 1, 0, 'C');
-
+$column = 0;
+            while (isset($report->columns[$column]))
+            {
+                $pdf->Cell($w[$column], 6, $report->columns[$column], 1, 0, 'C');
+                $column++;
+            }
+            $pdf->Ln();
+// Write column
         for ($rownum = 0; $rownum <= $totalrows; $rownum++)
         {
             $column = 0;
