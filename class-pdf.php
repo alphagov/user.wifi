@@ -100,7 +100,7 @@ class PDF
             {
                 $collength = strlen($row[$totalrows][$column]);
                 if ($w[$column] < $collength)
-                    $w[$column] = 10+ ($collength * 3);
+                    $w[$column] = 10 + ($collength * 2);
                 $column++;
             }
             $totalrows++;
