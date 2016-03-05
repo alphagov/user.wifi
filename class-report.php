@@ -58,7 +58,8 @@ class report
         $handle->bindValue(1, $this->orgAdmin->org_id, PDO::PARAM_INT);
         $handle->execute();
         $this->result = $handle->fetchAll(\PDO::FETCH_NUM);
-        $this->subject = "All authentications for " . $this->orgAdmin->name . " sites";
+        $this->subject = "All authentications for " . $this->orgAdmin->org_name .
+            " sites";
         $this->columns = array(
             "Date/Time",
             "Username",
@@ -108,12 +109,17 @@ class report
 
     }
 
-    function statsUsersPerDay($orgAdmin, $site, $days)
+    function statsUsersPerDay($orgAdmin, $site = null)
     {
         $db = DB::getInstance();
         $dblink = $db->getConnection();
 
-        $sql = 'select count(distinct(username))  from logs where authdate >= "2016-03-02" and authdate < "2016-03-03" and reply = "Access-Accept"';
+        if ($site)
+            $sitesql = 'and shortname = ?';
+
+        $sql = 'select count(distinct(username)) as Users, date(authdate) as Date  from logs where org_id = ' .
+            $this->orgAdmin->org_id . ' ' . $sitesql .
+            ' and reply = "Access-Accept" and authdate > DATE_SUB(NOW(), INTERVAL 30 DAY) group by Date order by Date desc';
         $handle = $dblink->prepare($sql);
         $handle->bindValue(1, $orgAdmin->org_id, PDO::PARAM_INT);
         $handle->bindValue(2, $site, PDO::PARAM_INT);
