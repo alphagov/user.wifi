@@ -65,8 +65,10 @@ class emailRequest
                 " representing " . $orgAdmin->org_name);
             $subjectArray = explode(":", $this->emailSubject, 2);
             $reportType = strtolower(trim($subjectArray[0]));
-
-
+            if (count($subjectArray) > 1)
+            {
+                $criteria = trim($subjectArray[1]);
+            }
             switch ($reportType)
             {
                 case "topsites":
@@ -79,12 +81,12 @@ class emailRequest
                     error_log("Site list generated records:" . count($report->result));
                     break;
                 case "site":
-                    $report->bySite($subjectArray[1]);
+                    $report->bySite($criteria);
                     error_log("Site list generated records:" . count($report->result));
                     break;
-                    
+
                 case "user":
-                    $report->byUser($subjectArray[1]);
+                    $report->byUser($criteria);
                     error_log("User report generated records:" . count($report->result));
                     break;
 
@@ -135,7 +137,7 @@ class emailRequest
             // Create the site information pdf
             $pdf = new pdf;
             $pdf->populateNewSite($site);
-$report = new report;
+            $report = new report;
             $report->orgAdmin = $orgAdmin;
             $report->getIPList($site);
             $pdf->generatePDF($report);
