@@ -61,7 +61,7 @@ class aaa
     public function accounting()
     {
         $acct = json_decode($this->requestJson,true);
-        error_log($acct[Acct-Status-Type]);
+        error_log($acct['Acct-Status-Type']);
     }
     public function postAuth()
     {
