@@ -3,11 +3,10 @@
 class aaa
 {
     public $user;
-    public $password;
     public $mac;
     public $siteIP;
-    public $memcache;
-    
+    public $lastSeen;
+
     public function __construct($request)
     {
         $path = preg_replace('~^/api/~', '', $request);
@@ -17,10 +16,15 @@ class aaa
             switch ($parts[$x])
             {
                 case "user":
-                    $this->user = $parts[$x + 1];
+                    $this->user = new user;
+                    $this->user->login = $parts[$x + 1];
+                    $this->user->loadRecord();
                     break;
                 case "mac":
                     $this->mac = $parts[$x + 1];
+                    break;
+                case "ap":
+                    $this->lastSeen = $parts[$x + 1];
                     break;
                 case "site":
                     $this->siteIP = $parts[$x + 1];
@@ -30,25 +34,11 @@ class aaa
         }
 
     }
-    public function authenticate() {
-        
-    }
-    public function loadFromCache() {
-        $m = MC::getInstance();
-$this->password = $m->m->get("PW".$this->user);
+    public function authorize()
+    {
 
-if (!($ip = $m->get('ip_block'))) {
-    if ($m->getResultCode() == Memcached::RES_NOTFOUND) {
-        $ip = array();
-        $m->set('ip_block', $ip);
     }
-    public function saveToCache() {
-        
-    }
-    public function getPassword() {
-        $this->loadFromCache();
-        
-    }
+
 }
 
 ?>
