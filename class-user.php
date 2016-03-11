@@ -93,7 +93,7 @@ class user
                 error_log("Found in Memcache : " . $userRecord['identifier']);
             if (!$userRecord)
             {
-                $handle = $dblink->prepare('select * from userdeails where username=?');
+                $handle = $dblink->prepare('select * from userdetails where username=?');
                 $handle->bindValue(1, $this->login, PDO::PARAM_STR);
                 $handle->execute();
                 $userRecord = $handle->fetch(\PDO::FETCH_ASSOC);
