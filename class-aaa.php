@@ -58,7 +58,7 @@ class aaa
         if ($this->user->password)
         {
             $this->responseHeader = "HTTP/1.0 200 OK";
-            $response['control:Cleartext-Password'] = $aaa->user->password;
+            $response['control:Cleartext-Password'] = $this->user->password;
             $this->responseBody = json_encode($response);
         } else
         {
