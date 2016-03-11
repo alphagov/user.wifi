@@ -65,7 +65,7 @@ class user
         $userRecord['sponsor'] = $this->sponsor->text;
         $userRecord['password'] = $this->password;
 
-        // Write to memcache - we need to do this to flush old entries 
+        // Write to memcache - we need to do this to flush old entries
         $m = MC::getInstance();
         $m->m->set($this->login, $userRecord);
 
@@ -85,33 +85,31 @@ class user
         $db = DB::getInstance();
         $dblink = $db->getConnection();
         $row = false;
-        if (!$force)
+        $m = MC::getInstance();
+        $userRecord = $m->m->get($this->login);
+        if ($userRecord)
+            error_log("Found in Memcache : " . $userRecord['identifier']);
+        if (!$userRecord)
         {
-            $m = MC::getInstance();
-            $userRecord = $m->m->get($this->login);
-            if ($userRecord)
-                error_log("Found in Memcache : " . $userRecord['identifier']);
-            if (!$userRecord)
+            $handle = $dblink->prepare('select * from userdetails where username=?');
+            $handle->bindValue(1, $this->login, PDO::PARAM_STR);
+            $handle->execute();
+            $userRecord = $handle->fetch(\PDO::FETCH_ASSOC);
+
+            if ($m->m->getResultCode() == Memcached::RES_NOTFOUND and $userRecord)
             {
-                $handle = $dblink->prepare('select * from userdetails where username=?');
-                $handle->bindValue(1, $this->login, PDO::PARAM_STR);
-                $handle->execute();
-                $userRecord = $handle->fetch(\PDO::FETCH_ASSOC);
+                // Not in cache but in the database - let's cache it for next time
+                $m->m->set($this->login, $userRecord);
 
-                if ($m->m->getResultCode() == Memcached::RES_NOTFOUND and $userRecord)
-                {
-                    // Not in cache but in the database - let's cache it for next time
-                    $m->m->set($this->login, $userRecord);
-
-                }
             }
 
+
         }
-        if ($UserRecord)
+        if ($userRecord)
         {
             $this->password = $userRecord['password'];
-            $this->identifier = new identifier($UserRecord['contact']);
-            $this->sponsor = new identifier($UserRecord['sponsor']);
+            $this->identifier = new identifier($userRecord['contact']);
+            $this->sponsor = new identifier($userRecord['sponsor']);
 
         } else
         {
