@@ -77,7 +77,7 @@ class user
         $this->password = $this->generateRandomWifiPassword();
     }
 
-    private function loadRecord()
+    public function loadRecord()
     {
         # This function looks for an existing password entry for this username
         # if it finds it and force is false then it will return the same password
