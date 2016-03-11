@@ -8,7 +8,7 @@ class identifier
 
     public function __construct($identifier)
     {
-        print $identifier;
+       
         if ($this->isValidMobileNumber($identifier))
         {
             $this->validMobile = true;
