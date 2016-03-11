@@ -9,6 +9,7 @@ class aaa
     public $type;
     public $responseHeader;
     public $responseBody;
+    public $reqeustJson;
 
     public function __construct($request)
     {
@@ -38,6 +39,10 @@ class aaa
 
         }
 
+
+    }
+    public function processRequest()
+    {
         switch ($this->type)
         {
             case "authorize":
@@ -46,8 +51,17 @@ class aaa
             case "post-auth":
                 $this->postAuth();
                 break;
+            case "accounting":
+                $this->accounting();
+                break;
+
         }
 
+    }
+    public function accounting()
+    {
+        $acct = json_decode($this->requestJson,true);
+        error_log($acct[Acct-Status-Type]);
     }
     public function postAuth()
     {
