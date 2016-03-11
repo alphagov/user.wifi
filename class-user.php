@@ -7,16 +7,11 @@ class user
     public $password;
     public $sponsor;
 
-    public function loaduser($login)
-    {
-        $this->login = $login;
-        $this->setIdentifier();
-    }
 
     public function enroll($force = false)
     {
         $this->setUsername();
-        $this->setWifiPassword();
+        $this->loadRecord();
         if ($force)
             $this->newPassword();
         $this->radiusDbWrite();
@@ -47,31 +42,42 @@ class user
     {
         $db = DB::getInstance();
         $dblink = $db->getConnection();
-        // Delete any old accounts for that username
+        // Delete any old accounts for that username -- will be deprecated
         $handle = $dblink->prepare('delete from radcheck where username=?');
         $handle->bindValue(1, $this->login, PDO::PARAM_STR);
         $handle->execute();
-        // Insert the new account details
+        // Insert the new account details -- wil be deprecated
         $handle = $dblink->prepare('insert into radcheck (username, attribute, op, value) VALUES (:login,"Cleartext-Password",":=",:pass)');
         $handle->bindValue(':login', $this->login, PDO::PARAM_STR);
         $handle->bindValue(':pass', $this->password, PDO::PARAM_STR);
         $handle->execute();
         // Insert mapping from username to email/phone
-        $handle = $dblink->prepare('insert into userdetails (username, contact, sponsor) VALUES
-                                    (:login,:contact,:sponsor) ON DUPLICATE KEY UPDATE sponsor=:sponsor');
+        $handle = $dblink->prepare('insert into userdetails (username, contact, sponsor,password) VALUES
+                                    (:login,:contact,:sponsor,:password) ON DUPLICATE KEY UPDATE sponsor=:sponsor, password=:password');
         $handle->bindValue(':login', $this->login, PDO::PARAM_STR);
         $handle->bindValue(':contact', $this->identifier->text, PDO::PARAM_STR);
         $handle->bindValue(':sponsor', $this->sponsor->text, PDO::PARAM_STR);
+        $handle->bindValue(':password', $this->password, PDO::PARAM_STR);
         $handle->execute();
+
+        // Populate the record for the cache
+        $userRecord['contact'] = $this->identifier->text;
+        $userRecord['sponsor'] = $this->sponsor->text;
+        $userRecord['password'] = $this->password;
+
+        // Write to memcache - we need to do this to flush old entries 
+        $m = MC::getInstance();
+        $m->m->set($this->login, $userRecord);
+
     }
 
     public function newPassword()
     {
         # This will force the generation of a new password for the user
-        $this->setWifiPassword(true);
+        $this->password = $this->generateRandomWifiPassword();
     }
 
-    private function setWifiPassword($force = false)
+    private function loadRecord()
     {
         # This function looks for an existing password entry for this username
         # if it finds it and force is false then it will return the same password
@@ -81,17 +87,35 @@ class user
         $row = false;
         if (!$force)
         {
-            $handle = $dblink->prepare('select distinct value from radcheck where attribute = "Cleartext-Password" and username=?');
-            $handle->bindValue(1, $this->login, PDO::PARAM_STR);
-            $handle->execute();
-            $row = $handle->fetch(\PDO::FETCH_ASSOC);
+            $m = MC::getInstance();
+            $userRecord = $m->m->get($this->login);
+            if ($userRecord)
+                error_log("Found in Memcache : " . $userRecord['identifier']);
+            if (!$userRecord)
+            {
+                $handle = $dblink->prepare('select * from userdeails where username=?');
+                $handle->bindValue(1, $this->login, PDO::PARAM_STR);
+                $handle->execute();
+                $userRecord = $handle->fetch(\PDO::FETCH_ASSOC);
+
+                if ($m->m->getResultCode() == Memcached::RES_NOTFOUND and $userRecord)
+                {
+                    // Not in cache but in the database - let's cache it for next time
+                    $m->m->set($this->login, $userRecord);
+
+                }
+            }
+
         }
-        if ($row)
+        if ($UserRecord)
         {
-            $this->password = $row['value'];
+            $this->password = $userRecord['password'];
+            $this->identifier = new identifier($UserRecord['contact']);
+            $this->sponsor = new identifier($UserRecord['sponsor']);
+
         } else
         {
-            $this->password = $this->generateRandomWifiPassword();
+            $this->newPassword();
         }
     }
 
@@ -138,7 +162,8 @@ class user
         $config = config::getInstance();
         $length = $config->values['wifi-username']['length'];
         $pattern = $config->values['wifi-username']['regex'];
-        $pass = preg_replace($pattern, "", base64_encode($this->strongRandomBytes($length * 4)));
+        $pass = preg_replace($pattern, "", base64_encode($this->strongRandomBytes($length *
+            4)));
         return substr($pass, 0, $length);
 
     }
@@ -162,7 +187,8 @@ class user
         {
             $length = $config->values['wifi-password']['length'];
             $pattern = $config->values['wifi-password']['regex'];
-            $pass = preg_replace($pattern, "", base64_encode($this->strongRandomBytes($length * 4)));
+            $pass = preg_replace($pattern, "", base64_encode($this->strongRandomBytes($length *
+                4)));
             $password = substr($pass, 0, $length);
         }
         return $password;
@@ -182,20 +208,6 @@ class user
         return $bytes;
     }
 
-    private function getIdentifier()
-    {
-        $db = DB::getInstance();
-        $dblink = $db->getConnection();
-        $handle = $dblink->prepare('select distinct contact from userdetails where username=?');
-        $handle->bindValue(1, $this->login, PDO::PARAM_STR);
-        $handle->execute();
-        $row = $handle->fetch(\PDO::FETCH_ASSOC);
-        if ($row)
-        {
-            $this->identifier = new identifier($row['contact']);
-        }
-
-    }
 }
 
 ?>

@@ -1,7 +1,9 @@
 <?php
+require ("../common.php");
 
-$path = preg_replace('~^/api/~', '', $_SERVER['SCRIPT_NAME']);
-$parts = explode('/', $path);
+$aaa = new aaa($_SERVER['SCRIPT_NAME']);
+
+
 var_dump($parts);
 
 ?>
