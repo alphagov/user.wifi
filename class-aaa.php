@@ -6,6 +6,9 @@ class aaa
     public $mac;
     public $siteIP;
     public $lastSeen;
+    public $type;
+    public $responseHeader;
+    public $responseBody;
 
     public function __construct($request)
     {
@@ -15,6 +18,8 @@ class aaa
         {
             switch ($parts[$x])
             {
+                case "api":
+                    $this->type = $parts[$x + 1];
                 case "user":
                     $this->user = new user;
                     $this->user->login = $parts[$x + 1];
@@ -33,12 +38,34 @@ class aaa
 
         }
 
+        switch ($this->type)
+        {
+            case "authorize":
+                $this->authorize();
+                break;
+            case "post-auth":
+                $this->postAuth();
+                break;
+        }
+
     }
-    public function authorize()
+    public function postAuth()
     {
 
     }
+    public function authorize()
+    {
+        if ($this->user->password)
+        {
+            $this->responseHeader = "HTTP/1.0 200 OK";
+            $response['control:Cleartext-Password'] = $aaa->user->password;
+            $this->responseBody = json_encode($response);
+        } else
+        {
+            $this->responseHeader = "HTTP/1.0 401 Forbidden";
 
-}
+        }
+
+    }
 
 ?>
