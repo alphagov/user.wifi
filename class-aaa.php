@@ -12,7 +12,6 @@ class aaa
 
     public function __construct($request)
     {
-        $path = preg_replace('~^/api/~', '', $request);
         $parts = explode('/', $path);
         for ($x = 0; $x < count($parts); $x++)
         {
@@ -20,6 +19,7 @@ class aaa
             {
                 case "api":
                     $this->type = $parts[$x + 1];
+                    break;
                 case "user":
                     $this->user = new user;
                     $this->user->login = $parts[$x + 1];
