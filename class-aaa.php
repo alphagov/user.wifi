@@ -55,7 +55,7 @@ class aaa
     }
     public function authorize()
     {
-        if ($this->user->password)
+        if ($this->user->identifier->text)
         {
             $this->responseHeader = "HTTP/1.0 200 OK";
             $response['control:Cleartext-Password'] = $this->user->password;
