@@ -12,7 +12,7 @@ class aaa
 
     public function __construct($request)
     {
-        $parts = explode('/', $path);
+        $parts = explode('/', $request);
         for ($x = 0; $x < count($parts); $x++)
         {
             switch ($parts[$x])
