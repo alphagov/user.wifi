@@ -80,6 +80,7 @@ class aaa
                 $this->session->startTime = $acct['User-Name']['value'];
                 $this->session->login = $acct['User-Name']['value'];
                 $this->session->login = $acct['User-Name']['value'];
+                error_log("Accounting start: ".$this->session->login." ".$this->session->id);
                 break;
             case 2:
                 // Acct Stop - store record in DB
