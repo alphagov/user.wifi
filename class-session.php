@@ -33,13 +33,13 @@ class session
     public function inMB()
     {
 
-        return round($this->session->inOctets / 1000000);
+        return round($this->inOctets / 1000000);
     }
     public function outMB()
     {
 
 
-        return round($this->session->outOctets / 1000000);
+        return round($this->outOctets / 1000000);
     }
     public function loadFromCache()
     {
