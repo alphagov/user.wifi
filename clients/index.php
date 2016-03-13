@@ -12,7 +12,8 @@ while ($result = $handle->fetch(PDO::FETCH_ASSOC))
         ipaddr = ' . $result['nasname'] . '
         secret = ' .
         $result['secret'] . '
-        }';
+        }
+';
 }
 
 ?>
