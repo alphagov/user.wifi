@@ -65,9 +65,18 @@ class session
         $m->m->set($this->id, $this->SessionRecord());
 
     }
-    public function writeToDb()
+  public function writeToDB()
     {
-
+        $db = DB::getInstance();
+        $dblink = $db->getConnection();
+        $handle = $dblink->prepare('update sessions set stop=now(),inMB=:inMB, outMB=:outMB where siteIP=:siteIP and username=:username and stop is null mac=:mac, and ap=:ap)');
+        $handle->bindValue(':siteIP', $this->siteIP, PDO::PARAM_STR);
+        $handle->bindValue(':username', $this->user->login, PDO::PARAM_STR);
+        $handle->bindValue(':mac', $this->mac, PDO::PARAM_STR);
+        $handle->bindValue(':ap', $this->ap, PDO::PARAM_STR);
+        $handle->bindValue(':inMB', $this->session->inMB(), PDO::PARAM_INT);
+        $handle->bindValue(':outMB', $this->session->outMB(), PDO::PARAM_INT);
+        $handle->execute();
     }
 
 }

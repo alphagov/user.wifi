@@ -95,6 +95,7 @@ class aaa
 
                 error_log("Accounting stop: " . $this->session->login . " " . $this->session->
                     id . " InMB: " . $this->session->inMB() . " OutMB: " . $this->session->outMB());
+                $this->session->writeToDB();
                 break;
             case 3:
                 // Acct Interim
@@ -107,19 +108,7 @@ class aaa
         }
 
     }
-    public function writeToDB()
-    {
-        $db = DB::getInstance();
-        $dblink = $db->getConnection();
-        $handle = $dblink->prepare('update sessions set stop=now(),inMB=:inMB, outMB=:outMB where siteIP=:siteIP and username=:username and stop is null mac=:mac, and ap=:ap)');
-        $handle->bindValue(':siteIP', $this->siteIP, PDO::PARAM_STR);
-        $handle->bindValue(':username', $this->user->login, PDO::PARAM_STR);
-        $handle->bindValue(':mac', $this->mac, PDO::PARAM_STR);
-        $handle->bindValue(':ap', $this->ap, PDO::PARAM_STR);
-        $handle->bindValue(':inMB', $this->session->inMB(), PDO::PARAM_INT);
-        $handle->bindValue(':outMB', $this->session->outMB(), PDO::PARAM_INT);
-        $handle->execute();
-    }
+
 
     public function postAuth()
     {
