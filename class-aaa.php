@@ -95,7 +95,9 @@ class aaa
                     id);
 
                 error_log("Accounting stop: " . $this->session->login . " " . $this->session->
-                    id . " InMB: " . $this->session->inMB() . " OutMB: " . $this->session->outMB());
+                    id . " InMB: " . $this->session->inMB() . " OutMB: " . $this->session->outMB() .
+                    "site: " . $this->session->siteIP . " mac: " . $this->session->mac . " ap: " . $this->
+                    session->ap);
                 $this->session->writeToDB();
                 break;
             case 3:
