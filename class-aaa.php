@@ -94,7 +94,7 @@ class aaa
                     id);
                
                 error_log("Accounting stop: " . $this->session->login . " " . $this->session->
-                    id . " InMB: " . $this->inMB() . " OutMB: " . $this->outMB());
+                    id . " InMB: " . $this->session->inMB() . " OutMB: " . $this->session->outMB());
                 break;
             case 3:
                 // Acct Interim
