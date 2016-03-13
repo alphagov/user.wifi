@@ -76,7 +76,7 @@ class session
     {
         $db = DB::getInstance();
         $dblink = $db->getConnection();
-        $handle = $dblink->prepare('update sessions set stop=now(),inMB=:inMB, outMB=:outMB where siteIP=:siteIP and username=:username and stop is null mac=:mac, and ap=:ap)');
+        $handle = $dblink->prepare('update sessions set stop=now(), inMB=:inMB, outMB=:outMB where siteIP=:siteIP and username=:username and stop is null and mac=:mac and ap=:ap)');
         $handle->bindValue(':siteIP', $this->siteIP, PDO::PARAM_STR);
         $handle->bindValue(':username', $this->login, PDO::PARAM_STR);
         $handle->bindValue(':mac', $this->mac, PDO::PARAM_STR);
