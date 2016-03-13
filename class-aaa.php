@@ -92,10 +92,9 @@ class aaa
                 $this->session->deleteFromCache();
                 error_log("Accounting stop: " . $this->session->login . " " . $this->session->
                     id);
-                $inMB = round($this->session->inOctets / 1000);
-                $outMB = round($this->session->outOctets / 1000);
+               
                 error_log("Accounting stop: " . $this->session->login . " " . $this->session->
-                    id . " InMB: " . $inMB . " OutMB: " . $outMB);
+                    id . " InMB: " . $this->inMB() . " OutMB: " . $this->outMB());
                 break;
             case 3:
                 // Acct Interim
@@ -110,7 +109,7 @@ class aaa
     }
     public function postAuth()
     {
-        if ($this->result == "Accept")
+        if ($this->result == "Access-Accept")
         {
             // insert a new entry into session
             $db = DB::getInstance();
