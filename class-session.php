@@ -51,7 +51,7 @@ class session
     public function writeToCache()
     {
         $m = MC::getInstance();
-        $m->m->set($this->id, $this->getSessionRecord());
+        $m->m->set($this->id, $this->SessionRecord());
 
     }
     public function writeToDb()
