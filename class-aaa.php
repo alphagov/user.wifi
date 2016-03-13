@@ -67,19 +67,19 @@ class aaa
     {
         $acct = json_decode($this->requestJson, true);
 
-        $this->session = new session($acct['Acct-Session-Id']['value']['']);
+        $this->session = new session($acct['Acct-Session-Id']['value'][0]);
 
 
-        switch ($acct['Acct-Status-Type']['value'][''])
+        switch ($acct['Acct-Status-Type']['value'][0])
         {
 
 
             case 1:
                 // Acct Start - Store session in Memcache
-                $this->session->login = $acct['User-Name']['value'][''];
-                $this->session->startTime = $acct['User-Name']['value'][''];
-                $this->session->login = $acct['User-Name']['value'][''];
-                $this->session->login = $acct['User-Name']['value'][''];
+                $this->session->login = $acct['User-Name']['value'][0];
+                $this->session->startTime = $acct['User-Name']['value'][0];
+                $this->session->login = $acct['User-Name']['value'][0];
+                $this->session->login = $acct['User-Name']['value'][0];
                 error_log("Accounting start: ".$this->session->login." ".$this->session->id);
                 break;
             case 2:
