@@ -80,6 +80,7 @@ class aaa
                 $this->session->startTime = getdate();
                 $this->session->mac = $acct['Calling-Station-Id']['value'][0];
                 $this->session->ap = $acct['Called-Station-Id']['value'][0];
+                $this->session->clientIP = $this->siteIP;
                 $this->session->writeToCache();
                 error_log("Accounting start: " . $this->session->login . " " . $this->session->
                     id);
