@@ -32,7 +32,7 @@ class aaa
                     $this->mac = $parts[$x + 1];
                     break;
                 case "ap":
-                    $this->ap = $parts[$x + 1];
+                    $this->ap = substr($parts[$x + 1],0,17);
                     break;
                 case "site":
                     $this->siteIP = $parts[$x + 1];
@@ -79,7 +79,7 @@ class aaa
                 $this->session->login = $acct['User-Name']['value'][0];
                 $this->session->startTime = getdate();
                 $this->session->mac = $acct['Calling-Station-Id']['value'][0];
-                $this->session->ap = $acct['Called-Station-Id']['value'][0];
+                $this->session->ap = substr($acct['Called-Station-Id']['value'][0],0,17);
                 $this->session->siteIP = $this->siteIP;
                 $this->session->writeToCache();
                 error_log("Accounting start: " . $this->session->login . " " . $this->session->
