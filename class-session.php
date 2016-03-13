@@ -16,13 +16,7 @@ class session
     {
         $this->id = $id;
         $this->loadFromCache();
-        if ($sessionRecord)
-        {
-            $this->login = $sessionRecord['login'];
-            $this->inOctets = $sessionRecord['InO'];
-            $this->outOctets = $sessionRecord['OutO'];
-            $this->startTime = $sessionRecord['Start'];
-        }
+
     }
 
 
@@ -40,17 +34,24 @@ class session
     {
         $m = MC::getInstance();
         $sessionRecord = $m->m->get($this->id);
+        if ($sessionRecord)
+        {
+            $this->login = $sessionRecord['login'];
+            $this->inOctets = $sessionRecord['InO'];
+            $this->outOctets = $sessionRecord['OutO'];
+            $this->startTime = $sessionRecord['Start'];
+        }
     }
     public function deleteFromCache()
     {
         $m = MC::getInstance();
-        $sessionRecord = $m->m->delete($this->id);
+        $m->m->delete($this->id);
     }
 
     public function writeToCache()
     {
         $m = MC::getInstance();
-        $sessionRecord = $m->m->set($this->id, $this->getSessionRecord());
+        $m->m->set($this->id, $this->getSessionRecord());
 
     }
     public function writeToDb()
