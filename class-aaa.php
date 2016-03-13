@@ -77,18 +77,26 @@ class aaa
             case 1:
                 // Acct Start - Store session in Memcache
                 $this->session->login = $acct['User-Name']['value'][0];
-                $this->session->startTime = $acct['User-Name']['value'][0];
-                $this->session->login = $acct['User-Name']['value'][0];
-                $this->session->login = $acct['User-Name']['value'][0];
+                $this->session->startTime = $acct['Event-Timestamp']['value'][0];
+                $this->session->mac = $acct['Calling-Station-Id']['value'][0];
+                $this->session->ap = $acct['Called-Station-Id']['value'][0];
+                $this->session->writeToCache();
                 error_log("Accounting start: ".$this->session->login." ".$this->session->id);
                 break;
             case 2:
                 // Acct Stop - store record in DB
-
+                $this->session->inOctets += $acct['Acct-Input-Octets']['value'][0];
+                $this->session->outOctets += $acct['Acct-Output-Octets']['value'][0];
+                $this->session->stopTime = $acct['Event-Timestamp']['value'][0];
+                $this->session->deleteFromCache();
+                error_log("Accounting stop: ".$this->session->login." ".$this->session->id);
                 break;
             case 3:
                 // Acct Interim
-
+                $this->session->inOctets += $acct['Acct-Input-Octets']['value'][0];
+                $this->session->outOctets += $acct['Acct-Output-Octets']['value'][0];
+                $this->session->writeToCache();
+                error_log("Accounting update: ".$this->session->login." ".$this->session->id);
                 break;
         }
 

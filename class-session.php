@@ -2,19 +2,20 @@
 
 class session
 {
-    
+
     public $id;
     public $inOctets;
     public $outOctets;
     public $login;
     public $startTime;
     public $stopTime;
+    public $mac;
+    public $ap;
 
     public function __construct($id)
     {
         $this->id = $id;
-        $m = MC::getInstance();
-        $sessionRecord = $m->m->get($this->id);
+        $this->loadFromCache();
         if ($sessionRecord)
         {
             $this->login = $sessionRecord['login'];
@@ -35,14 +36,17 @@ class session
 
 
     }
-    public function addInOctets($inO){
-    $this->inOctets += $inO;    
+    public function loadFromCache()
+    {
+        $m = MC::getInstance();
+        $sessionRecord = $m->m->get($this->id);
     }
-    
-    public function addOutOctets($outO) {
-        
+    public function deleteFromCache()
+    {
+        $m = MC::getInstance();
+        $sessionRecord = $m->m->delete($this->id);
     }
-    
+
     public function writeToCache()
     {
         $m = MC::getInstance();
