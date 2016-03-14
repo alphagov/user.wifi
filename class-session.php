@@ -74,7 +74,7 @@ class session
     }
     public function writeToDB()
     {
-        $window = 10; // Must match a session that starts within x seconds of the authentication
+        $window = 20; // Must match a session that starts within x seconds of the authentication
         $db = DB::getInstance();
         $dblink = $db->getConnection();
         $handle = $dblink->prepare('update sessions set stop=now(), inMB=:inMB, outMB=:outMB where siteIP=:siteIP and username=:username 
