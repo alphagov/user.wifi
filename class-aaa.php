@@ -78,8 +78,8 @@ class aaa
                 // Acct Start - Store session in Memcache
                 $this->session->login = $acct['User-Name']['value'][0];
                 $this->session->startTime = getdate();
-                $this->session->mac = $acct['Calling-Station-Id']['value'][0];
-                $this->session->ap = substr($acct['Called-Station-Id']['value'][0], 0, 17);
+                $this->session->mac = strtoupper($acct['Calling-Station-Id']['value'][0]);
+                $this->session->ap = strtoupper(substr($acct['Called-Station-Id']['value'][0], 0, 17));
                 $this->session->siteIP = $this->siteIP;
                 $this->session->writeToCache();
                 error_log("Accounting start: " . $this->session->login . " " . $this->session->
@@ -131,8 +131,8 @@ class aaa
                 $handle = $dblink->prepare('insert into sessions (start,siteIP,username,mac,ap) values (now(),:siteIP,:username,:mac,:ap)');
                 $handle->bindValue(':siteIP', $this->siteIP, PDO::PARAM_STR);
                 $handle->bindValue(':username', $this->user->login, PDO::PARAM_STR);
-                $handle->bindValue(':mac', $this->mac, PDO::PARAM_STR);
-                $handle->bindValue(':ap', $this->ap, PDO::PARAM_STR);
+                $handle->bindValue(':mac', strtoupper($this->mac), PDO::PARAM_STR);
+                $handle->bindValue(':ap', strtoupper($this->ap), PDO::PARAM_STR);
                 $handle->execute();
 
                 // Code to do per site actions is here

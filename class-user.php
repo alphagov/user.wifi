@@ -87,8 +87,7 @@ class user
         $row = false;
         $m = MC::getInstance();
         $userRecord = $m->m->get($this->login);
-        if ($userRecord)
-            error_log("Found in Memcache : " . $userRecord['contact']);
+
         if (!$userRecord)
         {
             $handle = $dblink->prepare('select * from userdetails where username=?');
