@@ -25,7 +25,7 @@ class aaa
                     break;
                 case "user":
                     $this->user = new user;
-                    $this->user->login = $parts[$x + 1];
+                    $this->user->login = strtoupper($parts[$x + 1]);
                     $this->user->loadRecord();
                     break;
                 case "mac":

@@ -8,7 +8,7 @@ class identifier
 
     public function __construct($identifier)
     {
-       
+
         if ($this->isValidMobileNumber($identifier))
         {
             $this->validMobile = true;
@@ -19,7 +19,11 @@ class identifier
             {
                 $this->validEmail = true;
                 $this->text = $this->fixUpEmailAddress($identifier);
-            }
+            } else
+                if ($identifier == "HEALTH")
+                {
+                    $this->text = "HEALTH";
+                }
 
     }
 
@@ -52,8 +56,7 @@ class identifier
 
     private function fixUpEmailAddress($address)
     {
-        preg_match_all('/[A-Za-z0-9\_\+\.\'-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]+/', $address,
-            $matches);
+        preg_match_all('/[A-Za-z0-9\_\+\.\'-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]+/', $address, $matches);
         return strtolower($matches[0][0]);
     }
 
