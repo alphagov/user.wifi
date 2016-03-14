@@ -77,7 +77,7 @@ class aaa
             case 1:
                 // Acct Start - Store session in Memcache
                 $this->session->login = $acct['User-Name']['value'][0];
-                $this->session->startTime = getdate();
+                $this->session->startTime = time();
                 $this->session->mac = strtoupper($acct['Calling-Station-Id']['value'][0]);
                 $this->session->ap = strtoupper(substr($acct['Called-Station-Id']['value'][0], 0, 17));
                 $this->session->siteIP = $this->siteIP;
@@ -91,7 +91,7 @@ class aaa
                 {
                     $this->session->inOctets += $acct['Acct-Input-Octets']['value'][0];
                     $this->session->outOctets += $acct['Acct-Output-Octets']['value'][0];
-                    $this->session->stopTime = getdate();
+                    $this->session->stopTime = time();
                     $this->session->deleteFromCache();
                     error_log("Accounting stop: " . $this->session->login . " " . $this->session->
                         id);
