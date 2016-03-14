@@ -79,8 +79,8 @@ class session
         $dblink = $db->getConnection();
         $handle = $dblink->prepare('update sessions set stop=now(), inMB=:inMB, outMB=:outMB where siteIP=:siteIP and username=:username 
         and stop is null and mac=:mac and ap=:ap and start between :startmin and :startmax');
-        $startmin = strftime('%Y-%m-%d %h:%m:%s',$this->startTime-$window);
-        $startmax = strftime('%Y-%m-%d %h:%m:%s',$this->startTime+$window);
+        $startmin = strftime('%Y-%m-%d %H:%M:%S',$this->startTime-$window);
+        $startmax = strftime('%Y-%m-%d %H:%M:%S',$this->startTime+$window);
         error_log("Updating record between ".$startmin. " and ".$startmax." for ".$this->login);
         $handle->bindValue(':startmin', $startmin , PDO::PARAM_STR);
         $handle->bindValue(':startmax', $startmax , PDO::PARAM_STR);
