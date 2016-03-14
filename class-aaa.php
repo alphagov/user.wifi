@@ -128,7 +128,11 @@ class aaa
                 $handle->bindValue(':mac', $this->mac, PDO::PARAM_STR);
                 $handle->bindValue(':ap', $this->ap, PDO::PARAM_STR);
                 $handle->execute();
+                
+                // Code to do per site actions is here
+                
             }
+            
         }
 
     }
