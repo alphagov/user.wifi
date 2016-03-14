@@ -72,7 +72,7 @@ class report
     {
         $db = DB::getInstance();
         $dblink = $db->getConnection();
-        $sql = "select start,username,contact,sponsor from logs where org_id = ? and shortname = ?";
+        $sql = "select start,stop,username, InMB,OutMB,mac from logs where org_id = ? and shortname = ?";
         $handle = $dblink->prepare($sql);
         $handle->bindValue(1, $this->orgAdmin->org_id, PDO::PARAM_INT);
         $handle->bindValue(2, $site, PDO::PARAM_INT);
@@ -80,8 +80,12 @@ class report
         $this->result = $handle->fetchAll(\PDO::FETCH_NUM);
         $this->subject = "All authentications for " . $site;
         $this->columns = array(
-            "Date/Time",
+            "Start",
+            "Stop",
             "Username",
+            "Up MB",
+            "Down MB",
+            "MAC",
             "Identity",
             "Sponsor");
     }
