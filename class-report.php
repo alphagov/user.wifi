@@ -53,7 +53,7 @@ class report
 
         $db = DB::getInstance();
         $dblink = $db->getConnection();
-        $sql = "select start,username,shortname,contact,sponsor from logs where org_id = ?";
+        $sql = "select start,username,shortname,InMB, OutMB from logs where org_id = ?";
         $handle = $dblink->prepare($sql);
         $handle->bindValue(1, $this->orgAdmin->org_id, PDO::PARAM_INT);
         $handle->execute();
@@ -64,8 +64,8 @@ class report
             "Date/Time",
             "Username",
             "Site Name",
-            "Identity",
-            "Sponsor");
+            "Up MB",
+            "Down MB");
     }
 
     function bySite($site)
@@ -94,7 +94,7 @@ class report
         $db = DB::getInstance();
         $dblink = $db->getConnection();
 
-        $sql = "select start,username,contact,sponsor from logs where username = ?";
+        $sql = "select start,stop,contact,sponsor from logs where username = ?";
         $handle = $dblink->prepare($sql);
         $handle->bindValue(1, $this->orgAdmin->org_id, PDO::PARAM_INT);
         $handle->bindValue(2, $site, PDO::PARAM_INT);
@@ -102,8 +102,8 @@ class report
         $this->result = $handle->fetchAll(\PDO::FETCH_NUM);
         $this->subject = "All authentications by the user " . $user;
         $this->columns = array(
-            "Date/Time",
-            "Username",
+            "Start",
+            "Stop",
             "Identity",
             "Sponsor");
 
