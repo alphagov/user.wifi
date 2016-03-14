@@ -32,7 +32,7 @@ class aaa
                     $this->mac = $parts[$x + 1];
                     break;
                 case "ap":
-                    $this->ap = substr($parts[$x + 1],0,17);
+                    $this->ap = substr($parts[$x + 1], 0, 17);
                     break;
                 case "site":
                     $this->siteIP = $parts[$x + 1];
@@ -79,7 +79,7 @@ class aaa
                 $this->session->login = $acct['User-Name']['value'][0];
                 $this->session->startTime = getdate();
                 $this->session->mac = $acct['Calling-Station-Id']['value'][0];
-                $this->session->ap = substr($acct['Called-Station-Id']['value'][0],0,17);
+                $this->session->ap = substr($acct['Called-Station-Id']['value'][0], 0, 17);
                 $this->session->siteIP = $this->siteIP;
                 $this->session->writeToCache();
                 error_log("Accounting start: " . $this->session->login . " " . $this->session->
@@ -117,15 +117,18 @@ class aaa
     {
         if ($this->result == "Access-Accept")
         {
-            // insert a new entry into session
-            $db = DB::getInstance();
-            $dblink = $db->getConnection();
-            $handle = $dblink->prepare('insert into sessions (start,siteIP,username,mac,ap) values (now(),:siteIP,:username,:mac,:ap)');
-            $handle->bindValue(':siteIP', $this->siteIP, PDO::PARAM_STR);
-            $handle->bindValue(':username', $this->user->login, PDO::PARAM_STR);
-            $handle->bindValue(':mac', $this->mac, PDO::PARAM_STR);
-            $handle->bindValue(':ap', $this->ap, PDO::PARAM_STR);
-            $handle->execute();
+            if ($this->user->login != "HEALTH")
+            {
+                // insert a new entry into session (unless it's a health check)
+                $db = DB::getInstance();
+                $dblink = $db->getConnection();
+                $handle = $dblink->prepare('insert into sessions (start,siteIP,username,mac,ap) values (now(),:siteIP,:username,:mac,:ap)');
+                $handle->bindValue(':siteIP', $this->siteIP, PDO::PARAM_STR);
+                $handle->bindValue(':username', $this->user->login, PDO::PARAM_STR);
+                $handle->bindValue(':mac', $this->mac, PDO::PARAM_STR);
+                $handle->bindValue(':ap', $this->ap, PDO::PARAM_STR);
+                $handle->execute();
+            }
         }
 
     }
