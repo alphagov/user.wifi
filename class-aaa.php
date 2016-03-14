@@ -86,27 +86,33 @@ class aaa
                     id);
                 break;
             case 2:
-                // Acct Stop - store record in DB
-                $this->session->inOctets += $acct['Acct-Input-Octets']['value'][0];
-                $this->session->outOctets += $acct['Acct-Output-Octets']['value'][0];
-                $this->session->stopTime = getdate();
-                $this->session->deleteFromCache();
-                error_log("Accounting stop: " . $this->session->login . " " . $this->session->
-                    id);
+                // Acct Stop - store record in DB - if there is no start record do nothing.
+                if ($this->session->startTime)
+                {
+                    $this->session->inOctets += $acct['Acct-Input-Octets']['value'][0];
+                    $this->session->outOctets += $acct['Acct-Output-Octets']['value'][0];
+                    $this->session->stopTime = getdate();
+                    $this->session->deleteFromCache();
+                    error_log("Accounting stop: " . $this->session->login . " " . $this->session->
+                        id);
 
-                error_log("Accounting stop: " . $this->session->login . " " . $this->session->
-                    id . " InMB: " . $this->session->inMB() . " OutMB: " . $this->session->outMB() .
-                    "site: " . $this->session->siteIP . " mac: " . $this->session->mac . " ap: " . $this->
-                    session->ap);
-                $this->session->writeToDB();
+                    error_log("Accounting stop: " . $this->session->login . " " . $this->session->
+                        id . " InMB: " . $this->session->inMB() . " OutMB: " . $this->session->outMB() .
+                        "site: " . $this->session->siteIP . " mac: " . $this->session->mac . " ap: " . $this->
+                        session->ap);
+                    $this->session->writeToDB();
+                }
                 break;
             case 3:
-                // Acct Interim
-                $this->session->inOctets += $acct['Acct-Input-Octets']['value'][0];
-                $this->session->outOctets += $acct['Acct-Output-Octets']['value'][0];
-                $this->session->writeToCache();
-                error_log("Accounting update: " . $this->session->login . " " . $this->session->
-                    id);
+                // Acct Interim - if there is no start record do nothing.
+                if ($this->session->startTime)
+                {
+                    $this->session->inOctets += $acct['Acct-Input-Octets']['value'][0];
+                    $this->session->outOctets += $acct['Acct-Output-Octets']['value'][0];
+                    $this->session->writeToCache();
+                    error_log("Accounting update: " . $this->session->login . " " . $this->session->
+                        id);
+                }
                 break;
         }
 
@@ -128,11 +134,11 @@ class aaa
                 $handle->bindValue(':mac', $this->mac, PDO::PARAM_STR);
                 $handle->bindValue(':ap', $this->ap, PDO::PARAM_STR);
                 $handle->execute();
-                
+
                 // Code to do per site actions is here
-                
+
             }
-            
+
         }
 
     }
