@@ -72,7 +72,7 @@ class report
     {
         $db = DB::getInstance();
         $dblink = $db->getConnection();
-        $sql = "select start,stop,username, InMB,OutMB,mac from logs where org_id = ? and shortname = ?";
+        $sql = "select start,stop,username, InMB,OutMB,mac,ap from logs where org_id = ? and shortname = ?";
         $handle = $dblink->prepare($sql);
         $handle->bindValue(1, $this->orgAdmin->org_id, PDO::PARAM_INT);
         $handle->bindValue(2, $site, PDO::PARAM_INT);
@@ -86,8 +86,7 @@ class report
             "Up MB",
             "Down MB",
             "MAC",
-            "Identity",
-            "Sponsor");
+            "AP");
     }
 
     function byUser($user)
