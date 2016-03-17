@@ -84,6 +84,7 @@ class aaa
                 $this->session->writeToCache();
                 error_log("Accounting start: " . $this->session->login . " " . $this->session->
                     id);
+                    $this->responseHeader = "HTTP/1.0 204 OK";
                 break;
             case 2:
                 // Acct Stop - store record in DB - if there is no start record do nothing.
@@ -101,6 +102,7 @@ class aaa
                         "site: " . $this->session->siteIP . " mac: " . $this->session->mac . " ap: " . $this->
                         session->ap);
                     $this->session->writeToDB();
+                    $this->responseHeader = "HTTP/1.0 204 OK";
                 }
                 break;
             case 3:
@@ -112,6 +114,7 @@ class aaa
                     $this->session->writeToCache();
                     error_log("Accounting update: " . $this->session->login . " " . $this->session->
                         id);
+                        $this->responseHeader = "HTTP/1.0 204 OK";
                 }
                 break;
         }
