@@ -32,7 +32,7 @@ class aaa
                     $this->setMac($parts[$x + 1]);
                     break;
                 case "ap":
-                    $this->ap = setAp($parts[$x + 1]);
+                    $this->setAp($parts[$x + 1]);
                     break;
                 case "site":
                     $this->siteIP = $parts[$x + 1];
