@@ -152,7 +152,7 @@ class aaa
         //convert to upper case
         $mac = strtoupper($mac);
         //get rid of anything that isn't hex
-        $mac = preg_replace('/[^0-F]/'," ",$mac);
+        $mac = preg_replace('/[^0-F]/',"",$mac);
         // recreate the mac in IETF format using the first 12 chars. 
         $mac = substr($mac,0,2).'-'.substr($mac,2,2).'-'.substr($mac,4,2).'-'.substr($mac,6,2).'-'.substr($mac,8,2).'-'.substr($mac,10,2);
         return $mac;       
