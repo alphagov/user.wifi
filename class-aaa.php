@@ -67,7 +67,7 @@ class aaa
     {
         $acct = json_decode($this->requestJson, true);
 
-        $this->session = new session($this->user->name.$acct['Acct-Session-Id']['value'][0]);
+        $this->session = new session($this->user->login.$acct['Acct-Session-Id']['value'][0]);
 
 
         switch ($acct['Acct-Status-Type']['value'][0])
@@ -76,7 +76,7 @@ class aaa
 
             case 1:
                 // Acct Start - Store session in Memcache
-                $this->session->login = $this->user->name;
+                $this->session->login = $this->user->login;
                 $this->session->startTime = time();
                 $this->setMac($acct['Calling-Station-Id']['value'][0]);
                 $this->setAp($acct['Called-Station-Id']['value'][0]);
