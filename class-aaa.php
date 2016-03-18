@@ -12,7 +12,7 @@ class aaa
     public $reqeustJson;
     public $session;
     public $result;
-
+    
     public function __construct($request)
     {
         $parts = explode('/', $request);
@@ -144,6 +144,21 @@ class aaa
 
         }
 
+    }
+    
+    private function fixMac($mac) {
+        //convert to upper case
+        $mac = strtoupper($mac);
+        $mac = preg_replace('/[^0-F]/'," ",$mac);
+        $mac = substr($mac,0,2).'-'.substr($mac,2,2).'-'.substr($mac,4,2).'-'.substr($mac,6,2).'-'.substr($mac,8,2).'-'.substr($mac,10,2);
+        return $mac;       
+    }
+    
+    public function setMac($mac) {
+        $this->mac=$this->fixMac($mac);
+    }
+    public function setAp($mac) {
+        $this->ap=$this->fixMac($mac);
     }
     public function authorize()
     {
