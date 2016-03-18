@@ -29,10 +29,10 @@ class aaa
                     $this->user->loadRecord();
                     break;
                 case "mac":
-                    $this->mac = $parts[$x + 1];
+                    $this->setMac($parts[$x + 1]);
                     break;
                 case "ap":
-                    $this->ap = substr($parts[$x + 1], 0, 17);
+                    $this->ap = setAp($parts[$x + 1]);
                     break;
                 case "site":
                     $this->siteIP = $parts[$x + 1];
@@ -67,7 +67,7 @@ class aaa
     {
         $acct = json_decode($this->requestJson, true);
 
-        $this->session = new session($acct['Acct-Session-Id']['value'][0]);
+        $this->session = new session($this->user.$acct['Acct-Session-Id']['value'][0]);
 
 
         switch ($acct['Acct-Status-Type']['value'][0])
@@ -78,8 +78,10 @@ class aaa
                 // Acct Start - Store session in Memcache
                 $this->session->login = $acct['User-Name']['value'][0];
                 $this->session->startTime = time();
-                $this->session->mac = strtoupper($acct['Calling-Station-Id']['value'][0]);
-                $this->session->ap = strtoupper(substr($acct['Called-Station-Id']['value'][0], 0, 17));
+                $this->setMac($acct['Calling-Station-Id']['value'][0]);
+                $this->setAp($acct['Called-Station-Id']['value'][0]);
+                $this->session->mac = $this->mac;
+                $this->session->ap = $this->ap;
                 $this->session->siteIP = $this->siteIP;
                 $this->session->writeToCache();
                 error_log("Accounting start: " . $this->session->login . " " . $this->session->
@@ -149,7 +151,9 @@ class aaa
     private function fixMac($mac) {
         //convert to upper case
         $mac = strtoupper($mac);
+        //get rid of anything that isn't hex
         $mac = preg_replace('/[^0-F]/'," ",$mac);
+        // recreate the mac in IETF format using the first 12 chars. 
         $mac = substr($mac,0,2).'-'.substr($mac,2,2).'-'.substr($mac,4,2).'-'.substr($mac,6,2).'-'.substr($mac,8,2).'-'.substr($mac,10,2);
         return $mac;       
     }
