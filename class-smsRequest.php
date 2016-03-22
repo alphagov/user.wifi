@@ -29,7 +29,7 @@ class smsRequest
         error_log("SMS: Security info request from ".$this->sender->text);
         $sms = new smsResponse;
         $sms->to = $this->sender->text;
-        $sms->set_reply();
+        $sms->setReply();
         $sms->security();
 
     }
@@ -38,7 +38,7 @@ class smsRequest
         error_log("SMS: Sending help information to ".$this->sender->text);
         $sms = new smsResponse;
         $sms->to = $this->sender->text;
-        $sms->set_reply();
+        $sms->setReply();
         $sms->help($this->message);
     }
     public function newPassword()
