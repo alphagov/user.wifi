@@ -4,16 +4,16 @@ require ("../common.php");
 
 $emailreq = new emailRequest();
 
-if (preg_match("/^Postmark/",$_SERVER['HTTP_USER_AGENT']))
+if (preg_match("/^Postmark/", $_SERVER['HTTP_USER_AGENT']))
 {
     $json = file_get_contents('php://input');
-    $data = json_decode($json);
+    $data = json_decode($json, true);
     // Support for Postmark
-    error_log("Postmark EMAIL: From : " . $data->From);
-    $emailreq->setEmailFrom($data->FromFull->Email);
-    $emailreq->setEmailTo($data->ToFull->Email);
-    $emailreq->setEmailSubject($data->Subject);
-    $emailreq->setEmailBody($data->TextBody);
+    error_log("Postmark EMAIL: From : " . $data['FromFull']['Email']);
+    $emailreq->setEmailFrom($data['FromFull']['Email']);
+    $emailreq->setEmailTo($data['ToFull'][0]['Email']);
+    $emailreq->setEmailSubject($data['Subject']);
+    $emailreq->setEmailBody($data['TextBody']);
 }
 
 if (isset($_REQUEST['sender']))
