@@ -56,7 +56,7 @@ class site
         if ($row)
             $this->radkey = $row['secret'];
         else
-            generateRandomRadKey();
+            $this->generateRandomRadKey();
     }
 
     private function generateRandomRadKey()
