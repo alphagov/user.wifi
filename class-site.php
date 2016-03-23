@@ -63,7 +63,7 @@ class site
     {
         $config = config::getInstance();
         $length = $config->values['radius-password']['length'];
-        $pattern = $config->value['radius-password']['regex'];
+        $pattern = $config->values['radius-password']['regex'];
         $pass = preg_replace($pattern, "", base64_encode($this->strongRandomBytes($length *
             4)));
         $this->radkey = substr($pass, 0, $length);
