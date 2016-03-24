@@ -96,7 +96,7 @@ class PDF
         $column = 0;
         while (isset($report->columns[$column]))
         {
-            $collength = 10 + round((2.4 * strlen($report->columns[$column])));
+            $collength = 10 + round((3 * strlen($report->columns[$column])));
             if ($w[$column] < $collength)
                 $w[$column] = $collength;
             $column++;
