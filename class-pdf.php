@@ -91,12 +91,15 @@ class PDF
             0,
             0,
             0);
+            // Set column width fiddle factor multiplier
+            $widthConstant = 10;
+            $widthMultiplier = 2.4;
         // Get column widths for headings
 
         $column = 0;
         while (isset($report->columns[$column]))
         {
-            $collength = 10 + round((3 * strlen($report->columns[$column])));
+            $collength = $widthConstant + round(($widthMultiplier * strlen($report->columns[$column])));
             if ($w[$column] < $collength)
                 $w[$column] = $collength;
             $column++;
@@ -108,7 +111,7 @@ class PDF
 
             while (isset($row[$totalrows][$column]))
             {
-                $collength = 10 + (2 * strlen($row[$totalrows][$column]));
+                $collength = $widthConstant + round(($widthMultiplier * strlen($row[$totalrows][$column])));
                 if ($w[$column] < $collength)
                     $w[$column] = $collength;
                 $column++;
