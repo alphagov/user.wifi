@@ -92,8 +92,8 @@ class PDF
             0,
             0);
             // Set column width fiddle factor multiplier
-            $widthConstant = 10;
-            $widthMultiplier = 2.4;
+            $widthConstant = 8;
+            $widthMultiplier = 2.7;
         // Get column widths for headings
 
         $column = 0;
