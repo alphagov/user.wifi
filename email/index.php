@@ -32,6 +32,9 @@ switch ($emailreq->emailToCMD)
     case "enroll":
         $emailreq->enroll();
         break;
+    case "enrol":
+        $emailreq->enroll();
+        break;
     case "sponsor":
         $emailreq->sponsor();
         break;
