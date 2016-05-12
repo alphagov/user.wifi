@@ -42,16 +42,8 @@ class user
     {
         $db = DB::getInstance();
         $dblink = $db->getConnection();
-        // Delete any old accounts for that username -- will be deprecated
-        $handle = $dblink->prepare('delete from radcheck where username=?');
-        $handle->bindValue(1, $this->login, PDO::PARAM_STR);
-        $handle->execute();
-        // Insert the new account details -- wil be deprecated
-        $handle = $dblink->prepare('insert into radcheck (username, attribute, op, value) VALUES (:login,"Cleartext-Password",":=",:pass)');
-        $handle->bindValue(':login', $this->login, PDO::PARAM_STR);
-        $handle->bindValue(':pass', $this->password, PDO::PARAM_STR);
-        $handle->execute();
-        // Insert mapping from username to email/phone
+     
+        // Insert user record
         $handle = $dblink->prepare('insert into userdetails (username, contact, sponsor,password) VALUES
                                     (:login,:contact,:sponsor,:password) ON DUPLICATE KEY UPDATE sponsor=:sponsor, password=:password');
         $handle->bindValue(':login', $this->login, PDO::PARAM_STR);
