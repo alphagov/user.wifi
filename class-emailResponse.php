@@ -20,8 +20,14 @@ class emailResponse
     {
         $config = config::getInstance();
         $this->subject = $config->values['email-messages']['sponsor-subject'];
-        $this->message = file_get_contents($config->values['email-messages']['sponsor-file']);
-        $this->message = str_replace("%X%", $count, $this->message);
+        if ($count>0) {
+            $this->message = file_get_contents($config->values['email-messages']['sponsor-file']);
+            $this->message = str_replace("%X%", $count, $this->message);
+        }
+        else
+        {
+            $this->message = file_get_contents($config->values['email-messages']['sponsor-help-file']);   
+        }
     }
 
     public function newsite()
@@ -29,6 +35,13 @@ class emailResponse
         $config = config::getInstance();
         $this->subject = $config->values['email-messages']['newsite-subject'];
         $this->message = file_get_contents($config->values['email-messages']['newsite-file']);
+    }
+    
+    public function newSiteBlank()
+    {
+        $config = config::getInstance();
+        $this->subject = $config->values['email-messages']['newsite-subject'];
+        $this->message = file_get_contents($config->values['email-messages']['newsite-help-file']);
     }
 
     public function enroll($user)

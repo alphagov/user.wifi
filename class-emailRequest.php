@@ -133,7 +133,8 @@ class emailRequest
             $site->org_name = $orgAdmin->org_name;
             $site->name = $this->emailSubject;
             $site->setRADKey();
-            $site->addIPs($this->ipList());
+            $newSiteIPs = $this->ipList();
+            $site->addIPs($newSiteIPs);
             // Create the site information pdf
             $pdf = new pdf;
             $pdf->populateNewSite($site);
@@ -144,7 +145,13 @@ class emailRequest
             // Create email response and attach the pdf
             $email = new emailResponse;
             $email->to = $orgAdmin->email;
-            $email->newSite();
+            if (count($newSiteIPs)>0) {
+                $email->newSite();
+            }
+            else
+            {
+                $email->newSiteBlank();
+            }
             $email->filename = $pdf->filename;
             $email->filepath = $pdf->filepath;
             $email->send();

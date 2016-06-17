@@ -6,19 +6,25 @@ class site
     public $name;
     public $org_id;
     public $org_name;
+    public $id;
+    public $activationRegex;
+    
 
 
     public function loadByIp($ipAddr)
     {
         $db = DB::getInstance();
         $dblink = $db->getConnection();
-        $handle = $dblink->prepare('select shortname, org_id from nas WHERE nasname = ?');
+        $handle = $dblink->prepare('select id,shortname, org_id,activation_regex from nas WHERE nasname = ?');
         $handle->bindValue(1, $ipAddr, PDO::PARAM_STR);
         $handle->execute();
         $row = $handle->fetch(\PDO::FETCH_ASSOC);
         $this->name = $row['shortname'];
         $this->org_id = $row['org_id'];
+        $this->activationRegex = $row['activation_regex'];
+        $this->id = $row['id'];
     }
+    
     public function addIPs($iplist)
     {
         $db = DB::getInstance();

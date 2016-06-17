@@ -5,11 +5,12 @@ class aaa
     public $user;
     public $mac;
     public $siteIP;
+    public $site;
     public $ap;
     public $type;
     public $responseHeader;
     public $responseBody;
-    public $reqeustJson;
+    public $requestJson;
     public $session;
     public $result;
     
@@ -36,6 +37,8 @@ class aaa
                     break;
                 case "site":
                     $this->siteIP = $parts[$x + 1];
+                    $this->site = new site;
+                    $this->site->loadByIp($this->siteIP);
                     break;
                 case "result":
                     $this->result = $parts[$x + 1];
@@ -166,18 +169,35 @@ class aaa
     }
     public function authorize()
     {
+    // If this matches a user account continue
         if ($this->user->identifier->text)
         {
-            $this->responseHeader = "HTTP/1.0 200 OK";
-            $response['control:Cleartext-Password'] = $this->user->password;
-            $this->responseBody = json_encode($response);
-        } else
-        {
-            $this->responseHeader = "HTTP/1.0 401 Forbidden";
-
+            // If the site isn't restricted 
+            if (($this->site->activateRegex == "") 
+            // or the user's email address is authorised 
+            or preg_match($this->site->activateRegex, $this->user->sponsor->text)
+            // or the user has activated at this site    
+            or $this->user->authorizedHere($this->site->id))
+                {
+                $this->authorizeResponse(TRUE);
+                } else {
+                $this->authorizeResponse(FALSE);   
+                }
         }
-
     }
+    
+    
+    private function authorizeResponse($accept)
+        {
+        if ($accept) {
+                $this->responseHeader = "HTTP/1.0 200 OK";
+                $response['control:Cleartext-Password'] = $this->user->password;
+                $this->responseBody = json_encode($response);   
+            }
+            else {
+                 $this->responseHeader = "HTTP/1.0 401 Forbidden";  
+            }    
+        }
 }
 
 ?>
