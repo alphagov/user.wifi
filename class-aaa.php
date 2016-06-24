@@ -45,7 +45,7 @@ class aaa
                     $this->result = $parts[$x + 1];
                     break;
                 case "phone":
-                    $this->phone = $parts[$x + 1];
+                    $this->phone = new identifier($parts[$x + 1]);
                     break;
             }
 
@@ -75,13 +75,13 @@ class aaa
     }
     public function activate()
     {
-        if ($this->site->id) {
+        if (($this->site->id) && ($this->phone->validMobile()) {
             // insert an activation entry 
             $db = DB::getInstance();
             $dblink = $db->getConnection();
             $handle = $dblink->prepare('insert into activations (site_id, contact) values (:siteId,:contact)');
             $handle->bindValue(':siteId', $this->site->id, PDO::PARAM_INT);
-            $handle->bindValue(':contact', $this->phone, PDO::PARAM_STR);
+            $handle->bindValue(':contact', $this->phone->text, PDO::PARAM_STR);
             $handle->execute();
         }      
     }

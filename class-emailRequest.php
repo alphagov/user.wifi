@@ -12,52 +12,10 @@ class emailRequest
     {
         $user = new user;
         $user->identifier = $this->emailFrom;
-        $user->verify();
-        
+        $user->verify($this->extractMobileNo());
     }
-    
-    public function enroll()
-    {
-        // Self enrollment request
-        if ($this->fromAuthDomain())
-        {
-            error_log("EMAIL: Self Enrolling : " . $this->emailFrom->text);
-            $user = new user;
-            $user->identifier = $this->emailFrom;
-            $user->sponsor = $this->emailFrom;
-            $user->enroll();
-
-        } else
-        {
-            error_log("EMAIL: Ignoring self enrollment from : " . $this->emailFrom->text);
-        }
-    }
-
-    public function sponsor()
-    {
-        if ($this->fromAuthDomain())
-        {
-            error_log("EMAIL: Sponsored request from: " . $this->emailFrom->text);
-            $enrollcount = 0;
-
-            foreach ($this->contactList() as $identifier)
-            {
-                $enrollcount++;
-                $user = new user;
-                $user->identifier = $identifier;
-                $user->sponsor = $this->emailFrom;
-                $user->enroll();
-            }
-            $email = new emailResponse();
-            $email->to = $this->emailFrom->text;
-            $email->sponsor($enrollcount);
-            $email->send();
-        } else
-        {
-            error_log("EMAIL: Ignoring sponsored reqeust from : " . $this->emailFrom->text);
-        }
-    }
-
+   
+  
     public function logRequest()
     {
 
@@ -174,7 +132,18 @@ class emailRequest
         }
     }
 
-
+    private function extractMobileNo()
+    {
+        foreach (preg_split("/((\r?\n)|(\r\n?))/", $this->emailBody) as $contact)
+            {
+                $contact = new identifier(trim($contact));
+                if ($contact->validMobile)
+                    {
+                    return $contact;
+                    }
+            }
+    }
+    
     private function contactList()
     {
 

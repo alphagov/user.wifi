@@ -16,6 +16,7 @@ class PDF
         $this->message = str_replace("%ORG%", $site->org_name, $this->message);
         $this->message = str_replace("%RADKEY%", $site->radkey, $this->message);
         $this->message = str_replace("%DESCRIPTION%", $site->name, $this->message);
+        $this->message = str_replace("%KIOSKKEY%", $site->kioskKey, $this->message);
         $this->filename = $site->org_name . "-" . $site->name;
         $this->filename = preg_replace("/[^a-zA-Z0-9]/", "_", $this->filename);
         $this->filename .= ".pdf";

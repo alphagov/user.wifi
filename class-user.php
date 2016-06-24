@@ -105,7 +105,6 @@ class user
             {
                 // Not in cache but in the database - let's cache it for next time
                 $m->m->set($this->login, $userRecord);
-
             }
 
 
