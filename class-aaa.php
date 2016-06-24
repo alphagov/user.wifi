@@ -210,12 +210,12 @@ class aaa
     private function authorizeResponse($accept)
         {
         if ($accept) {
-                $this->responseHeader = "HTTP/1.0 200 OK";
+                $this->responseHeader = "200 OK";
                 $response['control:Cleartext-Password'] = $this->user->password;
                 $this->responseBody = json_encode($response);   
             }
             else {
-                 $this->responseHeader = "HTTP/1.0 401 Forbidden";  
+                 $this->responseHeader = "404 Not Found";  
             }    
         }
 }
