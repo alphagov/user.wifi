@@ -195,7 +195,7 @@ class aaa
             // If the site isn't restricted 
             if (($this->site->activationRegex == "") 
             // or the user's email address is authorised 
-            or preg_match($this->site->activationRegex, $this->user->sponsor->text)
+            or preg_match('/'.$this->site->activationRegex.'/', $this->user->sponsor->text)
             // or the user has activated at this site    
             or $this->user->activatedHere($this->site))
                 {
