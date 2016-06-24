@@ -190,7 +190,7 @@ class aaa
     public function authorize()
     {
     // If this matches a user account continue
-        if ($this->user->identifier->text)
+        if ($this->user->identifier)
         {
             // If the site isn't restricted 
             if (($this->site->activationRegex == "") 
