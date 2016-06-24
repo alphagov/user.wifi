@@ -75,7 +75,7 @@ class aaa
     }
     public function activate()
     {
-        if (($this->site->id) && ($this->phone->validMobile()) {
+        if (($this->site->id) and ($this->phone->validMobile)) {
             // insert an activation entry 
             $db = DB::getInstance();
             $dblink = $db->getConnection();
