@@ -100,7 +100,13 @@ class smsResponse
         $this->send();
     }
 
-
+    public function restricted()
+    {
+        $config = config::getInstance();
+        $this->message = file_get_contents($config->values['sms-messages']['restricted-file']);
+        $this->send(); 
+    }
+    
     public function terms()
     {
         $config = config::getInstance();

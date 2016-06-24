@@ -187,6 +187,7 @@ class aaa
     public function setAp($mac) {
         $this->ap=$this->fixMac($mac);
     }
+    
     public function authorize()
     {
     // If this matches a user account continue
@@ -195,14 +196,27 @@ class aaa
             // If the site isn't restricted 
             if (($this->site->activationRegex == "") 
             // or the user's email address is authorised 
-            or preg_match('/'.$this->site->activationRegex.'/', $this->user->sponsor->text)
-            // or the user has activated at this site    
-            or $this->user->activatedHere($this->site))
-                {
+            or preg_match('/'.$this->site->activationRegex.'/', $this->user->sponsor->text))
+            {
                 $this->authorizeResponse(TRUE);
+            }
+            else
+            {
+                // or the user has activated at this site    
+            if ($this->user->activatedHere($this->site))
+                {
+                    $this->authorizeResponse(TRUE);
                 } else {
-                $this->authorizeResponse(FALSE);   
+                    $this->authorizeResponse(FALSE);   
+                    if ($this->user->identifier->validMobile) {
+                        error_log("SMS: Security info request from ".$this->sender->text);
+                        $sms = new smsResponse;
+                        $sms->to = $this->user->identifier->text;
+                        $sms->setReply();
+                        $sms->restricted();
+                    }
                 }
+            }        
         }
     }
     
