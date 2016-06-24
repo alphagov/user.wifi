@@ -40,7 +40,7 @@ class user
     public function activatedHere($site) {
         $db = DB::getInstance();
         $dblink = $db->getConnection();
-        $handle = $dblink->prepare('SELECT IF ((date(now()) - max(date(`time`)))<nas.activation_days,TRUE,FALSE) as valid from activations,nas 
+        $handle = $dblink->prepare('SELECT IF ((date(now()) - max(date(`time`)))<nas.activation_days,"TRUE","FALSE") as valid from activations,nas 
                                     WHERE activations.site_id = nas.id AND site_id = ? AND contact = ?');
         $handle->bindValue(1, $site->id, PDO::PARAM_INT);
         $handle->bindValue(2, $this->identifier->text, PDO::PARAM_STR);
