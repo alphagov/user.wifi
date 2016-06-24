@@ -193,7 +193,7 @@ class aaa
         if ($this->user->identifier->text)
         {
             // If the site isn't restricted 
-            if (($this->site->activateRegex == "") 
+            if (($this->site->activationRegex == "") 
             // or the user's email address is authorised 
             or preg_match($this->site->activationRegex, $this->user->sponsor->text)
             // or the user has activated at this site    
