@@ -29,14 +29,8 @@ if (isset($_REQUEST['sender']))
 
 switch ($emailreq->emailToCMD)
 {
-    case "enroll":
-        $emailreq->enroll();
-        break;
-    case "enrol":
-        $emailreq->enroll();
-        break;
-    case "sponsor":
-        $emailreq->sponsor();
+    case "verify":
+        $emailreq->verify();
         break;
     case "newsite":
         $emailreq->newsite();

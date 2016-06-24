@@ -8,7 +8,14 @@ class emailRequest
     public $emailBody;
     public $emailSubject;
 
-
+    public function verify()
+    {
+        $user = new user;
+        $user->identifier = $this->emailFrom;
+        $user->verify();
+        
+    }
+    
     public function enroll()
     {
         // Self enrollment request

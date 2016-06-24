@@ -41,13 +41,15 @@ class user
         $db = DB::getInstance();
         $dblink = $db->getConnection();
         $handle = $dblink->prepare('SELECT IF ((date(now()) - max(date(`time`)))<nas.activation_age,TRUE,FALSE) as valid from activations,nas 
-                                    WHERE activations.site_id = nas.id AND site_id = ? AND username = ?');
+                                    WHERE activations.site_id = nas.id AND site_id = ? AND contact = ?');
         $handle->bindValue(1, $siteId, PDO::PARAM_STR);
-        $handle->bindValue(2, $this->login, PDO::PARAM_STR);
+        $handle->bindValue(2, $this->identifier, PDO::PARAM_STR);
         $handle->execute();
         $row = $handle->fetch(\PDO::FETCH_ASSOC);
-        return $row['valid'];
-        
+        if ($row['valid'] == "TRUE")
+            return true;
+            else
+            return false;
     }
     
     private function radiusDbWrite()

@@ -3,6 +3,7 @@
 class site
 {
     public $radkey;
+    public $kioskKey;
     public $name;
     public $org_id;
     public $org_name;
@@ -54,15 +55,21 @@ class site
     {
         $db = DB::getInstance();
         $dblink = $db->getConnection();
-        $handle = $dblink->prepare('select secret from nas WHERE shortname=? and org_id=?');
+        $handle = $dblink->prepare('select secret, kioskkey from nas WHERE shortname=? and org_id=?');
         $handle->bindValue(1, $this->name, PDO::PARAM_STR);
         $handle->bindValue(2, $this->org_id, PDO::PARAM_INT);
         $handle->execute();
         $row = $handle->fetch(\PDO::FETCH_ASSOC);
         if ($row)
+            {
             $this->radkey = $row['secret'];
+            $this->kioskKey = $row['kioskkey'];
+            }
         else
+            {
             $this->generateRandomRadKey();
+            $this->generateRandomKioskKey();
+            }
     }
 
     private function generateRandomRadKey()
@@ -73,6 +80,15 @@ class site
         $pass = preg_replace($pattern, "", base64_encode($this->strongRandomBytes($length *
             4)));
         $this->radkey = substr($pass, 0, $length);
+    }
+    private function generateRandomKioskKey()
+    {
+        $config = config::getInstance();
+        $length = $config->values['kiosk-password']['length'];
+        $pattern = $config->values['kiosk-password']['regex'];
+        $pass = preg_replace($pattern, "", base64_encode($this->strongRandomBytes($length *
+            4)));
+        $this->kioskKey = substr($pass, 0, $length);
     }
     private function strongRandomBytes($length)
     {

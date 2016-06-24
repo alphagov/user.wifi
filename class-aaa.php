@@ -13,6 +13,7 @@ class aaa
     public $requestJson;
     public $session;
     public $result;
+    public $phone;
     
     public function __construct($request)
     {
@@ -43,6 +44,9 @@ class aaa
                 case "result":
                     $this->result = $parts[$x + 1];
                     break;
+                case "phone":
+                    $this->phone = $parts[$x + 1];
+                    break;
             }
 
         }
@@ -62,10 +66,26 @@ class aaa
             case "accounting":
                 $this->accounting();
                 break;
+            case "activate":
+                $this->activate();
+                break;
 
         }
 
     }
+    public function activate()
+    {
+        if ($this->site->id) {
+            // insert an activation entry 
+            $db = DB::getInstance();
+            $dblink = $db->getConnection();
+            $handle = $dblink->prepare('insert into activations (site_id, contact) values (:siteId,:contact)');
+            $handle->bindValue(':siteId', $this->site->id, PDO::PARAM_INT);
+            $handle->bindValue(':contact', $this->phone, PDO::PARAM_STR);
+            $handle->execute();
+        }      
+    }
+    
     public function accounting()
     {
         $acct = json_decode($this->requestJson, true);
