@@ -9,6 +9,7 @@ class site
     public $org_name;
     public $id;
     public $activationRegex;
+
     
 
 
@@ -16,7 +17,7 @@ class site
     {
         $db = DB::getInstance();
         $dblink = $db->getConnection();
-        $handle = $dblink->prepare('select id,shortname, org_id,activation_regex from nas WHERE nasname = ?');
+        $handle = $dblink->prepare('select id,shortname, org_id, activation_regex from nas WHERE nasname = ?');
         $handle->bindValue(1, $ipAddr, PDO::PARAM_STR);
         $handle->execute();
         $row = $handle->fetch(\PDO::FETCH_ASSOC);
