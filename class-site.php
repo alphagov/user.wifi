@@ -25,6 +25,7 @@ class site
         $this->org_id = $row['org_id'];
         $this->activationRegex = $row['activation_regex'];
         $this->id = $row['id'];
+        $this->kioskKey = $row['kioskkey'];
     }
     
     public function addIPs($iplist)

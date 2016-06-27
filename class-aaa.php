@@ -14,6 +14,7 @@ class aaa
     public $session;
     public $result;
     public $phone;
+    public $kioskKey;
     
     public function __construct($request)
     {
@@ -47,6 +48,9 @@ class aaa
                 case "phone":
                     $this->phone = new identifier($parts[$x + 1]);
                     break;
+                case "code":
+                    $this->kioskKey = $parts[$x + 1];
+                    break;
             }
 
         }
@@ -73,17 +77,32 @@ class aaa
         }
 
     }
+    public function kioskKeyValid($key)
+    {
+        if (strtoupper($this->site->kioskkey) == strtoupper($this->kioskKey))
+         return true;
+         else 
+         return false;   
+    }
+    
     public function activate()
     {
-        if (($this->site->id) and ($this->phone->validMobile)) {
-            // insert an activation entry 
-            $db = DB::getInstance();
-            $dblink = $db->getConnection();
-            $handle = $dblink->prepare('insert into activations (site_id, contact) values (:siteId,:contact)');
-            $handle->bindValue(':siteId', $this->site->id, PDO::PARAM_INT);
-            $handle->bindValue(':contact', $this->phone->text, PDO::PARAM_STR);
-            $handle->execute();
-        }      
+        if (($this->site->id) and $this->kioskKeyValid())
+            {
+            if ($this->phone and $this->phone->validMobile) {
+                // insert an activation entry 
+                $db = DB::getInstance();
+                $dblink = $db->getConnection();
+                $handle = $dblink->prepare('insert into activations (site_id, contact) values (:siteId,:contact)');
+                $handle->bindValue(':siteId', $this->site->id, PDO::PARAM_INT);
+                $handle->bindValue(':contact', $this->phone->text, PDO::PARAM_STR);
+                $handle->execute();
+            }
+        }   
+        else
+        {
+               $this->responseHeader = "404 Not Found"; 
+        }   
     }
     
     public function accounting()
