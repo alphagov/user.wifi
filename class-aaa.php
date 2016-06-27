@@ -90,6 +90,7 @@ class aaa
     
     public function activate()
     {
+        error_log($this->site->id);
         if (($this->site->id) and $this->kioskKeyValid())
             {
             if ($this->phone and $this->phone->validMobile) {
