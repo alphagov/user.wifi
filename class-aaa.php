@@ -79,7 +79,7 @@ class aaa
     }
     public function kioskKeyValid($key)
     {
-        if (strtoupper($this->site->kioskkey) == strtoupper($this->kioskKey))
+        if (strtoupper($this->site->kioskKey) == strtoupper($this->kioskKey))
          return true;
          else 
          return false;   
