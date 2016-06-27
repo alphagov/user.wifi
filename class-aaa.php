@@ -81,8 +81,10 @@ class aaa
     {
         if (strtoupper($this->site->kioskKey) == strtoupper($this->kioskKey))
          return true;
-         else 
-         return false;   
+         else {
+         return false;  
+         error_log($this->site->kioskKey." ".$this->kioskKey); 
+         }
     }
     
     public function activate()
