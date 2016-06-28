@@ -94,10 +94,18 @@ class emailRequest
             error_log("EMAIL: processing new site request from : " . $this->emailFrom->text);
             // Add the new site & IP addresses
             $site = new site();
-            $site->org_id = $orgAdmin->org_id;
-            $site->org_name = $orgAdmin->org_name;
-            $site->name = $this->emailSubject;
-            $site->setRADKey();
+            $site->loadByAddress($this->emailSubject);
+            if (!$site->id) {
+                $site->org_id = $orgAdmin->org_id;
+                $site->org_name = $orgAdmin->org_name;
+                $site->name = $this->emailSubject;
+                $site->setRADKey();
+                $site->updateFromEmail($this->emailBody);
+                $site->writeRecord();
+            }
+            else if ($site->updateFromEmail($this->emailBody)) 
+                $site->writeRecord();
+
             $newSiteIPs = $this->ipList();
             $site->addIPs($newSiteIPs);
             // Create the site information pdf

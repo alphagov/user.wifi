@@ -38,18 +38,34 @@ class user
 
     }
     public function activatedHere($site) {
+        if ($this->user->identifier->validMobile) {
         $db = DB::getInstance();
         $dblink = $db->getConnection();
-        $handle = $dblink->prepare('SELECT IF ((date(now()) - max(date(`activated`)))<nas.activation_days,"TRUE","FALSE") as valid from activations,nas 
-                                    WHERE activations.site_id = nas.id AND site_id = ? AND contact = ?');
+        $handle = $dblink->prepare('SELECT IF ((date(now()) - max(date(`activated`)))<site.activation_days,"YES","NO") as valid, IF (count(1)=0,"YES","NO") as firstvisit
+                                    from activations,site WHERE activations.site_id = site.id AND site_id = ? AND contact = ?');
         $handle->bindValue(1, $site->id, PDO::PARAM_INT);
         $handle->bindValue(2, $this->identifier->text, PDO::PARAM_STR);
         $handle->execute();
         $row = $handle->fetch(\PDO::FETCH_ASSOC);
-        if ($row['valid'] == "TRUE")
+        if ($row['valid'] == "YES")
             return true;
-            else
+            else {
+                if ($row['firstvisit'] == "YES") {
+                    // Send text message the first time a user enters a building
+                    error_log("SMS: Sending restricted building to ".$this->user->identifier->text);
+                    $sms = new smsResponse;
+                    $sms->to = $this->user->identifier->text;
+                    $sms->setReply();
+                    $sms->restricted($site->address);  
+                    // Put an entry in the activations database with a date of 0
+                    $handle = $dblink->prepare('insert into activations (activated, site_id, contact) values (0, ?, ?)');
+                    $handle->bindValue(1, $site->id, PDO::PARAM_INT);
+                    $handle->bindValue(2, $this->identifier->text, PDO::PARAM_STR);
+                    $handle->execute();
+                }
             return false;
+            }
+        }     
     }
     
     private function radiusDbWrite()

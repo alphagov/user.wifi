@@ -2,43 +2,110 @@
 
 class site
 {
-    public $radkey;
+    public $radKey;
     public $kioskKey;
     public $name;
     public $org_id;
     public $org_name;
     public $id;
     public $activationRegex;
+    public $activationDays;
+    public $postcode;
+    public $dataController;
+    public $address;
 
+
+    public function writeRecord() {
+        $handle = $dblink->prepare('insert into site (radkey, kioskkey, datacontroller, address, postcode, activation_regex, activation_days, org_id)
+         VALUES (:radkey, :kioskkey, :datacontroller, :address, :postcode, :activation_regex, :activation_days, :org_id)
+                on duplicate key update radkey=:radkey, kioskkey=:kioskkey, datacontroller=:datacontroller, address=:address
+                ,postcode=:postcode, activation_regex=:activation_regex, activation_days=:activation_days, org_id = :org_id');
+        $handle->bindValue(':radkey', $radKey, PDO::PARAM_STR);
+        $handle->bindValue(':kioskkey', $this->kioskKey, PDO::PARAM_STR);
+        $handle->bindValue(':datacontroller', $this->dataController, PDO::PARAM_STR);
+        $handle->bindValue(':address', $this->name, PDO::PARAM_STR); 
+        $handle->bindValue(':postcode', $this->postcode, PDO::PARAM_STR); 
+        $handle->bindValue(':activation_regex', $this->activationRegex, PDO::PARAM_STR); 
+        $handle->bindValue(':activation_days', $this->activationDays, PDO::PARAM_STR); 
+        $handle->bindValue(':org_id', $this->org_id, PDO::PARAM_INT); 
+    }
+
+    private function loadRow($row) {
+        $this->name = $row['address'];
+        $this->postcode = $row['postcode'];
+        $this->org_id = $row['org_id'];
+        $this->dataController = $row['datacontroller'];
+        $this->activationRegex = $row['activation_regex'];
+        $this->activationDays = $row['activation_days'];
+        $this->id = $row['id'];
+        $this->radKey = $row['radkey'];
+        $this->kioskKey = $row['kioskkey'];
+        $this->org_id = $row['org_id'];
+        $this->org_name = $row['org_name'];
+    }
+
+    public function updateFromEmail($emailBody) {
+        foreach (preg_split("/((\r?\n)|(\r\n?))/", $emailBody) as $line)
+        {
+            $updated = FALSE;
+            $line = trim($line);
+            $parameter = strtolower(trim(substr($line, 0, strpos($line,":"))));
+            $value = substr($line, strpos($line,":"));
     
+            switch ($parameter) {
+                case "postcode":
+                $this->postcode = $value;
+                $updated = TRUE;
+                break;
+                case "activationregex":
+                $this->activationRegex = $value;
+                $updated = TRUE;
+                break;
+                case "activationdays":
+                $this->activationDays = $value;
+                $updated = TRUE;
+                break;
+                case "datacontroller":
+                $this->dataController = $value;
+                $updated = TRUE;
+                break;
 
 
+            }
+        }
+        return $updated;
+    }
     public function loadByIp($ipAddr)
     {
         $db = DB::getInstance();
         $dblink = $db->getConnection();
-        $handle = $dblink->prepare('select id,shortname, org_id, activation_regex, kioskkey from nas WHERE nasname = ?');
+        $handle = $dblink->prepare('select * from site, organisation, siteip WHERE organisation.id = site.org_id and site.id=siteip.site_id and siteip.ip = ?');
         $handle->bindValue(1, $ipAddr, PDO::PARAM_STR);
         $handle->execute();
         $row = $handle->fetch(\PDO::FETCH_ASSOC);
-        $this->name = $row['shortname'];
-        $this->org_id = $row['org_id'];
-        $this->activationRegex = $row['activation_regex'];
-        $this->id = $row['id'];
-        $this->kioskKey = $row['kioskkey'];
+        loadRow($row);
     }
     
+    public function loadByAddress($address)
+    {
+        $db = DB::getInstance();
+        $dblink = $db->getConnection();
+        $handle = $dblink->prepare('select * from site, organisation WHERE organisation.id = site.org_id and site.address = ?');
+        $handle->bindValue(1, $address, PDO::PARAM_STR);
+        $handle->execute();
+        $row = $handle->fetch(\PDO::FETCH_ASSOC);
+        loadRow($row);
+    }
+
     public function addIPs($iplist)
     {
         $db = DB::getInstance();
         $dblink = $db->getConnection();
         foreach ($iplist as $ip_addr)
         {
-            $handle = $dblink->prepare('insert into nas (nasname, shortname, secret, org_id) VALUES (?,?,?,?)');
+            $handle = $dblink->prepare('insert into siteip (ip, site_id) VALUES (?,?)');
             $handle->bindValue(1, $ip_addr, PDO::PARAM_STR);
-            $handle->bindValue(2, $this->name, PDO::PARAM_STR);
-            $handle->bindValue(3, $this->radkey, PDO::PARAM_STR);
-            $handle->bindValue(4, $this->org_id, PDO::PARAM_INT);
+            $handle->bindValue(2, $this->id, PDO::PARAM_INT);
             try
             {
                 $handle->execute();
@@ -64,7 +131,7 @@ class site
         $row = $handle->fetch(\PDO::FETCH_ASSOC);
         if ($row)
             {
-            $this->radkey = $row['secret'];
+            $this->radKey = $row['secret'];
             $this->kioskKey = $row['kioskkey'];
             }
         else
@@ -81,7 +148,7 @@ class site
         $pattern = $config->values['radius-password']['regex'];
         $pass = preg_replace($pattern, "", base64_encode($this->strongRandomBytes($length *
             4)));
-        $this->radkey = substr($pass, 0, $length);
+        $this->radKey = substr($pass, 0, $length);
     }
     private function generateRandomKioskKey()
     {

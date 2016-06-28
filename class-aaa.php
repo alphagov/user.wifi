@@ -231,13 +231,7 @@ class aaa
                     $this->authorizeResponse(TRUE);
                 } else {
                     $this->authorizeResponse(FALSE);   
-                    if ($this->user->identifier->validMobile) {
-                        error_log("SMS: Sending restricted building to ".$this->user->identifier->text);
-                        $sms = new smsResponse;
-                        $sms->to = $this->user->identifier->text;
-                        $sms->setReply();
-                        $sms->restricted();
-                    }
+                  
                 }
             }        
         }
