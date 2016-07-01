@@ -102,7 +102,7 @@ class site
         $db = DB::getInstance();
         $dblink = $db->getConnection();
         $handle = $dblink->prepare('select * from site, organisation, sourceip WHERE organisation.id = site.org_id and site.id=siteip.site_id and ? between sourceip.min and sourceip.max');
-        $handle->bindValue(1, ip2long($ipAddr), PDO::PARAM_int);
+        $handle->bindValue(1, ip2long($ipAddr), PDO::PARAM_INT);
         $handle->execute();
         $row = $handle->fetch(\PDO::FETCH_ASSOC);
         $this->loadRow($row);
@@ -118,6 +118,7 @@ class site
         $handle->bindValue(1, $ipAddr, PDO::PARAM_STR);
         $handle->execute();
         $row = $handle->fetch(\PDO::FETCH_ASSOC);
+        print_r($row);
         $this->loadRow($row);
     }
     
