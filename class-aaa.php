@@ -98,7 +98,7 @@ class aaa
         error_log("Site ID: ".$this->site->id);
         if (($this->site->id) and $this->kioskKeyValid())
             {
-            if ($this->user->identifier and $this->user->identifier->validMobile) {
+            if (isset($this->user->identifier) and $this->user->identifier->validMobile) {
                 // insert an activation entry 
                 $db = DB::getInstance();
                 $dblink = $db->getConnection();
