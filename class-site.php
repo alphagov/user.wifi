@@ -133,7 +133,7 @@ class site
         $handle->bindValue(1, $address, PDO::PARAM_STR);
         $handle->execute();
         $row = $handle->fetch(\PDO::FETCH_ASSOC);
-        loadRow($row);
+        $this->loadRow($row);
     }
 
     public function addIPs($iplist)
