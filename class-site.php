@@ -105,7 +105,22 @@ class site
     {
         $db = DB::getInstance();
         $dblink = $db->getConnection();
-        $handle = $dblink->prepare('select * from site, organisation, sourceip WHERE organisation.id = site.org_id and site.id=siteip.site_id and ? between sourceip.min and sourceip.max');
+        $handle = $dblink->prepare('select site.id as site_id,               
+                                    radkey,           
+                                    kioskkey,         
+                                    datacontroller,   
+                                    address,          
+                                    postcode,         
+                                    activation_regex, 
+                                    activation_days,  
+                                    org_id, 
+                                    organisation.name as org_name,          
+                                    dailycode,        
+                                    dailycodedate  
+                                    from site, organisation, sourceip 
+                                    WHERE organisation.id = site.org_id 
+                                    and site.id=sourceip.site_id 
+                                    and ? between sourceip.min and sourceip.max');
         $handle->bindValue(1, ip2long($ipAddr), PDO::PARAM_INT);
         $handle->execute();
         $row = $handle->fetch(\PDO::FETCH_ASSOC);
@@ -118,7 +133,21 @@ class site
     {
         $db = DB::getInstance();
         $dblink = $db->getConnection();
-        $handle = $dblink->prepare('select * from site, organisation, siteip WHERE organisation.id = site.org_id and site.id=siteip.site_id and siteip.ip = ?');
+        $handle = $dblink->prepare('select site.id as site_id,               
+                                    radkey,           
+                                    kioskkey,         
+                                    datacontroller,   
+                                    address,          
+                                    postcode,         
+                                    activation_regex, 
+                                    activation_days,  
+                                    org_id, 
+                                    organisation.name as org_name,          
+                                    dailycode,        
+                                    dailycodedate  
+                                    from site, organisation, siteip 
+                                    WHERE organisation.id = site.org_id 
+                                    and site.id=siteip.site_id and siteip.ip = ?');
         $handle->bindValue(1, $ipAddr, PDO::PARAM_STR);
         $handle->execute();
         $row = $handle->fetch(\PDO::FETCH_ASSOC);
@@ -129,7 +158,21 @@ class site
     {
         $db = DB::getInstance();
         $dblink = $db->getConnection();
-        $handle = $dblink->prepare('select * from site, organisation WHERE organisation.id = site.org_id and site.address = ?');
+        $handle = $dblink->prepare('select site.id as site_id,               
+                                    radkey,           
+                                    kioskkey,         
+                                    datacontroller,   
+                                    address,          
+                                    postcode,         
+                                    activation_regex, 
+                                    activation_days,  
+                                    org_id, 
+                                    organisation.name as org_name,          
+                                    dailycode,        
+                                    dailycodedate  
+                                    from site, organisation 
+                                    WHERE organisation.id = site.org_id 
+                                    and site.address = ?');
         $handle->bindValue(1, $address, PDO::PARAM_STR);
         $handle->execute();
         $row = $handle->fetch(\PDO::FETCH_ASSOC);
