@@ -13,13 +13,14 @@ class site
     public $postcode;
     public $dataController;
     public $address;
+    public $dailyCode;
 
 
     public function writeRecord() {
         $handle = $dblink->prepare('insert into site (radkey, kioskkey, datacontroller, address, postcode, activation_regex, activation_days, org_id)
          VALUES (:radkey, :kioskkey, :datacontroller, :address, :postcode, :activation_regex, :activation_days, :org_id)
                 on duplicate key update radkey=:radkey, kioskkey=:kioskkey, datacontroller=:datacontroller, address=:address
-                ,postcode=:postcode, activation_regex=:activation_regex, activation_days=:activation_days, org_id = :org_id');
+                ,postcode=:postcode, activation_regex=:activation_regex, activation_days=:activation_days, org_id = :org_id, dailycode=:dailycode');
         $handle->bindValue(':radkey', $radKey, PDO::PARAM_STR);
         $handle->bindValue(':kioskkey', $this->kioskKey, PDO::PARAM_STR);
         $handle->bindValue(':datacontroller', $this->dataController, PDO::PARAM_STR);
@@ -28,6 +29,24 @@ class site
         $handle->bindValue(':activation_regex', $this->activationRegex, PDO::PARAM_STR); 
         $handle->bindValue(':activation_days', $this->activationDays, PDO::PARAM_STR); 
         $handle->bindValue(':org_id', $this->org_id, PDO::PARAM_INT); 
+        $handle->bindValue(':dailycode', $this->dailyCode, PDO::PARAM_STR); 
+        $handle->execute();
+        if (!$this->id)
+            $this->id = $dblink->lastInsertId();
+
+    }
+
+    public function getDailyCode() {
+        if (!$this->dailyCode) {
+            $config = config::getInstance();
+            $length = $config->values['daily-code']['length'];
+            $pattern = $config->values['daily-code']['regex'];
+            $pass = preg_replace($pattern, "", base64_encode($this->strongRandomBytes($length * 4)));
+            $this->dailyCode = substr($pass, 0, $length);
+            $this->writeRecord();
+        }
+
+        return $this->dailyCode;
     }
 
     private function loadRow($row) {
@@ -42,6 +61,7 @@ class site
         $this->kioskKey = $row['kioskkey'];
         $this->org_id = $row['org_id'];
         $this->org_name = $row['org_name'];
+        $this->dailyCode = $row['dailycode']
     }
 
     public function updateFromEmail($emailBody) {
@@ -75,6 +95,19 @@ class site
         }
         return $updated;
     }
+    public function loadByKioskIp($ipAddr)
+    {
+        $db = DB::getInstance();
+        $dblink = $db->getConnection();
+        $handle = $dblink->prepare('select * from site, organisation, sourceip WHERE organisation.id = site.org_id and site.id=siteip.site_id and ? between sourceip.min and sourceip.max');
+        $handle->bindValue(1, ip2long($ipAddr), PDO::PARAM_int);
+        $handle->execute();
+        $row = $handle->fetch(\PDO::FETCH_ASSOC);
+        loadRow($row);
+
+
+    }
+
     public function loadByIp($ipAddr)
     {
         $db = DB::getInstance();

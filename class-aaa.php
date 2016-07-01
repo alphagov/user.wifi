@@ -13,7 +13,6 @@ class aaa
     public $requestJson;
     public $session;
     public $result;
-    public $phone;
     public $kioskKey;
     
     public function __construct($request)
@@ -42,11 +41,17 @@ class aaa
                     $this->site = new site;
                     $this->site->loadByIp($this->siteIP);
                     break;
+                case "kioskip":
+                    $this->site = new site;
+                    $this->site->loadByKioskIp($parts[$x + 1]);
+                    break;
                 case "result":
                     $this->result = $parts[$x + 1];
                     break;
                 case "phone":
-                    $this->phone = new identifier($parts[$x + 1]);
+                    $this->user = new user;
+                    $this->user->identifier = new identifier($parts[$x + 1]);
+                    $this->user->loadRecord();
                     break;
                 case "code":
                     $this->kioskKey = $parts[$x + 1];
@@ -93,7 +98,7 @@ class aaa
         error_log("Site ID: ".$this->site->id);
         if (($this->site->id) and $this->kioskKeyValid())
             {
-            if ($this->phone and $this->phone->validMobile) {
+            if ($this->user->identifier and $this->user->identifier->validMobile) {
                 // insert an activation entry 
                 $db = DB::getInstance();
                 $dblink = $db->getConnection();
@@ -101,7 +106,16 @@ class aaa
                 $handle->bindValue(':siteId', $this->site->id, PDO::PARAM_INT);
                 $handle->bindValue(':contact', $this->phone->text, PDO::PARAM_STR);
                 $handle->execute();
+                $this->user->loadRecord();
+                if (!$this->user->login) {
+                     $sms = new smsResponse;
+                     $sms->to = $this->user->identifier->text;
+                     $sms->setReply();
+                     $sms->terms();
+                }    
             }
+            else
+            print $this->site->getDailyCode();
         }   
         else
         {

@@ -151,7 +151,7 @@ class user
             return false;
     }
 
-    private function setUsername()
+    public function setUsername()
     {
         $db = DB::getInstance();
         $dblink = $db->getConnection();
