@@ -14,6 +14,7 @@ class site
     public $dataController;
     public $address;
     public $dailyCode;
+    public $dailyCodeDate;
 
 
     public function writeRecord() {
@@ -22,7 +23,7 @@ class site
         $handle = $dblink->prepare('insert into site (id, radkey, kioskkey, datacontroller, address, postcode, activation_regex, activation_days, org_id)
          VALUES (:id, :radkey, :kioskkey, :datacontroller, :address, :postcode, :activation_regex, :activation_days, :org_id)
                 on duplicate key update radkey=:radkey, kioskkey=:kioskkey, datacontroller=:datacontroller, address=:address
-                ,postcode=:postcode, activation_regex=:activation_regex, activation_days=:activation_days, org_id = :org_id, dailycode=:dailycode');
+                ,postcode=:postcode, activation_regex=:activation_regex, activation_days=:activation_days, org_id = :org_id, dailycode=:dailycode, dailycodedate=:dailycodedate');
         $handle->bindValue(':id', $this->id, PDO::PARAM_INT);
         $handle->bindValue(':radkey', $this->radKey, PDO::PARAM_STR);
         $handle->bindValue(':kioskkey', $this->kioskKey, PDO::PARAM_STR);
@@ -33,6 +34,7 @@ class site
         $handle->bindValue(':activation_days', $this->activationDays, PDO::PARAM_STR); 
         $handle->bindValue(':org_id', $this->org_id, PDO::PARAM_INT); 
         $handle->bindValue(':dailycode', $this->dailyCode, PDO::PARAM_STR); 
+        $handle->bindValue(':dailycodedate', $this->dailyCodeDate, PDO::PARAM_INT); 
         $handle->execute();
         if (!$this->id)
             $this->id = $dblink->lastInsertId();
@@ -40,12 +42,13 @@ class site
     }
 
     public function getDailyCode() {
-        if (!$this->dailyCode) {
+        if ($this->dailyCodeDate <> date("z")) {
             $config = config::getInstance();
             $length = $config->values['daily-code']['length'];
             $pattern = $config->values['daily-code']['regex'];
             $pass = preg_replace($pattern, "", base64_encode($this->strongRandomBytes($length * 4)));
             $this->dailyCode = substr($pass, 0, $length);
+            $this->dailyCodeDate = date("z");
             $this->writeRecord();
         }
 
@@ -64,6 +67,7 @@ class site
         $this->kioskKey = $row['kioskkey'];
         $this->org_name = $row['name'];
         $this->dailyCode = $row['dailycode'];
+        $this->dailyCodeDate = $row['dailycodedate'];
     }
 
     public function updateFromEmail($emailBody) {
@@ -118,7 +122,6 @@ class site
         $handle->bindValue(1, $ipAddr, PDO::PARAM_STR);
         $handle->execute();
         $row = $handle->fetch(\PDO::FETCH_ASSOC);
-        print_r($row);
         $this->loadRow($row);
     }
     
