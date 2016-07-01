@@ -61,7 +61,7 @@ class site
         $this->kioskKey = $row['kioskkey'];
         $this->org_id = $row['org_id'];
         $this->org_name = $row['org_name'];
-        $this->dailyCode = $row['dailycode']
+        $this->dailyCode = $row['dailycode'];
     }
 
     public function updateFromEmail($emailBody) {
