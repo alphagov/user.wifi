@@ -191,8 +191,8 @@ class emailRequest
 
         foreach (preg_split("/((\r?\n)|(\r\n?))/", $this->emailBody) as $ipAddr)
         {
-            $IpAddr = explode("-",trim($ipAddr));
-            if (filter_var($ipAddr[0], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 |
+            $ipAddr = explode("-",trim($ipAddr));
+            if (count($ipAddr) == 2 and filter_var($ipAddr[0], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 |
                 FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) and filter_var($ipAddr[1], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 |
                 FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE))
             {
