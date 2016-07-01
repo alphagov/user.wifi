@@ -59,7 +59,7 @@ class site
         $this->dataController = $row['datacontroller'];
         $this->activationRegex = $row['activation_regex'];
         $this->activationDays = $row['activation_days'];
-        $this->id = $row['id'];
+        $this->id = $row['site_id'];
         $this->radKey = $row['radkey'];
         $this->kioskKey = $row['kioskkey'];
         $this->org_name = $row['name'];
