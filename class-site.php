@@ -59,8 +59,7 @@ class site
         $this->id = $row['id'];
         $this->radKey = $row['radkey'];
         $this->kioskKey = $row['kioskkey'];
-        $this->org_id = $row['org_id'];
-        $this->org_name = $row['org_name'];
+        $this->org_name = $row['name'];
         $this->dailyCode = $row['dailycode'];
     }
 
