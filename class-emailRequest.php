@@ -99,17 +99,24 @@ class emailRequest
                 $site->org_id = $orgAdmin->org_id;
                 $site->org_name = $orgAdmin->org_name;
                 $site->name = $this->emailSubject;
+                error_log("EMAIL: creating new site : ".$site->name);
                 $site->setRADKey();
                 $site->updateFromEmail($this->emailBody);
                 $site->writeRecord();
             }
-            else if ($site->updateFromEmail($this->emailBody)) 
+            else if ($site->updateFromEmail($this->emailBody)) {
+                error_log("EMAIL: updating site atributes : ".$site->name);
                 $site->writeRecord();
+            }
 
             $newSiteIPs = $this->ipList();
+            if (count($newSiteIPs) >0) 
+                error_log("EMAIL: Adding client IP addresses : ".$site->name);
             $site->addIPs($newSiteIPs);
             
             $newSiteSourceIPs = $this->sourceIpList();
+            if (count($newSiteSiteIPs) >0) 
+                error_log("EMAIL: Adding source IP addresses : ".$site->name);
             $site->addSourceIPs($newSiteSourceIPs);
             // Create the site information pdf
             $pdf = new pdf;
