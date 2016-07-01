@@ -103,7 +103,7 @@ class site
         $handle->bindValue(1, ip2long($ipAddr), PDO::PARAM_int);
         $handle->execute();
         $row = $handle->fetch(\PDO::FETCH_ASSOC);
-        loadRow($row);
+        $this->loadRow($row);
 
 
     }
@@ -116,7 +116,7 @@ class site
         $handle->bindValue(1, $ipAddr, PDO::PARAM_STR);
         $handle->execute();
         $row = $handle->fetch(\PDO::FETCH_ASSOC);
-        loadRow($row);
+        $this->loadRow($row);
     }
     
     public function loadByAddress($address)
