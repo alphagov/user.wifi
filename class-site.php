@@ -208,10 +208,10 @@ class site
         $dblink = $db->getConnection();
         foreach ($iplist as $ip_addr)
         {
-            $handle = $dblink->prepare('insert into sourceip (min, max, site_id) VALUES (?,?)');
+            $handle = $dblink->prepare('insert into sourceip (min, max, site_id) VALUES (?,?,?)');
             $handle->bindValue(1, ip2long($ip_addr['min']), PDO::PARAM_INT);
-            $handle->bindValue(1, ip2long($ip_addr['max']), PDO::PARAM_INT);
-            $handle->bindValue(2, $this->id, PDO::PARAM_INT);
+            $handle->bindValue(2, ip2long($ip_addr['max']), PDO::PARAM_INT);
+            $handle->bindValue(3, $this->id, PDO::PARAM_INT);
             try
             {
                 $handle->execute();
