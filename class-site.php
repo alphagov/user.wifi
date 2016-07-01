@@ -17,6 +17,8 @@ class site
 
 
     public function writeRecord() {
+        $db = DB::getInstance();
+        $dblink = $db->getConnection();
         $handle = $dblink->prepare('insert into site (radkey, kioskkey, datacontroller, address, postcode, activation_regex, activation_days, org_id)
          VALUES (:radkey, :kioskkey, :datacontroller, :address, :postcode, :activation_regex, :activation_days, :org_id)
                 on duplicate key update radkey=:radkey, kioskkey=:kioskkey, datacontroller=:datacontroller, address=:address
