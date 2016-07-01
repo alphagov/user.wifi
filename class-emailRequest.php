@@ -115,7 +115,7 @@ class emailRequest
             $site->addIPs($newSiteIPs);
             
             $newSiteSourceIPs = $this->sourceIpList();
-            if (count($newSiteSiteIPs) >0) 
+            if (count($newSiteSourceIPs) >0) 
                 error_log("EMAIL: Adding source IP addresses : ".$site->name);
             $site->addSourceIPs($newSiteSourceIPs);
             // Create the site information pdf
