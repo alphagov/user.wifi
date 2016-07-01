@@ -24,7 +24,7 @@ class site
                 on duplicate key update radkey=:radkey, kioskkey=:kioskkey, datacontroller=:datacontroller, address=:address
                 ,postcode=:postcode, activation_regex=:activation_regex, activation_days=:activation_days, org_id = :org_id, dailycode=:dailycode');
         $handle->bindValue(':id', $this->id, PDO::PARAM_INT);
-        $handle->bindValue(':radkey', $this->$radKey, PDO::PARAM_STR);
+        $handle->bindValue(':radkey', $this->radKey, PDO::PARAM_STR);
         $handle->bindValue(':kioskkey', $this->kioskKey, PDO::PARAM_STR);
         $handle->bindValue(':datacontroller', $this->dataController, PDO::PARAM_STR);
         $handle->bindValue(':address', $this->name, PDO::PARAM_STR); 
