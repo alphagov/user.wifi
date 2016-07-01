@@ -19,11 +19,12 @@ class site
     public function writeRecord() {
         $db = DB::getInstance();
         $dblink = $db->getConnection();
-        $handle = $dblink->prepare('insert into site (radkey, kioskkey, datacontroller, address, postcode, activation_regex, activation_days, org_id)
-         VALUES (:radkey, :kioskkey, :datacontroller, :address, :postcode, :activation_regex, :activation_days, :org_id)
+        $handle = $dblink->prepare('insert into site (id, radkey, kioskkey, datacontroller, address, postcode, activation_regex, activation_days, org_id)
+         VALUES (:id, :radkey, :kioskkey, :datacontroller, :address, :postcode, :activation_regex, :activation_days, :org_id)
                 on duplicate key update radkey=:radkey, kioskkey=:kioskkey, datacontroller=:datacontroller, address=:address
                 ,postcode=:postcode, activation_regex=:activation_regex, activation_days=:activation_days, org_id = :org_id, dailycode=:dailycode');
-        $handle->bindValue(':radkey', $radKey, PDO::PARAM_STR);
+        $handle->bindValue(':id', $this->id, PDO::PARAM_INT);
+        $handle->bindValue(':radkey', $this->$radKey, PDO::PARAM_STR);
         $handle->bindValue(':kioskkey', $this->kioskKey, PDO::PARAM_STR);
         $handle->bindValue(':datacontroller', $this->dataController, PDO::PARAM_STR);
         $handle->bindValue(':address', $this->name, PDO::PARAM_STR); 
