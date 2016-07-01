@@ -12,7 +12,7 @@ class report
     {
         $db = DB::getInstance();
         $dblink = $db->getConnection();
-        $sql = "select ip, site.name, site.radkey from site, siteip where site.id = siteip.site_id and org_id = ? and site.address = ?";
+        $sql = "select ip, site.address, site.radkey from site, siteip where site.id = siteip.site_id and org_id = ? and site.address = ?";
         $handle = $dblink->prepare($sql);
         $handle->bindValue(1, $site->org_id, PDO::PARAM_INT);
         $handle->bindValue(2, $site->name, PDO::PARAM_STR);
