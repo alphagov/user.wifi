@@ -108,6 +108,9 @@ class emailRequest
 
             $newSiteIPs = $this->ipList();
             $site->addIPs($newSiteIPs);
+            
+            $newSiteSourceIPs = $this->sourceIpList();
+            $site->addSourceIPs($newSiteSourceIPs);
             // Create the site information pdf
             $pdf = new pdf;
             $pdf->populateNewSite($site);
@@ -182,7 +185,7 @@ class emailRequest
         return $list;
     }
 
-    private function kioskIpList()
+    private function sourceIpList()
     {
         $list = array();
 
@@ -193,7 +196,7 @@ class emailRequest
                 FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) and filter_var($ipAddr[1], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 |
                 FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE))
             {
-                $list[] = array("min" => $ipAddr[0],'max' = $ipAddr[1]);
+                $list[] = array("min" => $ipAddr[0],'max' => $ipAddr[1]);
             }
         }
         return $list;
