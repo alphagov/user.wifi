@@ -28,7 +28,7 @@ class smsRequest
     {
         error_log("SMS: Received a daily code from ".$this->sender->text);
         $user = new user();
-        $user->identifier = new identifier($this->sender->text);
+        $user->identifier = $this->sender;
         $user->codeActivate($this->messageWords[0]);
     }   
 
