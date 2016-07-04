@@ -21,7 +21,7 @@ class user
     {
         $db = DB::getInstance();
         $dblink = $db->getConnection();
-        $handle = $dblink->prepare('insert into activation (dailycode, contact) values (:siteId,:contact)');
+        $handle = $dblink->prepare('insert into activation (site_id, contact) values (:siteId,:contact)');
         $handle->bindValue(':siteId', $site_id, PDO::PARAM_INT);
         $handle->bindValue(':contact', $this->identifier->text, PDO::PARAM_STR);
         $handle->execute();
