@@ -17,7 +17,25 @@ class user
         $this->radiusDbWrite();
         $this->sendCredentials();
     }
+    public function kioskActivate($site_id)
+    {
+        $db = DB::getInstance();
+        $dblink = $db->getConnection();
+        $handle = $dblink->prepare('insert into activation (dailycode, contact) values (:siteId,:contact)');
+        $handle->bindValue(':siteId', $site_id, PDO::PARAM_INT);
+        $handle->bindValue(':contact', $this->identifier->text, PDO::PARAM_STR);
+        $handle->execute();
+    }
 
+    public function codeActivate($code)
+    {
+        $db = DB::getInstance();
+        $dblink = $db->getConnection();
+        $handle = $dblink->prepare('insert into activation (dailycode, contact) values (:dailycode,:contact)');
+        $handle->bindValue(':dailycode', $code, PDO::PARAM_INT);
+        $handle->bindValue(':contact', $this->identifier->text, PDO::PARAM_STR);
+        $handle->execute();
+    }
 
     private function sendCredentials()
     {
@@ -42,7 +60,7 @@ class user
         $db = DB::getInstance();
         $dblink = $db->getConnection();
         $handle = $dblink->prepare('SELECT IF ((date(now()) - max(date(`activated`)))<site.activation_days,"YES","NO") as valid, IF (count(1)=0,"YES","NO") as firstvisit
-                                    from activations,site WHERE activations.site_id = site.id AND site_id = ? AND contact = ?');
+                                    from activation,site WHERE (activation.site_id = site.id or activation.dailycode = site.dailycode) AND site_id = ? AND contact = ?');
         $handle->bindValue(1, $site->id, PDO::PARAM_INT);
         $handle->bindValue(2, $this->identifier->text, PDO::PARAM_STR);
         $handle->execute();
@@ -58,7 +76,7 @@ class user
                     $sms->setReply();
                     $sms->restricted($site->address);  
                     // Put an entry in the activations database with a date of 0
-                    $handle = $dblink->prepare('insert into activations (activated, site_id, contact) values (0, ?, ?)');
+                    $handle = $dblink->prepare('insert into activation (activated, site_id, contact) values (0, ?, ?)');
                     $handle->bindValue(1, $site->id, PDO::PARAM_INT);
                     $handle->bindValue(2, $this->identifier->text, PDO::PARAM_STR);
                     $handle->execute();

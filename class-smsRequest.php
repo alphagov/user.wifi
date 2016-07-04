@@ -24,6 +24,14 @@ class smsRequest
 
     }
 
+    public function dailycode()
+    {
+        error_log("SMS: Received a daily code from ".$this->sender->text);
+        $user = new user();
+        $user->identifier = $this->sender->text;
+        $user->codeActivate($this->messageWords[0]);
+    }   
+
     public function security()
     {
         error_log("SMS: Security info request from ".$this->sender->text);

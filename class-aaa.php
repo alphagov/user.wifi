@@ -51,7 +51,6 @@ class aaa
                 case "phone":
                     $this->user = new user;
                     $this->user->identifier = new identifier($parts[$x + 1]);
-                    $this->user->loadRecord();
                     break;
                 case "code":
                     $this->kioskKey = $parts[$x + 1];
@@ -100,12 +99,7 @@ class aaa
             {
             if (isset($this->user->identifier) and $this->user->identifier->validMobile) {
                 // insert an activation entry 
-                $db = DB::getInstance();
-                $dblink = $db->getConnection();
-                $handle = $dblink->prepare('insert into activations (site_id, contact) values (:siteId,:contact)');
-                $handle->bindValue(':siteId', $this->site->id, PDO::PARAM_INT);
-                $handle->bindValue(':contact', $this->phone->text, PDO::PARAM_STR);
-                $handle->execute();
+                $this->user->kioskActivate($this->site->id);
                 $this->user->loadRecord();
                 if (!$this->user->login) {
                      $sms = new smsResponse;

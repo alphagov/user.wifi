@@ -17,8 +17,8 @@ else
 
 if ($smsReq->sender->validMobile)
 {
-
-    switch ($smsReq->messageWords[0])
+    $firstword=$smsReq->messageWords[0];
+    switch ($firstword)
     {
         case "security":
 
@@ -32,8 +32,9 @@ if ($smsReq->sender->validMobile)
         case "help":
             $smsReq->help();
             break;
-        
-
+        case (preg_match('/[0-9]4/', $firstword) ? true : false):
+            $smsReq->dailycode();
+            break;
         default:
             $smsReq->other();
             break;
