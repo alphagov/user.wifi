@@ -110,14 +110,17 @@ class emailRequest
             }
 
             $newSiteIPs = $this->ipList();
-            if (count($newSiteIPs) >0) 
+            if (count($newSiteIPs) >0) {
                 error_log("EMAIL: Adding client IP addresses : ".$site->name);
-            $site->addIPs($newSiteIPs);
+                $site->addIPs($newSiteIPs);
+            }
             
             $newSiteSourceIPs = $this->sourceIpList();
-            if (count($newSiteSourceIPs) >0) 
+            if (count($newSiteSourceIPs) >0) {
                 error_log("EMAIL: Adding source IP addresses : ".$site->name);
-            $site->addSourceIPs($newSiteSourceIPs);
+                $site->addSourceIPs($newSiteSourceIPs);
+            }
+
             // Create the site information pdf
             $pdf = new pdf;
             $pdf->populateNewSite($site);
@@ -182,7 +185,7 @@ class emailRequest
 
         foreach (preg_split("/((\r?\n)|(\r\n?))/", $this->emailBody) as $ipAddr)
         {
-            $ipAddr = trim($ipAddr);
+            $ipAddr = preg_replace('/[^0-9.]/', '', $ipAddr);
             if (filter_var($ipAddr, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 |
                 FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE))
             {
@@ -198,7 +201,8 @@ class emailRequest
 
         foreach (preg_split("/((\r?\n)|(\r\n?))/", $this->emailBody) as $ipAddr)
         {
-            $ipAddr = explode("-",trim($ipAddr));
+            $ipAddr = preg_replace('/[^-0-9.]/', '', $ipAddr);
+            $ipAddr = explode("-",$ipAddr);
             if (count($ipAddr) == 2 and filter_var($ipAddr[0], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 |
                 FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) and filter_var($ipAddr[1], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 |
                 FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE))
