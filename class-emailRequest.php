@@ -13,7 +13,7 @@ class emailRequest
         $db = DB::getInstance();
         $dblink = $db->getConnection();
         $handle = $dblink->prepare('insert into verify (code, email) values (:code,:email)');
-        $handle->bindValue(':email', $this->emailFrom, PDO::PARAM_STR);
+        $handle->bindValue(':email', $this->emailFrom->text, PDO::PARAM_STR);
         $attempts=0;
         $success=false;
         while ($success==false and $attempts<10) 
