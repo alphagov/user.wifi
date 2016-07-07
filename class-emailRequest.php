@@ -20,12 +20,13 @@ class emailRequest
         {
 
         try
-            {
+            { 
+                $attempts++;
                 $code = $this->generateRandomVerifyCode();
-                $handle->bindValue(':code', $code, PDO::PARAM_INT);
+                $handle->bindValue(':code', $code, PDO::PARAM_STR);
                 $handle->execute();
                 $success=true;
-                $attempts++;
+                
             }
             catch (PDOException $e)
             {
