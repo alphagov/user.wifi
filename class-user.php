@@ -51,7 +51,7 @@ class user
         $handle->bindValue(':code', $code, PDO::PARAM_STR);
         $handle->execute();
 
-        $handle = $dblink->prepare('update userdetails set email = :email where contact = :contact)');
+        $handle = $dblink->prepare('update userdetails set email = :email where contact = :contact');
         $handle->bindValue(':email', $row['email'], PDO::PARAM_STR);
         $handle->bindValue(':contact', $this->identifier->text, PDO::PARAM_STR);
         $handle->execute();
