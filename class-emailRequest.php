@@ -12,7 +12,7 @@ class emailRequest
     {
         $db = DB::getInstance();
         $dblink = $db->getConnection();
-        $handle = $dblink->prepare('delete from verify where email = :email)');
+        $handle = $dblink->prepare('delete from verify where email = :email');
         $handle->bindValue(':email', $this->emailFrom->text, PDO::PARAM_STR);
         $handle->execute();
         $handle = $dblink->prepare('insert into verify (code, email) values (:code,:email)');
