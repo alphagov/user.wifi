@@ -45,7 +45,7 @@ class emailRequest
         $config = config::getInstance();
         $length = $config->values['verify-code']['length'];
         $pattern = $config->values['verify-code']['regex'];
-        $pass = preg_replace($pattern, "", base64_encode($this->strongRandomBytes($length * 4)));
+        $pass = preg_replace($pattern, "", base64_encode($this->strongRandomBytes($length * 10)));
         return substr($pass, 0, $length);
     }
     private function strongRandomBytes($length)

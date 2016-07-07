@@ -261,7 +261,7 @@ class site
         $length = $config->values['kiosk-password']['length'];
         $pattern = $config->values['kiosk-password']['regex'];
         $pass = preg_replace($pattern, "", base64_encode($this->strongRandomBytes($length *
-            4)));
+            10)));
         $this->kioskKey = substr($pass, 0, $length);
     }
     private function strongRandomBytes($length)
