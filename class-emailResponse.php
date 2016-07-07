@@ -43,7 +43,13 @@ class emailResponse
         $this->subject = $config->values['email-messages']['newsite-subject'];
         $this->message = file_get_contents($config->values['email-messages']['newsite-help-file']);
     }
-
+    public function verify($code)
+    {
+        $config = config::getInstance();
+        $this->subject = $config->values['email-messages']['verify-subject'];
+        $this->message = file_get_contents($config->values['email-messages']['verify-file']);
+        $this->message = str_replace("%CODE%", $code, $this->message);
+    }
     public function enroll($user)
     {
         $config = config::getInstance();
