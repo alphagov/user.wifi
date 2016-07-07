@@ -14,11 +14,11 @@ class smsRequest
     public function setMessage($message)
     {
         $config = config::getInstance();
+        // remove any instances of wifi from the message
+        $this->message = str_replace($config->values['strip-keyword'], "", $this->message);
         // remove whitespace and convert to lower case
         $this->message = strtolower(trim($message));
-        // remove any instances of wifi from the message
-        $this->message = str_replace($config->values['strip-keyword'], "", $this->
-            message);
+        
 
         $this->messageWords = explode(' ', $this->message);
 
