@@ -23,7 +23,14 @@ class smsRequest
         $this->messageWords = explode(' ', $this->message);
 
     }
-
+    
+    public function verify()
+    {
+        error_log("SMS: Received an email verification code from ".$this->sender->text);
+        $user = new user();
+        $user->identifier = $this->sender;
+        $user->codeVerify($this->messageWords[0]);   
+    }
     public function dailycode()
     {
         error_log("SMS: Received a daily code from ".$this->sender->text);
