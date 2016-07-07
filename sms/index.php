@@ -33,14 +33,15 @@ if ($smsReq->sender->validMobile)
         case "help":
             $smsReq->help();
             break;
-        case (preg_match('/^[0-9]4$/', $firstword) ? $firstword : !$firstword):
-            $smsReq->dailycode();
-            break;
-        case (preg_match('/^[0-9]6$/', $firstword) ? $firstword : !$firstword):
-            $smsReq->verify();
-            break;
+     
         default: 
+            if (preg_match('/^[0-9]4$/', $firstword) {
+                $smsReq->dailycode();
+            } else if (preg_match('/^[0-9]6$/', $firstword) {
+                $smsReq->verify();
+            } else {
             $smsReq->other();
+            }
             break;
 
     }
