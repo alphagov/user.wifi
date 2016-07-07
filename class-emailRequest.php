@@ -42,8 +42,8 @@ class emailRequest
     private function generateRandomVerifyCode()
     {
         $config = config::getInstance();
-        $length = $config->values['verify-password']['length'];
-        $pattern = $config->values['verify-password']['regex'];
+        $length = $config->values['verify-code']['length'];
+        $pattern = $config->values['verify-code']['regex'];
         $pass = preg_replace($pattern, "", base64_encode($this->strongRandomBytes($length * 4)));
         return substr($pass, 0, $length);
     }
