@@ -18,7 +18,7 @@ else
 if ($smsReq->sender->validMobile)
 {
     $firstword=$smsReq->messageWords[0];
-    error_log($firstword);
+    error_log("*".$firstword."*");
     switch ($firstword)
     {
         case "security":
