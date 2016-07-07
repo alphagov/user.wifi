@@ -36,6 +36,27 @@ class user
         $handle->bindValue(':contact', $this->identifier->text, PDO::PARAM_STR);
         $handle->execute();
     }
+    public function codeVerify($code)
+    {
+
+        $db = DB::getInstance();
+        $dblink = $db->getConnection();
+        $handle = $dblink->prepare('select email from verify where code = :code');
+        $handle->bindValue(':code', $code, PDO::PARAM_STR);
+        $handle->execute();
+        $row = $handle->fetch(\PDO::FETCH_ASSOC);
+
+        if ($row) {
+        $handle = $dblink->prepare('delete from verify where code = :code');
+        $handle->bindValue(':code', $code, PDO::PARAM_STR);
+        $handle->execute();
+
+        $handle = $dblink->prepare('update userdetails set email = :email where contact = :contact)');
+        $handle->bindValue(':email', $row['email'], PDO::PARAM_STR);
+        $handle->bindValue(':contact', $this->identifier->text, PDO::PARAM_STR);
+        $handle->execute();
+        }
+    }
 
     private function sendCredentials()
     {
