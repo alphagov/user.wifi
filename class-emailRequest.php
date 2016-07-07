@@ -29,12 +29,12 @@ class emailRequest
             }
             catch (PDOException $e)
             {
-                $success==false;
+                $success=false;
             }
         }
         if ($success) {
             $email = new emailResponse;
-            $email->to = $this->emailFrom;
+            $email->to = $this->emailFrom->text;
             $email->verify($code);
             $email->send();
         }
