@@ -5,7 +5,7 @@ class user
     public $identifier;
     public $login;
     public $password;
-    public $sponsor;
+    public $email;
 
 
     public function enroll($force = false)
@@ -113,17 +113,17 @@ class user
         $dblink = $db->getConnection();
      
         // Insert user record
-        $handle = $dblink->prepare('insert into userdetails (username, contact, sponsor,password) VALUES
-                                    (:login,:contact,:sponsor,:password) ON DUPLICATE KEY UPDATE sponsor=:sponsor, password=:password');
+        $handle = $dblink->prepare('insert into userdetails (username, contact, email,password) VALUES
+                                    (:login,:contact,:email,:password) ON DUPLICATE KEY UPDATE email=:email, password=:password');
         $handle->bindValue(':login', $this->login, PDO::PARAM_STR);
         $handle->bindValue(':contact', $this->identifier->text, PDO::PARAM_STR);
-        $handle->bindValue(':sponsor', $this->sponsor->text, PDO::PARAM_STR);
+        $handle->bindValue(':email', $this->email, PDO::PARAM_STR);
         $handle->bindValue(':password', $this->password, PDO::PARAM_STR);
         $handle->execute();
 
         // Populate the record for the cache
         $userRecord['contact'] = $this->identifier->text;
-        $userRecord['sponsor'] = $this->sponsor->text;
+        $userRecord['email'] = $this->email;
         $userRecord['password'] = $this->password;
 
         // Write to memcache - we need to do this to flush old entries
@@ -168,7 +168,7 @@ class user
         {
             $this->password = $userRecord['password'];
             $this->identifier = new identifier($userRecord['contact']);
-            $this->sponsor = new identifier($userRecord['sponsor']);
+            $this->email = new $userRecord['email'];
 
         } else
         {

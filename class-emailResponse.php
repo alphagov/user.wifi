@@ -135,8 +135,7 @@ class emailResponse
             $data['attachment'][1] = new CURLFile($this->filepath);
         }
         $ch = curl_init($config->values[$conf_index]['url']);
-        curl_setopt($ch, CURLOPT_USERPWD, $config->values[$conf_index]['user'] . ":" . $config->
-            values[$conf_index]['key']);
+        curl_setopt($ch, CURLOPT_USERPWD, $config->values[$conf_index]['user'] . ":" . $config->values[$conf_index]['key']);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
