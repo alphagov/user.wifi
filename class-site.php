@@ -84,11 +84,11 @@ class site
                 $this->postcode = $value;
                 $updated = TRUE;
                 break;
-                case "activationregex":
+                case "activation-whitelist":
                 $this->activationRegex = $value;
                 $updated = TRUE;
                 break;
-                case "activationdays":
+                case "activation-days":
                 $this->activationDays = $value;
                 $updated = TRUE;
                 break;
