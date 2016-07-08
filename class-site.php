@@ -76,6 +76,7 @@ class site
             $updated = FALSE;
             $line = trim($line);
             $parameter = strtolower(trim(substr($line, 0, strpos($line,":"))));
+            error_log($parameter);
             $value = substr($line, strpos($line,":"));
     
             switch ($parameter) {
