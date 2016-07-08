@@ -78,7 +78,7 @@ class site
             $line = trim($line);
             $parameter = strtolower(trim(substr($line, 0, strpos($line,":"))));
             
-            $value = substr($line, strpos($line,":"));
+            $value = substr($line, strpos($line,":")+1);
     
             switch ($parameter) {
                 case "postcode":
@@ -88,6 +88,7 @@ class site
                 break;
                 case "activation-whitelist":
                     error_log("*".$parameter."*");
+                    $value = str_replace(" ","",$value);
                     $value = str_replace(",","$|",$value);
                     $value .="$";                        
                     error_log("activation_regex:/".$value."/");
