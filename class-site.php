@@ -71,9 +71,10 @@ class site
     }
 
     public function updateFromEmail($emailBody) {
+        $updated = FALSE;
         foreach (preg_split("/((\r?\n)|(\r\n?))/", $emailBody) as $line)
         {
-            $updated = FALSE;
+            
             $line = trim($line);
             $parameter = strtolower(trim(substr($line, 0, strpos($line,":"))));
             
