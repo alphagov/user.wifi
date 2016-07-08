@@ -87,19 +87,22 @@ class site
                 $updated = TRUE;
                 break;
                 case "activation-whitelist":
-                error_log("*".$parameter."*");
-                $this->activationRegex = $value;
-                $updated = TRUE;
+                    error_log("*".$parameter."*");
+                    $value = str_replace(",","$|",$value);
+                    $value .="$";                        
+                    error_log("activation_regex:/".$value."/");
+                    $this->activationRegex = $value;
+                    $updated = TRUE;
                 break;
                 case "activation-days":
-                error_log("*".$parameter."*");
-                $this->activationDays = $value;
-                $updated = TRUE;
+                    error_log("*".$parameter."*");
+                    $this->activationDays = $value;
+                    $updated = TRUE;
                 break;
                 case "datacontroller":
-                error_log("*".$parameter."*");
-                $this->dataController = $value;
-                $updated = TRUE;
+                    error_log("*".$parameter."*");
+                    $this->dataController = $value;
+                    $updated = TRUE;
                 break;
 
 
