@@ -76,23 +76,27 @@ class site
             $updated = FALSE;
             $line = trim($line);
             $parameter = strtolower(trim(substr($line, 0, strpos($line,":"))));
-            error_log("*".$parameter."*");
+            
             $value = substr($line, strpos($line,":"));
     
             switch ($parameter) {
                 case "postcode":
+                error_log("*".$parameter."*");
                 $this->postcode = $value;
                 $updated = TRUE;
                 break;
                 case "activation-whitelist":
+                error_log("*".$parameter."*");
                 $this->activationRegex = $value;
                 $updated = TRUE;
                 break;
                 case "activation-days":
+                error_log("*".$parameter."*");
                 $this->activationDays = $value;
                 $updated = TRUE;
                 break;
                 case "datacontroller":
+                error_log("*".$parameter."*");
                 $this->dataController = $value;
                 $updated = TRUE;
                 break;
