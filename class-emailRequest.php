@@ -190,7 +190,7 @@ class emailRequest
             $email = new emailResponse;
             $email->to = $orgAdmin->email;
             if ($outcome) {
-                $email->newSite($action,$outcome);
+                $email->newSite($action,$outcome,$site);
             }
             else
             {

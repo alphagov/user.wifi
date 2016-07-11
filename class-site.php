@@ -69,6 +69,15 @@ class site
         $this->dailyCode = $row['dailycode'];
         $this->dailyCodeDate = $row['dailycodedate'];
     }
+    public function attributesText() {
+        $attributes .= "Postcode: ".$this->postcode."\n";
+        $whitelist = str_replace("$|",", ",$this->activationRegex))
+        $whitelist = str_replace("$","",$whitelist."\n");
+        $attributes .= "Activation-whitelist: ".$whitelist."\n";
+        $attributes .= "Activation-days: ".$this->activationDays."\n";
+        $attributes .= "DataController: ".$this->dataController."\n";
+        return $attributes;
+    }
 
     public function updateFromEmail($emailBody) {
         $updated = FALSE;
