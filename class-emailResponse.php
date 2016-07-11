@@ -30,11 +30,13 @@ class emailResponse
         }
     }
 
-    public function newsite()
+    public function newsite($action,$outcome)
     {
         $config = config::getInstance();
         $this->subject = $config->values['email-messages']['newsite-subject'];
         $this->message = file_get_contents($config->values['email-messages']['newsite-file']);
+        $this->message = str_replace("%OUTCOME%", $outcome, $this->message);
+        $this->message = str_replace("%ACTION%", $action, $this->message);
     }
     
     public function newSiteBlank()

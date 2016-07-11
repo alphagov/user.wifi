@@ -79,6 +79,7 @@ class emailRequest
                 " representing " . $orgAdmin->org_name);
             $subjectArray = explode(":", $this->emailSubject, 2);
             $reportType = strtolower(trim($subjectArray[0]));
+            $pdf = new pdf;
             if (count($subjectArray) > 1)
             {
                 $criteria = trim($subjectArray[1]);
@@ -87,6 +88,7 @@ class emailRequest
             {
                 case "topsites":
                     $report->topSites();
+                    $pdf->encrypt = FALSE;
                     error_log("Top Sites report generated records:" . count($report->result));
                     break;
 
@@ -113,7 +115,7 @@ class emailRequest
 
 
             // Create report pdf
-            $pdf = new pdf;
+            
             $pdf->populateLogRequest($orgAdmin);
             $pdf->landscape = true;
             $pdf->generatePDF($report);
@@ -142,31 +144,38 @@ class emailRequest
         {
             error_log("EMAIL: processing new site request from : " . $this->emailFrom->text);
             // Add the new site & IP addresses
+            $outcome = "none";
             $site = new site();
             $site->loadByAddress($this->emailSubject);
+            $action = "updated"
             if (!$site->id) {
                 $site->org_id = $orgAdmin->org_id;
                 $site->org_name = $orgAdmin->org_name;
                 $site->name = $this->emailSubject;
                 error_log("EMAIL: creating new site : ".$site->name);
+                $outcome = "New Site Created\n";
                 $site->setRADKey();
                 $site->updateFromEmail($this->emailBody);
                 $site->writeRecord();
+                $action = "created";
             }
             else if ($site->updateFromEmail($this->emailBody)) {
                 error_log("EMAIL: updating site atributes : ".$site->name);
+                $outcome = "Site attributes updated\n";
                 $site->writeRecord();
             }
 
             $newSiteIPs = $this->ipList();
             if (count($newSiteIPs) >0) {
                 error_log("EMAIL: Adding client IP addresses : ".$site->name);
+                $outcome .= count($newSiteIPs)."RADIUS IP Addresses added";
                 $site->addIPs($newSiteIPs);
             }
             
             $newSiteSourceIPs = $this->sourceIpList();
             if (count($newSiteSourceIPs) >0) {
                 error_log("EMAIL: Adding source IP addresses : ".$site->name);
+                $outcome .= count($newSiteIPs)."Source IP Address ranges added\n";
                 $site->addSourceIPs($newSiteSourceIPs);
             }
 
@@ -180,8 +189,8 @@ class emailRequest
             // Create email response and attach the pdf
             $email = new emailResponse;
             $email->to = $orgAdmin->email;
-            if (count($newSiteIPs)>0) {
-                $email->newSite();
+            if ($outcome) {
+                $email->newSite($action,$outcome);
             }
             else
             {

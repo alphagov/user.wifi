@@ -8,6 +8,7 @@ class PDF
     public $message;
     public $landscape;
     public $password;
+    public $encrypt = TRUE;
 
     public function populateNewSite($site)
     {
@@ -63,7 +64,17 @@ class PDF
                 $pdf->Write(5, $line . "\n");
         }
         $pdf->Output($un_filename);
-        $this->encryptPdf($un_filename);
+        if ($this->encrypt) {
+            $this->encryptPdf($un_filename);
+        } else {
+            $this->dontEncryptPdf($un_filename);
+        }
+    }
+    
+    private function dontEncryptPdf($filename)
+    {
+        copy($filename,$this->filepath);
+        unlink($filename);
     }
 
     private function encryptPdf($filename)
