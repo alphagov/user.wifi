@@ -34,7 +34,7 @@ class emailResponse
     {
         $config = config::getInstance();
         //$this->from = $config->values['email-newsitereply'];
-        $this->subject = $config->values['email-messages']['newsite-subject'];
+        $this->subject = $site->name;
         $this->message = file_get_contents($config->values['email-messages']['newsite-file']);
         $this->message = str_replace("%OUTCOME%", $outcome, $this->message);
         $this->message = str_replace("%ACTION%", $action, $this->message);
