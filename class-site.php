@@ -83,8 +83,8 @@ class site
         $updated = FALSE;
         foreach (preg_split("/((\r?\n)|(\r\n?))/", $emailBody) as $line)
         {
-            $line = strreplace(">","",$line);
-            $line = strreplace("*","",$line);
+            $line = str_replace(">","",$line);
+            $line = str_replace("*","",$line);
             $line = trim($line);
             $parameter = strtolower(trim(substr($line, 0, strpos($line,":"))));
             
