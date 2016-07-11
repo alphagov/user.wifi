@@ -145,7 +145,7 @@ class emailRequest
         {
             error_log("EMAIL: processing new site request from : " . $this->emailFrom->text);
             // Add the new site & IP addresses
-            $outcome = "";
+            $outcome = "Existing site updated\n";
             $site = new site(); 
             $site->loadByAddress($this->emailSubject);
             $action = "updated";
@@ -154,15 +154,16 @@ class emailRequest
                 $site->org_name = $orgAdmin->org_name;
                 $site->name = $this->emailSubject;
                 error_log("EMAIL: creating new site : ".$site->name);
-                $outcome = "New Site Created\n";
+                $outcome = "New site created\n";
                 $site->setRADKey();
-                $site->updateFromEmail($this->emailBody);
+                if ($site->updateFromEmail($this->emailBody))
+                    $outcome .= "Site attributes updated\n";
                 $site->writeRecord();
                 $action = "created";
             }
             else if ($site->updateFromEmail($this->emailBody)) {
                 error_log("EMAIL: updating site atributes : ".$site->name);
-                $outcome = "Site attributes updated\n";
+                $outcome .= "Site attributes updated\n";
                 $site->writeRecord();
             }
 
