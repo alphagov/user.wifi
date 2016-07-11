@@ -145,7 +145,7 @@ class emailRequest
             error_log("EMAIL: processing new site request from : " . $this->emailFrom->text);
             // Add the new site & IP addresses
             $outcome = "none";
-            $site = new site();
+            $site = new site(); 
             $site->loadByAddress($this->emailSubject);
             $action = "updated";
             if (!$site->id) {
