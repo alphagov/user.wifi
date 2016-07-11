@@ -145,7 +145,7 @@ class emailRequest
         {
             error_log("EMAIL: processing new site request from : " . $this->emailFrom->text);
             // Add the new site & IP addresses
-            $outcome = "none";
+            $outcome = "";
             $site = new site(); 
             $site->loadByAddress($this->emailSubject);
             $action = "updated";
@@ -169,7 +169,7 @@ class emailRequest
             $newSiteIPs = $this->ipList();
             if (count($newSiteIPs) >0) {
                 error_log("EMAIL: Adding client IP addresses : ".$site->name);
-                $outcome .= count($newSiteIPs)."RADIUS IP Addresses added";
+                $outcome .= count($newSiteIPs)."RADIUS IP Addresses added\n";
                 $site->addIPs($newSiteIPs);
             }
             
