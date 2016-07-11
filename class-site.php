@@ -70,7 +70,7 @@ class site
         $this->dailyCodeDate = $row['dailycodedate'];
     }
     public function attributesText() {
-        $attributes .= "Postcode: ".$this->postcode."\n";
+        $attributes = "Postcode: ".$this->postcode."\n";
         $whitelist = str_replace("$|",", ",$this->activationRegex);
         $whitelist = str_replace("$","",$whitelist."\n");
         $attributes .= "Activation-whitelist: ".$whitelist."\n";
