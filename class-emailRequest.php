@@ -136,6 +136,7 @@ class emailRequest
 
     public function newSite()
     {
+        str_ireplace("re: ","",$this->emailSubject);
         $db = DB::getInstance();
         $dblink = $db->getConnection();
 
