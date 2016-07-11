@@ -42,7 +42,7 @@ class emailResponse
         $this->message = str_replace("%ATTRIBUTES%", $site->attributesText(), $this->message);
     }
     
-    public function newSiteBlank()
+    public function newSiteBlank($site)
     {
         $config = config::getInstance();
         $this->subject = $site->name;

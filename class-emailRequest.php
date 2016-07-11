@@ -195,7 +195,7 @@ class emailRequest
             }
             else
             {
-                $email->newSiteBlank();
+                $email->newSiteBlank($site);
             }
             $email->filename = $pdf->filename;
             $email->filepath = $pdf->filepath;
