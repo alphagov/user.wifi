@@ -45,7 +45,7 @@ class emailResponse
     public function newSiteBlank()
     {
         $config = config::getInstance();
-        $this->subject = $config->values['email-messages']['newsite-subject'];
+        $this->subject = $site->name;
         $this->message = file_get_contents($config->values['email-messages']['newsite-help-file']);
     }
     public function verify($code)
