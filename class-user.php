@@ -168,7 +168,7 @@ class user
         {
             $this->password = $userRecord['password'];
             $this->identifier = new identifier($userRecord['contact']);
-            $this->email = new $userRecord['email'];
+            $this->email = $userRecord['email'];
 
         } else
         {
