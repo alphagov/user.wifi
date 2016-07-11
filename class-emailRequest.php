@@ -147,7 +147,7 @@ class emailRequest
             $outcome = "none";
             $site = new site();
             $site->loadByAddress($this->emailSubject);
-            $action = "updated"
+            $action = "updated";
             if (!$site->id) {
                 $site->org_id = $orgAdmin->org_id;
                 $site->org_name = $orgAdmin->org_name;
