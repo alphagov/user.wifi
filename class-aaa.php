@@ -233,6 +233,7 @@ class aaa
             }
             else
             {
+                error_log("Restricted site: ".$this->site->activationRegex." Users email: ".$this->user->email);
                 // or the user has activated at this site    
             if ($this->user->activatedHere($this->site))
                 {
