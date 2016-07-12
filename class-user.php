@@ -77,7 +77,7 @@ class user
 
     }
     public function activatedHere($site) {
-        if ($this->user->identifier->validMobile) {
+        if ($this->identifier->validMobile) {
         $db = DB::getInstance();
         $dblink = $db->getConnection();
         $handle = $dblink->prepare('SELECT IF ((date(now()) - max(date(`activated`)))<site.activation_days,"YES","NO") as valid, IF (count(1)=0,"YES","NO") as firstvisit
