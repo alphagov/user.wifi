@@ -93,7 +93,7 @@ class user
                     // Send text message the first time a user enters a building
                     error_log("SMS: Sending restricted building to ".$this->user->identifier->text);
                     $sms = new smsResponse;
-                    $sms->to = $this->user->identifier->text;
+                    $sms->to = $this->identifier->text;
                     $sms->setReply();
                     $sms->restricted($site->address);  
                     // Put an entry in the activations database with a date of 0
