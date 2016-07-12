@@ -91,7 +91,7 @@ class user
             else {
                 if ($row['firstvisit'] == "YES") {
                     // Send text message the first time a user enters a building
-                    error_log("SMS: Sending restricted building to ".$this->user->identifier->text);
+                    error_log("SMS: Sending restricted building to ".$this->identifier->text);
                     $sms = new smsResponse;
                     $sms->to = $this->identifier->text;
                     $sms->setReply();
