@@ -95,6 +95,7 @@ class smsResponse
         $message = str_replace("%LOGIN%", $user->login, $message);
         $message = str_replace("%PASS%", $user->password, $message);
         $message = str_replace("%KEYWORD%", $config->values['reply-keyword'], $message);
+        $message = str_replace("%THUMBPRINT%", $config->values['radcert-thumbprint'], $message);
 
         $this->message = $message;
         $this->send();

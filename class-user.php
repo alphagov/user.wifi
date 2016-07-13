@@ -66,14 +66,7 @@ class user
             $sms->setReply();
             $sms->to = $this->identifier->text;
             $sms->enroll($this);
-        } else
-            if ($this->identifier->validEmail)
-            {
-                $email = new emailResponse();
-                $email->to = $this->identifier->text;
-                $email->enroll($this);
-
-            }
+        } 
 
     }
     public function activatedHere($site) {
@@ -146,34 +139,39 @@ class user
         $db = DB::getInstance();
         $dblink = $db->getConnection();
         $row = false;
-        $m = MC::getInstance();
-        $userRecord = $m->m->get($this->login);
+        if ($this->login) {
+            $m = MC::getInstance();
+            $userRecord = $m->m->get($this->login);
 
-        if (!$userRecord)
-        {
-            $handle = $dblink->prepare('select * from userdetails where username=?');
-            $handle->bindValue(1, $this->login, PDO::PARAM_STR);
-            $handle->execute();
-            $userRecord = $handle->fetch(\PDO::FETCH_ASSOC);
+            if (!$userRecord) 
+                {
+                $handle = $dblink->prepare('select * from userdetails where username=?');
+                $handle->bindValue(1, $this->login, PDO::PARAM_STR);
+                $handle->execute();
+                $userRecord = $handle->fetch(\PDO::FETCH_ASSOC);
 
-            if ($m->m->getResultCode() == Memcached::RES_NOTFOUND and $userRecord)
-            {
-                // Not in cache but in the database - let's cache it for next time
-                $m->m->set($this->login, $userRecord);
+                if ($m->m->getResultCode() == Memcached::RES_NOTFOUND and $userRecord)
+                   {
+                    // Not in cache but in the database - let's cache it for next time
+                    $m->m->set($this->login, $userRecord);
+                    }
+                }
+            } else if ($this->identifier->validMobile) {
+                $handle = $dblink->prepare('select * from userdetails where contact=?');
+                $handle->bindValue(1, $this->identifier->text, PDO::PARAM_STR);
+                $handle->execute();
+                $userRecord = $handle->fetch(\PDO::FETCH_ASSOC);
             }
-
-
-        }
-        if ($userRecord)
-        {
-            $this->password = $userRecord['password'];
-            $this->identifier = new identifier($userRecord['contact']);
-            $this->email = $userRecord['email'];
-
-        } else
-        {
-            $this->newPassword();
-        }
+            if ($userRecord)
+            {
+                $this->password = $userRecord['password'];
+                $this->identifier = new identifier($userRecord['contact']);
+                $this->email = $userRecord['email'];
+            } else
+            {
+                $this->newPassword();
+            }
+        
     }
 
     private function UsernameIsUnique($uname)

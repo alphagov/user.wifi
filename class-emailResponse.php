@@ -54,6 +54,9 @@ class emailResponse
         $this->subject = $config->values['email-messages']['verify-subject'];
         $this->message = file_get_contents($config->values['email-messages']['verify-file']);
         $this->message = str_replace("%CODE%", $code, $this->message);
+        $this->message = str_replace("%LONGNUMBER%", $config->values['reply-sender'], $this->message);
+        $this->message = str_replace("%SHORTNUMBER%", $config->values['shortnumber'], $this->message);
+
     }
     public function enroll($user)
     {
