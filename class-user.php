@@ -90,9 +90,9 @@ class user
                     $sms->setReply();
 
                     if ($this->email) 
-                        $sms->restrictedUnset($site);
-                        else 
                         $sms->restrictedSet($site);
+                        else 
+                        $sms->restrictedUnset($site);
                     // Put an entry in the activations database with a date of 0
                     $handle = $dblink->prepare('insert into activation (activated, site_id, contact) values (0, ?, ?)');
                     $handle->bindValue(1, $site->id, PDO::PARAM_INT);

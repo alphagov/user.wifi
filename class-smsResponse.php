@@ -110,7 +110,7 @@ class smsResponse
         $this->send(); 
     }
 
-    public function restrictedSet()
+    public function restrictedSet($site)
     {
         $config = config::getInstance($site);
         $this->message = file_get_contents($config->values['sms-messages']['restricted-set-file']);
