@@ -60,7 +60,7 @@ class smsRequest
     {
         error_log("SMS: Creating new password for ".$this->sender->text);
         $user = new user();
-        $user->identifier = $this->sender->text;
+        $user->identifier = $this->sender;
         $user->enroll(true);
 
     }
