@@ -101,10 +101,22 @@ class smsResponse
         $this->send();
     }
 
-    public function restricted()
+    public function restrictedUnset($site)
     {
         $config = config::getInstance();
-        $this->message = file_get_contents($config->values['sms-messages']['restricted-file']);
+        $this->message = file_get_contents($config->values['sms-messages']['restricted-unset-file']);
+        $this->message = str_replace("%ADDRESS%", $site->name, $this->message);
+        $this->message = str_replace("%WHITELIST%", $site->getWhitelist(), $this->message);
+        $this->send(); 
+    }
+
+    public function restrictedSet()
+    {
+        $config = config::getInstance($site);
+        $this->message = file_get_contents($config->values['sms-messages']['restricted-set-file']);
+        $this->message = str_replace("%ADDRESS%", $site->name, $this->message);
+        $this->message = str_replace("%WHITELIST%", $site->getWhitelist(), $this->message);
+
         $this->send(); 
     }
     

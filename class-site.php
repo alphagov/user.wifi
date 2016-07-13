@@ -69,11 +69,14 @@ class site
         $this->dailyCode = $row['dailycode'];
         $this->dailyCodeDate = $row['dailycodedate'];
     }
-    public function attributesText() {
-        $attributes = "Postcode: ".$this->postcode."\n";
+    public function getWhitelist() {
         $whitelist = str_replace("$|",", ",$this->activationRegex);
         $whitelist = str_replace("$","",$whitelist);
-        $attributes .= "Activation-whitelist: ".$whitelist."\n";
+        return $whitelist; 
+    }
+    public function attributesText() {
+        $attributes = "Postcode: ".$this->postcode."\n";
+        $attributes .= "Activation-whitelist: ".$this->getWhitelist()."\n";
         $attributes .= "Activation-days: ".$this->activationDays."\n";
         $attributes .= "DataController: ".$this->dataController."\n";
         return $attributes;
