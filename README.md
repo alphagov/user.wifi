@@ -58,6 +58,10 @@ To accomplish the above we have the following components:
 <a name="Management-and-Development-tier"></a>
 ## Management and Development tier
 
+[AWS account] (https://344618620317.signin.aws.amazon.com/console)
+
+[SSH dev/test/management host] (ssh://admin@52.50.52.124)
+
 
 
 <a name="commiting-building-and-releasing"></a>
@@ -86,3 +90,18 @@ User password reset
 
 ## Output of pentest
 
+## Braindump
+
+* sort out repo merge thingy
+* add dan and gary as controbutors
+* dev boxes clones and pulls from ali's account
+* dev in aws , also assets,  admin@
+* 52.50.52.124
+* automate backups
+* install jenkins
+* send out system.md to uknot
+* create readme.md
+
+* cloudwatch
+* some config is environment variables most in files
+* 
