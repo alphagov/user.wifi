@@ -2,6 +2,8 @@
 
 This is the documentation for the user.wifi backend infrastructure.  If you’ve found this from a search online for user.wifi, and would like to use the service [read this] () If you’d like to implement user.wifi at a site where you offer guest wifi [read this] (https://governmenttechnology.blog.gov.uk/2016/06/17/wi-fi-security-and-government-wide-roaming-solutions/).
 
+Note there are multiple copies of this repo, the one under AlistairHCowan in github is the master at the time of writing.
+
 # Table of contents
 
 <!-- MarkdownTOC -->
@@ -60,7 +62,12 @@ To accomplish the above we have the following components:
 
 [AWS account] (https://344618620317.signin.aws.amazon.com/console)
 
-[SSH dev/test/management host] (ssh://admin@52.50.52.124)
+SSH dev/test/management host 
+
+```
+ssh admin@52.50.52.124
+```
+
 
 
 
@@ -93,10 +100,8 @@ User password reset
 ## Braindump
 
 * sort out repo merge thingy
-* add dan and gary as controbutors
 * dev boxes clones and pulls from ali's account
 * dev in aws , also assets,  admin@
-* 52.50.52.124
 * automate backups
 * install jenkins
 * send out system.md to uknot
