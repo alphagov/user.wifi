@@ -27,6 +27,13 @@ A secure guest wi-fi service for UK government buildings.
 <a name="backend-architecture"></a>
 # Backend architecture
 
+User.wifi :
+- Onboarding process
+ - new guest wi-fi users can sign up by SMS, user.wifi creating and issuing a unique and unchanging user + password and storing these in a database
+ - has a similar process for sponsored sign up by email
+- accepts RADIUS requests from users attempting to join the user.wifi SSID in government buildings, and checks against the database
+- additionally checks if the site has a 'snowflake' rule requiring additional log in requirements to be met, and notifys the user of these by SMS
+
 <a name="overview"></a>
 ## Overview
 
