@@ -79,6 +79,8 @@ SSH dev/test/management host
 ssh admin@52.50.52.124
 ```
 
+If your source IP isn’t in the Security Group, you’ll be denied.
+
 <a name="commiting-building-and-releasing"></a>
 ## Commiting, building and releasing
 
