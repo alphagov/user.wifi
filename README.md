@@ -48,17 +48,28 @@ To accomplish the above we have the following components:
 <a name="database"></a>
 ## Database
 
+There are two databases, one for dev, which supports the user.wifi.dev SSID, and one for prod, which supports user.wifi.
+
 <a name="api-tier"></a>
 ## API tier
+
+This is a cluster of docker containers running apache + php.  The bulk of this repository is the php and other data that builds and runs these docker containers.
 
 <a name="radius-tier"></a>
 ## RADIUS tier
 
+This is a cluster of docker containers running a copy of freeradius, with an experimental API backend extension compiled in.  These apply some basic ACLs to incoming requests, then handle reformating them as API calls and handing the to the API tier.  There is also a healthcheck HTTP service running, which checks the health of freeradius and it’s connection to the API, and will return an error code if a fault is detected -- this is required for healthchecking.
+
 <a name="connectivity-tier"></a>
 ## Connectivity tier
 
+Sadly, because Cisco suck, we use fixed IP addresses for connectivity to the RADIUS tier.  These are elastic IPs, which should *NEVER* be returned to the AWS pool as this would require the field-reconfiguration of every government site using user.wifi. 
+
 <a name="Management-and-Development-tier"></a>
 ## Management and Development tier
+
+
+_Q: where does the kiosk docker instance fit into this?_
 
 [AWS account] (https://344618620317.signin.aws.amazon.com/console)
 
@@ -68,28 +79,42 @@ SSH dev/test/management host
 ssh admin@52.50.52.124
 ```
 
-
-
-
 <a name="commiting-building-and-releasing"></a>
 ## Commiting, building and releasing
 
 <a name="debugging"></a>
-## Debugging
+## Debugging and logging
 
 <a name="to-do-features"></a>
 ## To-do (features)
 
+Following would be nice
+- Logs to cloudwatch
+- Alerts from cloudwatch
+- hotspot map of users joining user.wifi
+
 <a name="to-do-build-and-management"></a>
 ## To-do (build and management)
 
+Following items need doing
+
+- automate dev box backups
+- install Jenkins on dev box
+- make the dev box rebuildable with code on demand
+- sort out the multiple repos and move everything to one place
+- more documentation
+- docker configuration to be moved to version control, perhaps with more use of environment variables with secrets elsewhere?
+- port the whole thing to GCE
+- replace systemd with init and friends
+
 ## Processes
 
-Site onboarding
-Site decommissioning
-Site IP address change
-User phone number change
-User password reset
+To be documented:
+- Site onboarding
+- Site decommissioning
+- Site IP address change
+- User phone number change
+- User password reset
 
 # Further documentation
 
@@ -97,16 +122,16 @@ User password reset
 
 ## Output of pentest
 
+Available on request from Alistair Cowan [mailto:alistair.cowan@digital.cabinet-office.gov.uk]
+
 ## Braindump
 
-* sort out repo merge thingy
-* dev boxes clones and pulls from ali's account
-* dev in aws , also assets,  admin@
-* automate backups
-* install jenkins
-* send out system.md to uknot
-* create readme.md
-
-* cloudwatch
-* some config is environment variables most in files
-* 
+docker-wifi-backend, docker-radius-rest, docker-wifi-kiosk
+dev box actually runs dev
+prod runs under terraform , dev runs under dev box
+rds for dev seperate for prod
+config in containers, not to be made public
+enrolment.cfg, along with apache in /etc
+all messages in /messages
+it will retry sms providers as required
+radius west will self destruct nightly and rebuild it’s grabs a file from wifi-backend with wget  ...  destroy all in the event of a new site
