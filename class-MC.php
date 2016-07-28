@@ -1,5 +1,5 @@
 <?php
-
+// This is a singleton class for maintaining a single connection to the Memcache server
 class MC {
      private static $instance; //The single instance
      public $m;
@@ -16,6 +16,8 @@ class MC {
         }
 
     }
+    // Function returns the single instance of this class
+
       public static function getInstance()
     {
         if (!self::$instance)
@@ -24,6 +26,7 @@ class MC {
         }
         return self::$instance;
     }
+    
     // Constructor
     private function __construct()
     {
