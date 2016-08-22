@@ -36,7 +36,20 @@ class smsRequest
         error_log("SMS: Received a daily code from ".$this->sender->text);
         $user = new user();
         $user->identifier = $this->sender;
-        $user->codeActivate($this->messageWords[0]);
+        $sms = new smsResponse;
+        $sms->to = $this->sender->text;
+        $sms->setReply();
+
+        if ($user->codeActivate($this->messageWords[0]))
+             {    
+                $sms->activated();
+                error_log("SMS: Initial request, sending terms to ".$this->sender->text);
+            }
+            else
+            {
+                $sms->terms();
+                error_log("SMS: Initial request, sending terms to ".$this->sender->text);
+            }
     }   
 
     public function security()
