@@ -33,14 +33,15 @@ class smsRequest
     }
     public function dailycode()
     {
-        error_log("SMS: Received a daily code from ".$this->sender->text);
+        
         $user = new user();
         $user->identifier = $this->sender;
         $sms = new smsResponse;
         $sms->to = $this->sender->text;
         $sms->setReply();
-
-        if ($user->codeActivate($this->messageWords[0]))
+        $login = $user->codeActivate($this->messageWords[0]);
+        error_log("SMS: Received a daily code from ".$this->sender->text." User: ".$login);
+        if ($login)
              {    
                 $sms->activate();
                 error_log("SMS: Account exists, sending activation response to ".$this->sender->text);
