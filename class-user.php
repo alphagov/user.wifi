@@ -29,12 +29,14 @@ class user
 
     public function codeActivate($code)
     {
+        $this->loadRecord();
         $db = DB::getInstance();
         $dblink = $db->getConnection();
         $handle = $dblink->prepare('insert into activation (dailycode, contact) values (:dailycode,:contact)');
         $handle->bindValue(':dailycode', $code, PDO::PARAM_INT);
         $handle->bindValue(':contact', $this->identifier->text, PDO::PARAM_STR);
         $handle->execute();
+        return $this->login;
     }
     public function codeVerify($code)
     {

@@ -130,6 +130,16 @@ class smsResponse
 
     }
 
+    public function activate()
+    {
+        $config = config::getInstance();
+        $this->message = file_get_contents($config->values['sms-messages']['activate-file']);
+        $this->message = str_replace("%KEYWORD%", $config->values['reply-keyword'], $this->
+            message);
+        $this->send();
+
+    }
+
     public function security()
     {
         $config = config::getInstance();
