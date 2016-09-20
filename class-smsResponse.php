@@ -29,8 +29,8 @@ class smsResponse
     {
         $config = config::getInstance();
         $notifyClient = new \Alphagov\Notifications\Client([
-            'serviceId'     => "{".$config->values['notify']['serviceId']."}",
-            'apiKey'        => "{".$config->values['notify']['apiKey']."}",
+            'serviceId'     => $config->values['notify']['serviceId'],
+            'apiKey'        => $config->values['notify']['apiKey'],
             'httpClient'    => new \Http\Adapter\Guzzle6\Client]);
 
         try {
