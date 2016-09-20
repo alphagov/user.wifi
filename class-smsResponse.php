@@ -45,7 +45,7 @@ class smsResponse
         $config = config::getInstance();
 	$this->personalisation['PASSWORD']=$pdf->password;
 	$this->personalisation['FILENAME']=$pdf->filename;
-	$this->template="newsite-password";
+	$this->template=$config->values['notify']['newsite-password'];
         $this->send();
 
     }
@@ -54,7 +54,7 @@ class smsResponse
         $config = config::getInstance();
 	$this->personalisation['PASSWORD']=$pdf->password;
         $this->personalisation['FILENAME']=$pdf->filename;
-        $this->template="logrequest-password";
+        $this->template=$config->values['notify']['logrequest-password'];
         $this->send();
 
     }
@@ -66,7 +66,7 @@ class smsResponse
 	$this->personalisation['LOGIN']=$user->login;
         $this->personalisation['PASS']=$user->password;
 	$this->personalisation['KEYWORD']=$config->values['reply-keyword'];
-        $this->template="wifi-details";
+        $this->template=$config->values['notify']['wifi-details'];
         $this->send();
     }
 
@@ -75,7 +75,7 @@ class smsResponse
     {
         $config = config::getInstance();
 	$this->personalisation['KEYWORD']=$config->values['reply-keyword'];
-	$this->template="terms";
+	$this->template=$config->values['notify']['terms'];
         $this->send();
 
     }
@@ -84,7 +84,7 @@ class smsResponse
     {
         $config = config::getInstance();
 	$this->personalisation['THUMBPRINT']=$config->values['radcert-thumbprint'];
-	$this->template="security-details";
+	$this->template=$config->values['notify']['security-details'];
         $this->send();
 
     }
@@ -96,25 +96,25 @@ class smsResponse
         switch ($os)
         {
             case (preg_match("/OSX/i", $os) ? true : false):
-                $this->template="help-osx";
+                $this->template=$config->values['notify']['help-osx'];
                 break;
             case (preg_match("/win.*(XP|7|8)/i", $os) ? true : false):
-                $this->template="help-windows";
+                $this->template=$config->values['notify']['help-windows'];
                 break;
             case (preg_match("/win.*10/i", $os) ? true : false):
-                $this->template="help-windows10";
+                $this->template=$config->values['notify']['help-windows10'];
                 break;
             case (preg_match("/android/i", $os) ? true : false):
-                $this->template="help-android";
+                $this->template=$config->values['notify']['help-android'];
                 break;
             case (preg_match("/(ios|ipad|iphone|ipod)/i", $os) ? true : false):
-                $this->template="help-iphone";
+                $this->template=$config->values['notify']['help-iphone'];
                 break;
             case (preg_match("/blackberry/i", $os) ? true : false):
-                $this->template="help-blackberry";
+                $this->template=$config->values['notify']['help-blackberry'];
                 break;
             default:
-                $this->template="help";
+                $this->template=$config->values['notify']['help'];
                 break;
         }
         $this->send();
