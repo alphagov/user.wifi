@@ -28,9 +28,6 @@ class smsResponse
     public function send()
     {
         $config = config::getInstance();
-        // choose which provider to use to send the message
-        // knock off the +
-        $this->to = str_replace("+", "", $this->to);
         $notifyClient = new \Alphagov\Notifications\Client([
             'serviceId'     => "{".$config->values['notify']['serviceId']."}",
             'apiKey'        => "{".$config->values['notify']['apiKey']."}",
