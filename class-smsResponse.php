@@ -32,8 +32,8 @@ class smsResponse
         // knock off the +
         $this->to = str_replace("+", "", $this->to);
         $notifyClient = new \Alphagov\Notifications\Client([
-            'serviceId'     => "{".$config->values['notify']['serviceId']."}",
-            'apiKey'        => "{".$config->values['notify']['apiKey']."}",
+            'serviceId'     => $config->values['notify']['serviceId'],
+            'apiKey'        => $config->values['notify']['apiKey'],
             'httpClient'    => new \Http\Adapter\Guzzle6\Client]);
 
         try {
