@@ -4,7 +4,9 @@ class smsResponse
 {
     public $from;
     public $to;
-    public $message;
+    public $template;
+    public $personalisation;
+
 
     public function __construct()
     {
@@ -29,60 +31,33 @@ class smsResponse
         // choose which provider to use to send the message
         // knock off the +
         $this->to = str_replace("+", "", $this->to);
+        $notifyClient = new \Alphagov\Notifications\Client([
+            'serviceId'     => "{".$config->values['notify']['serviceId']."}",
+            'apiKey'        => "{".$config->values['notify']['apiKey']."}",
+            'httpClient'    => new \Http\Adapter\Guzzle6\Client]);
 
-        // remove any double spaces (when not using keywords)
-        $this->message = str_replace("  ", " ", $this->message);
-        $provider = 1;
-        $success = false;
-        while ($success == false and isset($config->values['sms-provider' . $provider]))
-        {
-            if ($this->providerCanHandle($provider))
-                $success = $this->tryProvider($provider);
-            $provider++;
-        }
+        try {
+            $response = $notifyClient->sendSms( $this->to , $this->template, $this->personalisation);
+            } catch (NotifyException $e){}
 
     }
-
-    private function tryProvider($provider)
-    {
-        
-        $config = config::getInstance();
-        $confIndex = 'sms-provider' . $provider;
-        $key = $config->values[$confIndex]['key'];
-        $data = $config->values[$confIndex]['user-field'] . '=' . $config->values[$confIndex]['user'] .
-            '&' . $config->values[$confIndex]['key-field'] . '=' . $config->values[$confIndex]['key'] .
-            '&' . $config->values[$confIndex]['message-field'] . '=' . urlencode($this->
-            message) . '&' . $config->values[$confIndex]['from-field'] . '=' . $this->from .
-            '&' . $config->values[$confIndex]['to-field'] . '=' . $this->to;
-        print "<PRE>" . $data . "<BR>" . $config->values[$confIndex]['url'] . "</PRE>";
-        $ch = curl_init($config->values[$confIndex]['url']);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $result = curl_exec($ch); // This is the result from the API
-        curl_close($ch);
-       
-        if (preg_match($config->values[$confIndex]['success-regex'], $result))
-            return true;
-        else
-            return false;
-    }
+ 
 
     public function newsite($pdf)
     {
         $config = config::getInstance();
-        $this->message = file_get_contents($config->values['sms-messages']['newsite-file']);
-        $this->message = str_replace("%PASSWORD%", $pdf->password, $this->message);
-        $this->message = str_replace("%FILENAME%", $pdf->filename, $this->message);
+	$this->personalisation['PASSWORD']=$pdf->password;
+	$this->personalisation['FILENAME']=$pdf->filename;
+	$this->template="newsite-password";
         $this->send();
 
     }
     public function logrequest($pdf)
     {
         $config = config::getInstance();
-        $this->message = file_get_contents($config->values['sms-messages']['logrequest-file']);
-        $this->message = str_replace("%PASSWORD%", $pdf->password, $this->message);
-        $this->message = str_replace("%FILENAME%", $pdf->filename, $this->message);
+	$this->personalisation['PASSWORD']=$pdf->password;
+        $this->personalisation['FILENAME']=$pdf->filename;
+        $this->template="logrequest-password";
         $this->send();
 
     }
@@ -91,12 +66,10 @@ class smsResponse
     public function enroll($user)
     {
         $config = config::getInstance();
-        $message = file_get_contents($config->values['sms-messages']['enrollment-file']);
-        $message = str_replace("%LOGIN%", $user->login, $message);
-        $message = str_replace("%PASS%", $user->password, $message);
-        $message = str_replace("%KEYWORD%", $config->values['reply-keyword'], $message);
-
-        $this->message = $message;
+	$this->personalisation['LOGIN']=$user->login;
+        $this->personalisation['PASS']=$user->password;
+	$this->personalisation['KEYWORD']=$config->values['reply-keyword'];
+        $this->template="wifi-details";
         $this->send();
     }
 
@@ -104,9 +77,8 @@ class smsResponse
     public function terms()
     {
         $config = config::getInstance();
-        $this->message = file_get_contents($config->values['sms-messages']['terms-file']);
-        $this->message = str_replace("%KEYWORD%", $config->values['reply-keyword'], $this->
-            message);
+	$this->personalisation['KEYWORD']=$config->values['reply-keyword'];
+	$this->template="terms";
         $this->send();
 
     }
@@ -114,9 +86,8 @@ class smsResponse
     public function security()
     {
         $config = config::getInstance();
-        $this->message = file_get_contents($config->values['sms-messages']['security-file']);
-        $this->message = str_replace("%THUMBPRINT%", $config->values['radcert-thumbprint'],
-            $this->message);
+	$this->personalisation['THUMBPRINT']=$config->values['radcert-thumbprint'];
+	$this->template="security-details";
         $this->send();
 
     }
@@ -128,54 +99,30 @@ class smsResponse
         switch ($os)
         {
             case (preg_match("/OSX/i", $os) ? true : false):
-                $this->message = file_get_contents($config->values['sms-messages']['osx-help-file']);
+                $this->template="help-osx";
                 break;
             case (preg_match("/win.*(XP|7|8)/i", $os) ? true : false):
-                $this->message = file_get_contents($config->values['sms-messages']['win-help-file']);
+                $this->template="help-windows";
                 break;
             case (preg_match("/win.*10/i", $os) ? true : false):
-                $this->message = file_get_contents($config->values['sms-messages']['win10-help-file']);
+                $this->template="help-windows10";
                 break;
             case (preg_match("/android/i", $os) ? true : false):
-                $this->message = file_get_contents($config->values['sms-messages']['android-help-file']);
+                $this->template="help-android";
                 break;
             case (preg_match("/(ios|ipad|iphone|ipod)/i", $os) ? true : false):
-                $this->message = file_get_contents($config->values['sms-messages']['ios-help-file']);
+                $this->template="help-iphone";
                 break;
             case (preg_match("/blackberry/i", $os) ? true : false):
-                $this->message = file_get_contents($config->values['sms-messages']['blackberry-help-file']);
+                $this->template="help-blackberry";
                 break;
             default:
-                $this->message = file_get_contents($config->values['sms-messages']['unknown-help-file']);
+                $this->template="help";
                 break;
         }
         $this->send();
     }
 
-    private function isInternational()
-    {
-
-        $config = config::getInstance();
-
-        if (substr($this->to, 0, 2) == $config->values['country-code'])
-            return false;
-        else
-            return true;
-    }
-
-
-    private function providerCanHandle($provider)
-    {
-        $config = config::getInstance();
-        if (!$this->isInternational() or $config->values['sms-provider' . $provider]['international'] ==
-            1)
-        {
-            return true;
-        } else
-        {
-            return false;
-        }
-    }
 
 
 }
