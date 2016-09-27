@@ -15,8 +15,8 @@ if (isset($data['SubscribeURL']))
     error_log("AWS SNS EMAIL: From : " . $data['mail']['commonHeaders']['from'][0]);
     $emailreq->setEmailFrom($data['mail']['commonHeaders']['from'][0]);
     $emailreq->setEmailTo($data['mail']['commonHeaders']['to'][0]);
-    $emailreq->setEmailSubject($data['mail']['commonHeaders']['Subject']);
-    $emailreq->setEmailBody($data['Content']);
+    $emailreq->setEmailSubject($data['mail']['commonHeaders']['subject']);
+    $emailreq->setEmailBody($data['content']);
 
     switch ($emailreq->emailToCMD) {
         case "enroll":
