@@ -9,7 +9,7 @@ $data = json_decode($json, true);
 if (isset($data['SubscribeURL'])) 
 {
     file_get_contents($data['SubscribeURL']);
-    errror_log("AWS SNS SubscribeURL confirmed");
+    error_log("AWS SNS SubscribeURL confirmed");
 } else 
 {
     error_log("AWS SNS EMAIL: From : " . $data['mail']['commonHeaders']['from'][0]);
