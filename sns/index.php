@@ -19,7 +19,7 @@ if (isset($data['SubscribeURL']))
     preg_match($pattern,reset($data['mail']['commonHeaders']['to']),$matches);
     $emailreq->setEmailTo($matches[0]);
     $emailreq->setEmailSubject($data['mail']['commonHeaders']['subject']);
-    $emailreq->setEmailBody($data['content']);
+    $emailreq->setEmailBody($data['Message']);
 
     switch ($emailreq->emailToCMD) {
         case "enroll":
