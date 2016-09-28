@@ -13,10 +13,10 @@ if (isset($data['SubscribeURL']))
 } else 
 {
     $pattern = "/([a-zA-Z\.\-]+@[a-zA-Z\.\-]+)/";
-    preg_match_all($pattern,$data['mail']['commonHeaders']['from'][0],$matches);
+    preg_match_all($pattern,reset($data['mail']['commonHeaders']['from']),$matches);
     $emailreq->setEmailFrom($matches[0]);
     error_log("AWS SNS EMAIL: From : " . $matches[0]);
-    preg_match_all($pattern,$data['mail']['commonHeaders']['to'][0],$matches);
+    preg_match_all($pattern,reset($data['mail']['commonHeaders']['to']),$matches);
     $emailreq->setEmailTo($matches[0]);
     $emailreq->setEmailSubject($data['mail']['commonHeaders']['subject']);
     $emailreq->setEmailBody($data['content']);
