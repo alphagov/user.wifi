@@ -64,7 +64,7 @@ class emailResponse
 				$this->subject,
 				$this->message,
 				$this->from,
-				,
+				'<pre>'.$this->message.</pre>,
 				array($this->filepath)
 
 				 );
