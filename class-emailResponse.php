@@ -54,80 +54,20 @@ class emailResponse
     public function send()
     {
         $config = config::getInstance();
-        $provider = 1;
-        $success = false;
+        $client = SesClient::factory(array(
+	'region' => 'eu-west-1', 
+        'key'    => $config->values['AWS']['Access-keyID'],
+        'secret' => $config->values['AWS']['Access-key']
+        ));
+	$mailer = new SesRawMailer($client);
+        $messageId = $mailer->send($this->to, 
+				$this->subject,
+				$this->message,
+				$this->from,
+				,
+				array($this->filepath)
 
-        while ($success == false and isset($config->values['email-provider' . $provider]))
-        {
-            $success = $this->tryEmailProvider($provider);
-            $provider++;
-        }
-    }
-
-    function tryPostMark($provider)
-    {
-        $config = config::getInstance();
-        $conf_index = 'email-provider' . $provider;
-        $attachments = array();
-        $data = array(
-            'From' => $this->from,
-            'To' => $this->to,
-            'Subject' => $this->subject,
-            'TextBody' => $this->message);
-            
-        if ($this->filename != "")
-        {
-            $attachments = array(
-                'Name' => $this->filename,
-                'Content' => base64_encode(file_get_contents($this->filepath)),
-                'ContentType' => 'application/octet-stream');
-            $data['Attachments'][]= $attachments;
-                    }
-                    
-        $json = json_encode($data);
-        
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $config->values[$conf_index]['url']);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            'Accept: application/json',
-            'Content-Type: application/json',
-            'X-Postmark-Server-Token: ' . $config->values[$conf_index]['key']));
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
-        $response = json_decode(curl_exec($ch), true);
-        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-        return $http_code === 200;
-
-    }
-
-    function tryMailGun($provider)
-    {
-        $config = config::getInstance();
-        $conf_index = 'email-provider' . $provider;
-        $key = $config->values[$conf_index]['key'];
-        $data['text'] = $this->message;
-        $data['from'] = $this->from;
-        $data['to'] = $this->to;
-        $data['subject'] = $this->subject;
-        if ($this->filename != "")
-        {
-            $data['attachment'][1] = new CURLFile($this->filepath);
-        }
-        $ch = curl_init($config->values[$conf_index]['url']);
-        curl_setopt($ch, CURLOPT_USERPWD, $config->values[$conf_index]['user'] . ":" . $config->
-            values[$conf_index]['key']);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $result = curl_exec($ch);
-        // This is the result from the API
-        curl_close($ch);
-        if (preg_match('/success', $result))
-            return true;
-        else
-            return false;
+				 );
     }
 
     function tryEmailProvider($provider)
