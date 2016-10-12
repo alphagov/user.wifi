@@ -54,12 +54,12 @@ class emailResponse
     public function send()
     {
         $config = config::getInstance();
-	$client = Aws\Ses\SesClient::factory(array(
+	$client = Aws\Ses\SesClient([
 	'version' => 'latest',
 	'region' => 'eu-west-1', 
         'key'    => $config->values['AWS']['Access-keyID'],
         'secret' => $config->values['AWS']['Access-key']
-        ));
+        ]);
         $request = array();
         $request['Source'] = $this->from;
         $request['Destination']['ToAddresses'] = array($this->to);
