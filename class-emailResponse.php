@@ -55,12 +55,24 @@ class emailResponse
     {
         $config = config::getInstance();
 	$client = Aws\Ses\SesClient::factory(array(
+	'version' => 'latest',
 	'region' => 'eu-west-1', 
         'key'    => $config->values['AWS']['Access-keyID'],
         'secret' => $config->values['AWS']['Access-key']
         ));
-	$mailer = new SesRawMailer($client);
-        $messageId = $mailer->send($this->to, 
+        $request = array();
+        $request['Source'] = SENDER;
+        $request['Destination']['ToAddresses'] = array(RECIPIENT);
+        $request['Message']['Subject']['Data'] = SUBJECT;
+        $request['Message']['Body']['Text']['Data'] = BODY;
+
+        try {
+            $result = $client->sendEmail($request);
+            $messageId = $result->get('MessageId');
+            error_log("Email sent! Message ID: $messageId"."\n");
+            } catch (Exception $e) {
+            error_log("The email was not sent. Error message: ".$e->getMessage());
+            }$messageId = $mailer->send($this->to, 
 				$this->subject,
 				$this->message,
 				$this->from,
