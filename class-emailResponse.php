@@ -61,10 +61,11 @@ class emailResponse
         'secret' => $config->values['AWS']['Access-key']
         ));
         $request = array();
-        $request['Source'] = SENDER;
-        $request['Destination']['ToAddresses'] = array(RECIPIENT);
-        $request['Message']['Subject']['Data'] = SUBJECT;
-        $request['Message']['Body']['Text']['Data'] = BODY;
+        $request['Source'] = $this->from;
+        $request['Destination']['ToAddresses'] = array($this->to);
+        $request['Message']['Subject']['Data'] = $this->subject;
+        $request['Message']['Body']['Text']['Data'] = $this->message;
+
 
         try {
             $result = $client->sendEmail($request);
@@ -72,14 +73,7 @@ class emailResponse
             error_log("Email sent! Message ID: $messageId"."\n");
             } catch (Exception $e) {
             error_log("The email was not sent. Error message: ".$e->getMessage());
-            }$messageId = $mailer->send($this->to, 
-				$this->subject,
-				$this->message,
-				$this->from,
-				'<pre>'.$this->message.'</pre>',
-				array($this->filepath)
-
-				 );
+            }
     }
 
     function tryEmailProvider($provider)
