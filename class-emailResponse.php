@@ -54,7 +54,7 @@ class emailResponse
     public function send()
     {
         $config = config::getInstance();
-	$client = Aws\Ses\SesClient([
+	$client = new Aws\Ses\SesClient([
 	'version' => 'latest',
 	'region' => 'eu-west-1', 
         'key'    => $config->values['AWS']['Access-keyID'],
