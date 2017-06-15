@@ -1,5 +1,7 @@
 # Documentation for user.wifi code
 
+**This repo is now deprecated**: it has been superseded by [govwifi](https://github.com/alphagov/govwifi).
+
 This is the documentation for the user.wifi backend infrastructure.  If you’ve found this from a search online for user.wifi, and would like to use the service [read this] () If you’d like to implement user.wifi at a site where you offer guest wifi [read this] (https://governmenttechnology.blog.gov.uk/2016/06/17/wi-fi-security-and-government-wide-roaming-solutions/).
 
 Note there are multiple copies of this repo, the one under AlistairHCowan in github is the master at the time of writing.
